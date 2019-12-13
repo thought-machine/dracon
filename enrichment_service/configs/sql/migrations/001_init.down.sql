@@ -1,0 +1,1 @@
+-- do nothing. Normally we don't drop tables unless data has been moved

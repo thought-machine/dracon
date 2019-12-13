@@ -1,0 +1,30 @@
+---
+apiVersion: dracon/v1alpha1
+kind: Producer
+metadata:
+  name: python-project-bandit-producer
+  labels: {}
+spec:
+  inputs: {resources: [], params: []}
+  outputs: {resources: []}
+  volumes: []
+  steps:
+  # run bandit
+  - name: run-bandit
+    image: thoughtmachine/dracon-tool-bandit:latest
+    imagePullPolicy: Never
+    command: ["sh"]
+    args: ["-c",
+      "bandit --recursive {{.ProducerSourcePath}} --format json --output {{.ProducerToolOutPath}} || true"
+    ]
+    volumeMounts: []
+  # parse results
+  - name: parse-bandit
+    image: thoughtmachine/dracon-producer-bandit:latest
+    imagePullPolicy: Never
+    command: ["/parse"]
+    args: [
+      "-in={{.ProducerToolOutPath}}",
+      "-out={{.ProducerOutPath}}"
+    ]
+    volumeMounts: []

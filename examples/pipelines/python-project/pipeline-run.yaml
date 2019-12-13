@@ -1,0 +1,30 @@
+---
+# git+https config
+apiVersion: dracon/v1alpha1
+kind: PipelineResource
+metadata:
+  name: "{{.RunID}}-git-github-psf-black"
+  labels: {}
+spec:
+  type: git
+  params:
+  - name: revision
+    value: master
+  - name: url
+    value: https://github.com/psf/black.git
+---
+# pipelinerun
+apiVersion: dracon/v1alpha1
+kind: PipelineRun
+metadata:
+  name: "python-project-{{.RunID}}"
+  labels:
+    project: dracon
+spec:
+  pipelineRef: {name: python-project}
+  params: []
+  podTemplate: {}
+  # serviceAccount: git-github-psf-black # replace with desired git source service account (if needed)
+  resources:
+  - {name: git-source, resourceRef: {name: "{{.RunID}}-git-github-psf-black"}} # replace with desired git source
+  timeout: 1h0m0s

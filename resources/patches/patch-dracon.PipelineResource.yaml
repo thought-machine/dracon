@@ -1,0 +1,8 @@
+---
+- op: replace
+  path: /apiVersion
+  value: tekton.dev/v1alpha1
+
+- op: add
+  path: /metadata/labels/project
+  value: dracon

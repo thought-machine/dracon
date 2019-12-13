@@ -1,0 +1,7 @@
+/dist/
+/vendor/
+__pycache__
+*.pyc
+
+# Please output directory
+plz-out
