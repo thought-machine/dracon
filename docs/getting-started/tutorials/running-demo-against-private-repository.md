@@ -11,7 +11,7 @@
 1. Clone the Dracon repository.
 
    ```bash
-   $ git clone https://github.com/thought-machine/dracon-private.git "${PWD}/dracon"
+   $ git clone https://github.com/thought-machine/dracon.git "${PWD}/dracon"
    ```
 
 2. Copy an example demo pipeline from the `./examples/pipelines` directory into your working directory. We have chosen `mixed-lang-project`.
@@ -24,7 +24,7 @@
 
    1. Replace the `FILL_ME_IN`s with the guidance.
    2. Name the resources consistently, we've opted for `gitssh-<repository_domain>-<repository_path_kebab_separated>`, examples:
-      - `github.com/thought-machine/dracon-private` -> `gitssh-github-thought-machine-dracon-private`
+      - `github.com/thought-machine/dracon` -> `gitssh-github-thought-machine-dracon`
       - `github.com/tektoncd/pipeline` -> `gitssh-github-tektoncd-pipeline`
    3. Set the `tekton.dev/v1alpha1, PipelineRun` resource's `spec.serviceAccountName` to the `v1, ServiceAccount` you just added.
    4. Remove the previous `tekton.dev/v1alpha1, PipelineResource`.

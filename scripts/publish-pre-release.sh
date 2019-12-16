@@ -15,7 +15,7 @@ plz build //cmd/dracon:dracon
 
 github_api_version="application/vnd.github.v3+json"
 github_owner="thought-machine"
-github_repo="dracon-private"
+github_repo="dracon"
 
 post_release_json=$(cat <<EOF
 {
