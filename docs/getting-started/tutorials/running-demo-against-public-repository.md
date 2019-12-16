@@ -11,7 +11,7 @@
 1. Clone the Dracon repository.
 
    ```bash
-   $ git clone https://github.com/thought-machine/dracon-private.git "${PWD}/dracon"
+   $ git clone https://github.com/thought-machine/dracon.git "${PWD}/dracon"
    ```
 
 2. Copy an example demo pipeline from the `./examples/pipelines` directory into your working directory. We have chosen `mixed-lang-project`.
