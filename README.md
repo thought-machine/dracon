@@ -23,6 +23,13 @@ Other tutorials are also available:
 | [Creating your own producer][tut-own-producer]          | WIP: Extending Dracon by creating your own custom producer |
 | [Creating your own consumer][tut-own-consumer]          | WIP: Extending Dracon by creating your own custom consumer |
 
+## Installing
+
+We have compiled binaries for `dracon` in under [GitHub releases](releases/). `dracon` can quickly be installed into your home directory by executing:
+```bash
+bash <(curl -s https://raw.githubusercontent.com/thought-machine/dracon/master/scripts/install.sh)
+```
+
 ## Announcements
 
 Dracon was announced at OWASP Appsec Amsterdam in 2019. Check out [the slides](docs/presentations/Dracon-OWASP-Presentation-export.pdf)
