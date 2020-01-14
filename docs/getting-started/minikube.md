@@ -72,7 +72,7 @@ To see the progress of a Pipeline, you can execute:
 
 ```bash
 # To see the pipeline status
-$ kubectl get piplineruns
+$ kubectl get pipelineruns
 # To see the pods running as part of the pipeline
 $ kubectl get pod -w
 ```
