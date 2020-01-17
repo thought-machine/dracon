@@ -58,7 +58,10 @@ var runCmd = &cobra.Command{
 		}
 
 		for _, doc := range resDocs["PipelineResource"] {
-			err = kubernetes.Apply(string(doc))
+			err = kubernetes.Apply(string(doc), &kubernetes.KubectlOpts{
+				Namespace: kubernetesNamespace,
+				Context:   kubernetesContext,
+			})
 			if err != nil {
 				log.Fatalf("Failed to apply templates: %s\n", err)
 				os.Exit(2)
@@ -66,7 +69,10 @@ var runCmd = &cobra.Command{
 		}
 
 		for _, doc := range resDocs["PipelineRun"] {
-			err = kubernetes.Apply(string(doc))
+			err = kubernetes.Apply(string(doc), &kubernetes.KubectlOpts{
+				Namespace: kubernetesNamespace,
+				Context:   kubernetesContext,
+			})
 			if err != nil {
 				log.Fatalf("Failed to apply templates: %s\n", err)
 				os.Exit(2)

@@ -64,7 +64,10 @@ var setupCmd = &cobra.Command{
 		for k, docs := range resDocs {
 			if k != "PipelineRun" && k != "PipelineResource" {
 				for _, doc := range docs {
-					err = kubernetes.Apply(string(doc))
+					err = kubernetes.Apply(string(doc), &kubernetes.KubectlOpts{
+						Namespace: kubernetesNamespace,
+						Context:   kubernetesContext,
+					})
 					if err != nil {
 						log.Fatalf("Failed to apply templates :%s\n", err)
 					}

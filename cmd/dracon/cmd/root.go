@@ -25,7 +25,12 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
+// flags
+var (
+	cfgFile             string
+	kubernetesContext   string
+	kubernetesNamespace string
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -47,6 +52,8 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.dracon.yaml)")
+	rootCmd.PersistentFlags().StringVar(&kubernetesContext, "context", "", "Kubernetes Context")
+	rootCmd.PersistentFlags().StringVar(&kubernetesNamespace, "namespace", "", "Kubernetes Namespace")
 }
 
 // initConfig reads in config file and ENV variables if set.
