@@ -19,7 +19,6 @@ bin_path="${install_path}/dracon"
 repo="thought-machine/dracon"
 download_url=$(curl -s https://api.github.com/repos/${repo}/releases/latest \
   | grep browser_download_url \
-  | grep ${arch} \
   | cut -d '"' -f 4)
 echo "-> downloading ${download_url} to ${bin_path}"
 curl -L $download_url -o ${bin_path}
