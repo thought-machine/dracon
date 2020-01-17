@@ -5,7 +5,6 @@ go_library(
     ],
     visibility = ["PUBLIC"],
     deps = [
-        "//third_party/go:pkg_errors",
     ],
 )
 
@@ -16,7 +15,6 @@ go_test(
     ],
     deps = [
         ":kubernetes",
-        "//third_party/go:pkg_errors",
         "//third_party/go:stretchr_testify",
     ],
 )

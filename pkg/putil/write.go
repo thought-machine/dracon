@@ -1,13 +1,13 @@
 package putil
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 
 	"github.com/gogo/protobuf/proto"
-	"github.com/pkg/errors"
 	v1 "github.com/thought-machine/dracon/pkg/genproto/v1"
 )
 
@@ -56,7 +56,7 @@ func WriteResults(
 	}
 
 	if err := ioutil.WriteFile(outFile, outBytes, 0644); err != nil {
-		return errors.Wrapf(err, "could not write to file %s", outFile)
+		return fmt.Errorf("could not write to file '%s': %w", outFile, err)
 	}
 
 	log.Printf("wrote %d issues from to %s", len(issues), outFile)
