@@ -41,21 +41,12 @@ A helper script that automates the below exists in `./scripts/minikube.sh`.
 
 ## Usage
 
-### Configure Kubectl
-
-Configure Kubectl to use the `minikube` context and `dracon` namespace by default:
-
-```bash
-$ kubectl config use-context minikube
-$ kubectl config set-context minikube --namespace=dracon
-```
-
 ### Setting up a Pipeline
 
 To setup an pipeline, you can execute:
 
 ```bash
-$ dracon setup --pipeline examples/pipelines/golang-project
+$ dracon --context minikube --namespace=dracon setup --pipeline examples/pipelines/golang-project
 ```
 
 ### Running a Pipeline
@@ -63,7 +54,7 @@ $ dracon setup --pipeline examples/pipelines/golang-project
 To run that example pipeline you can execute:
 
 ```bash
-$ dracon run --pipeline examples/pipelines/golang-project
+$ dracon --context minikube --namespace=dracon run --pipeline examples/pipelines/golang-project
 ```
 
 ### Inspecting a Pipeline
