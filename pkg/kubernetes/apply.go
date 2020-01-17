@@ -5,8 +5,6 @@ import (
 	"io"
 	"log"
 	"os/exec"
-
-	"github.com/pkg/errors"
 )
 
 // KubectlOpts represents options/flags to pass to kubectl
@@ -21,7 +19,7 @@ func Apply(resources string, opts *KubectlOpts) error {
 	cmd := exec.Command(shCmd[0], shCmd[1:]...)
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
-		return errors.Wrap(err, "could not create stdin pipe")
+		return fmt.Errorf("could not create stdin pipe: %w", err)
 	}
 	go func() {
 		defer stdin.Close()
@@ -32,13 +30,10 @@ func Apply(resources string, opts *KubectlOpts) error {
 	}()
 
 	output, err := cmd.CombinedOutput()
-	if err != nil {
-		return errors.Wrap(err, resources)
+	if err != nil || !cmd.ProcessState.Success() {
+		return fmt.Errorf("%s\n%s:%w", resources, output, err)
 	}
-	if !cmd.ProcessState.Success() {
-		return errors.Wrap(err, string(output))
-	}
-	log.Println(string(output))
+	log.Printf("%s\n", output)
 	return nil
 }
 
