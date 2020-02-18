@@ -15,11 +15,11 @@ spec:
         app: kibana
     spec:
       containers:
-      - name: kibana
-        image: docker.elastic.co/kibana/kibana:6.8.5
-        ports:
-        - containerPort: 5601
-          name: webinterface
+        - name: kibana
+          image: docker.elastic.co/kibana/kibana:7.6.0
+          ports:
+            - containerPort: 5601
+              name: webinterface
 ---
 apiVersion: v1
 kind: Service
@@ -30,7 +30,7 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - port: 5601
-    name: webinterface
+    - port: 5601
+      name: webinterface
   selector:
     app: kibana
