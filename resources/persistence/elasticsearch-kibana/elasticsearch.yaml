@@ -14,20 +14,20 @@ spec:
         app: elasticsearch
     spec:
       containers:
-      - name: elasticsearch
-        image: docker.elastic.co/elasticsearch/elasticsearch:6.8.5
-        env:
-        - name: discovery.type
-          value: single-node
-        ports:
-        - containerPort: 9200
-          name: client
-        - containerPort: 9300
-          name: nodes
-        volumeMounts:
-        - mountPath: /usr/share/elasticsearch/data
-          name: elasticsearch
-          subPath: es-data
+        - name: elasticsearch
+          image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
+          env:
+            - name: discovery.type
+              value: single-node
+          ports:
+            - containerPort: 9200
+              name: client
+            - containerPort: 9300
+              name: nodes
+          volumeMounts:
+            - mountPath: /usr/share/elasticsearch/data
+              name: elasticsearch
+              subPath: es-data
   volumeClaimTemplates:
     - metadata:
         name: elasticsearch
@@ -46,9 +46,9 @@ metadata:
     service: elasticsearch
 spec:
   ports:
-  - port: 9200
-    name: client
-  - port: 9300
-    name: nodes
+    - port: 9200
+      name: client
+    - port: 9300
+      name: nodes
   selector:
     app: elasticsearch

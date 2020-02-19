@@ -9,7 +9,7 @@ go_binary(
     deps = [
         "//consumers",
         "//pkg/genproto/v1",
-        "//third_party/go:elastic_go-elasticsearch_v6",
+        "//third_party/go:elastic_go-elasticsearch_v7",
         "//third_party/go:golang_protobuf",
     ],
 )

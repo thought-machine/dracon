@@ -7,8 +7,21 @@ package(default_visibility = ["PUBLIC"])
 #     get = "github.com/elastic/go-elasticsearch",
 # )
 
+# TODO(hjenkins): Support multiple versions of ES
+# go_get(
+#     name = "elastic_go-elasticsearch_v6",
+#     get = "github.com/elastic/go-elasticsearch",
+#     install = [
+#         "",
+#         "esapi",
+#         "estransport",
+#         "internal/version",
+#     ],
+#     revision = "v6.8.2",
+# )
+
 go_get(
-    name = "elastic_go-elasticsearch_v6",
+    name = "elastic_go-elasticsearch_v7",
     get = "github.com/elastic/go-elasticsearch",
     install = [
         "",
@@ -16,15 +29,8 @@ go_get(
         "estransport",
         "internal/version",
     ],
-    revision = "v6.8.2",
+    revision = "v7.6.0",
 )
-
-# TODO(hjenkins): Support multiple versions of ES
-# go_get(
-#     name = "elastic_go-elasticsearch_v7",
-#     revision = "v7.4.1",
-#     get = "github.com/elastic/go-elasticsearch",
-# )
 
 go_get(
     name = "gogo_protobuf",
