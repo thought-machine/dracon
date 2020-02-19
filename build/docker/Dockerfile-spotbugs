@@ -3,7 +3,7 @@ FROM openjdk:8-alpine
 ARG install_dir=/opt/findsecbugs
 
 ARG SPOTBUGS_VERSION=3.1.12
-ARG SPOTBUGS_ADDRESS=http://repo.maven.apache.org/maven2/com/github/spotbugs/spotbugs/${SPOTBUGS_VERSION}/spotbugs-${SPOTBUGS_VERSION}.tgz
+ARG SPOTBUGS_ADDRESS=https://repo.maven.apache.org/maven2/com/github/spotbugs/spotbugs/${SPOTBUGS_VERSION}/spotbugs-${SPOTBUGS_VERSION}.tgz
 ARG SPOTBUGS_SHA1=95114d9aaeeba7bd4ea5a3d6a2167cd6c87bb943
 
 ARG FINDSECBUGS_VERSION=1.10.0
