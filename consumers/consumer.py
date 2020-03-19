@@ -2,8 +2,11 @@ import logging
 
 from abc import ABC, abstractmethod
 
-from gen import engine_pb2
-from utils.file_utils import load_files
+import copy
+
+from pathlib import Path
+from third_party.python.google.protobuf.message import DecodeError
+from api.proto import engine_pb2
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -15,12 +18,12 @@ class Consumer(ABC):
     @abstractmethod
     def __init__(self, config: dict):
         try:
-            self.pb_location = config['pb_location']
+            self.pvc_location = config['pvc_location']
         except(KeyError):
             logger.error('PVC location not provided')
             raise
 
-        logger.info('Instantiated Consumer class with results at ' + self.pb_location)
+        logger.info('Instantiated Consumer class with results at ' + self.pvc_location)
 
     @abstractmethod
     def load_results(self):
@@ -29,7 +32,7 @@ class Consumer(ABC):
         """
 
         scan_results = engine_pb2.EnrichedLaunchToolResponse()
-        collected_results = load_files(scan_results, self.pb_location)
+        collected_results = self.load_files(scan_results, self.pvc_location)
 
         return collected_results
 
@@ -46,3 +49,37 @@ class Consumer(ABC):
             logger.info('Scan: ' + raw_scan.tool_name + ' run at ' + scan_time)
             for issue in raw_scan.issues:
                 logger.info('Issue: ' + str(issue))
+
+
+
+
+    def load_files(self, protobuf, location):
+        """Given a protobuf object and a filesystem location, attempts to load all *.pb
+        files found in directories underneath the location into the protobuf object
+
+        :param protobuf: object expected to be found in the location
+        :param location: directory where protobuf objects are stored
+
+        :returns array of protobuf objects of the given type which were found at the location
+        :raise SyntaxError: If there are no .pb files found in location
+        """
+
+        logger.info('Searching for scan results')
+        collected_files = []
+
+        for filename in  Path(location).glob('**/*.pb'):
+            logger.info("Found file %s" % filename)
+            with open(filename, "rb") as f:
+                try:
+                    protobuf.ParseFromString(f.read())
+                    collected_files.append(copy.deepcopy(protobuf))
+
+                except DecodeError as e:
+                    logger.warning('Unable to parse file %s skipping because of: %s '%(filename,str(e)))
+                    # Note: here skipping is important,
+                    #  the results dir might have all sorts of protobuf messages that don't
+                    #  match the type provided
+        if len(collected_files) == 0:
+            raise SyntaxError('No valid results were found in the provided directory')
+
+        return collected_files
