@@ -5,6 +5,7 @@ python_binary(
     main = "stdout_json.py",
     deps = [
         "//consumers:consumers_base_python",
+        "//third_party/python:protobuf",
         "//api/proto:config",
         "//api/proto:engine",
         "//api/proto:issue",

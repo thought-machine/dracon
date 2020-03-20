@@ -14,7 +14,8 @@ pip_library(
     hashes=["eb641f83c54084dd1e5d02abbd6a88b905b4191a"],
     licences=["BSD 3-Clause"],
     visibility = ["PUBLIC"],
-    version="3.11.3"
+    version="3.11.3",
+    deps = [":six"]
 )
 
 pip_library(
@@ -24,5 +25,13 @@ pip_library(
     licences = ["MIT"],
     version = "40.4.3",
     visibility = ["PUBLIC"]
-
+)
+pip_library(
+    name = "six",
+    package_name = "six",
+    hashes = ["1555c64851feea9ec2b55a8540d4161302c9d744"],
+    licences = ["MIT"],
+    version = "1.14.0",
+    outs = ["six.py"],
+    visibility = ["PUBLIC"]
 )
