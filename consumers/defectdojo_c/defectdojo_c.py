@@ -5,6 +5,7 @@ from api.proto import engine_pb2
 from consumers.consumer import Consumer
 from third_party.python.defectdojo_api import defectdojo
 
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class DefectDojoConsumer(Consumer):
@@ -86,6 +87,7 @@ class DefectDojoConsumer(Consumer):
         if not finding.success:
             raise Exception(
                 "Couldn't communicate to DefectDojo error message: %s" % finding.message)
+        
 
     def send_results(self, collected_results: list, raw_issue: bool):
         """
