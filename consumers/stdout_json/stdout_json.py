@@ -82,7 +82,7 @@ def main():
         logger.info('Loading results from %s' % str(ec.pvc_location))
         collected_results, raw = ec.load_results()
         logger.info("gathered %s results"%len(collected_results))
-        logger.info("Reading raw: %s "%len(raw))
+        logger.info("Reading raw: %s "%raw)
     except SyntaxError as e:
         logger.error('Unable to load results from %s: ' % str(e))
         sys.exit(-1)
