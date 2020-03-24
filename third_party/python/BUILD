@@ -23,5 +23,4 @@ pip_library(
     licences = ["MIT"],
     version = "40.4.3",
     visibility = ["PUBLIC"]
-
 )
