@@ -48,9 +48,6 @@ class Consumer(ABC):
             for issue in raw_scan.issues:
                 logger.info('Issue: ' + str(issue))
 
-
-
-
     def load_files(self, protobuf, location):
         """Given a protobuf object and a filesystem location, attempts to load all *.pb
         files found in directories underneath the location into the protobuf object
