@@ -1,9 +1,8 @@
-import unittest
-import tempfile
 import shutil
+import tempfile
+import unittest
 
-from api.proto import engine_pb2
-from api.proto import issue_pb2
+from api.proto import engine_pb2, issue_pb2
 from consumers.consumer import Consumer
 from third_party.python.google.protobuf.timestamp_pb2 import Timestamp
 

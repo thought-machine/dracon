@@ -1,12 +1,10 @@
-import logging
-
-from abc import ABC, abstractmethod
-
 import copy
-
+import logging
+from abc import ABC, abstractmethod
 from pathlib import Path
-from third_party.python.google.protobuf.message import DecodeError
+
 from api.proto import engine_pb2
+from third_party.python.google.protobuf.message import DecodeError
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
