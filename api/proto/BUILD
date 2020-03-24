@@ -1,11 +1,9 @@
-
 proto_library(
     name = "config",
     srcs = ["config.proto"],
     languages = ["py"],
     visibility=["PUBLIC"],
 )
-
 
 proto_library(
     name = "engine",
@@ -24,4 +22,3 @@ proto_library(
     languages = ["py"],
     visibility=["PUBLIC"],
 )
-
