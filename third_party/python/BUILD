@@ -11,9 +11,9 @@ pip_library(
 pip_library(
     name = "protobuf",
     outs = ["google/protobuf"],
-    hashes=["eb641f83c54084dd1e5d02abbd6a88b905b4191a"],
-    licences=["BSD 3-Clause"],
-    version="3.11.3"
+    hashes = ["eb641f83c54084dd1e5d02abbd6a88b905b4191a"],
+    licences = ["BSD 3-Clause"],
+    version = "3.11.3"
 )
 
 pip_library(
