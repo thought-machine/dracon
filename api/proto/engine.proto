@@ -2,8 +2,8 @@ syntax = "proto3";
 package dracon.v1;
 option go_package = "v1";
 
-import "issue.proto";
-import "config.proto";
+import "api/proto/issue.proto";
+import "api/proto/config.proto";
 import "google/protobuf/timestamp.proto";
 
 /*
