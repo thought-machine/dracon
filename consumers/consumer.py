@@ -17,11 +17,12 @@ class Consumer(ABC):
     def __init__(self, config: dict):
         try:
             self.pvc_location = config['pvc_location']
-        except(KeyError):
+        except KeyError:
             logger.error('PVC location not provided')
             raise
 
-        logger.info('Instantiated Consumer class with results at ' + self.pvc_location)
+        logger.info('Instantiated Consumer class with results at %s',
+                    self.pvc_location)
 
     @abstractmethod
     def load_results(self):
@@ -46,7 +47,7 @@ class Consumer(ABC):
             scan_time = raw_scan.scan_info.scan_start_time.ToJsonString()
             logger.info('Scan: ' + raw_scan.tool_name + ' run at ' + scan_time)
             for issue in raw_scan.issues:
-                logger.info('Issue: ' + str(issue))
+                logger.info('Issue: %s', str(issue))
 
     def load_files(self, protobuf, location):
         """Given a protobuf object and a filesystem location, attempts to load all *.pb
@@ -62,19 +63,21 @@ class Consumer(ABC):
         logger.info('Searching for scan results')
         collected_files = []
 
-        for filename in  Path(location).glob('**/*.pb'):
-            logger.info("Found file %s" % filename)
-            with open(filename, "rb") as f:
+        for filename in Path(location).glob('**/*.pb'):
+            logger.info("Found file %s", filename)
+            with open(filename, "rb") as msg_file:
                 try:
-                    protobuf.ParseFromString(f.read())
+                    protobuf.ParseFromString(msg_file.read())
                     collected_files.append(copy.deepcopy(protobuf))
 
-                except DecodeError as e:
-                    logger.warning('Unable to parse file %s skipping because of: %s '%(filename,str(e)))
+                except DecodeError as decode_error:
+                    logger.warning('Unable to parse file %s skipping because of: %s',
+                                   filename, str(decode_error))
                     # Note: here skipping is important,
                     #  the results dir might have all sorts of protobuf messages that don't
                     #  match the type provided
         if len(collected_files) == 0:
-            raise SyntaxError('No valid results were found in the provided directory')
+            raise SyntaxError(
+                'No valid results were found in the provided directory')
 
         return collected_files

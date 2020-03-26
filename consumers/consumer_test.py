@@ -85,8 +85,9 @@ class TestConsumer(unittest.TestCase):
         with open(self.malformed, "wb") as f:
             f.write(malformed_proto)
 
-        print(self.tmp_root_dir,self.tmp_subdir,self.tmpfile,self.tmpfile2,self.malformed)
-  
+        print(self.tmp_root_dir, self.tmp_subdir,
+              self.tmpfile, self.tmpfile2, self.malformed)
+
     def tearDown(self):
         shutil.rmtree(self.tmp_root_dir)
 
@@ -111,14 +112,14 @@ class TestConsumer(unittest.TestCase):
         issue = raw_scan_result.issues.pop()
         self.assertEqual(issue.target, 'target.py:0')
 
- 
     def test_load_file_proto_read(self):
         '''Test we can load protos and read from them correctly
            Also ensures we handled malformed protobufs gracefully
         '''
         scan_result_proto = engine_pb2.LaunchToolResponse()
         cons = ExampleConsumer(self.config)
-        collected_results = cons.load_files(scan_result_proto, self.tmp_root_dir)
+        collected_results = cons.load_files(
+            scan_result_proto, self.tmp_root_dir)
         result = collected_results.pop()
 
         self.assertEqual(result.scan_info.scan_uuid,
@@ -128,8 +129,10 @@ class TestConsumer(unittest.TestCase):
         '''Check that the recursive file detection is working as expected'''
         scan_result_proto = engine_pb2.LaunchToolResponse()
         cons = ExampleConsumer(self.config)
-        collected_results = cons.load_files(scan_result_proto, self.tmp_root_dir)
+        collected_results = cons.load_files(
+            scan_result_proto, self.tmp_root_dir)
         self.assertEqual(len(collected_results), 2)
+
 
 if __name__ == '__main__':
     unittest.main()
