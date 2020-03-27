@@ -15,6 +15,13 @@ docker_image(
 )
 
 docker_image(
+    name = "dracon-base-python",
+    dockerfile = "Dockerfile-base-python",
+    image = "dracon-base-python",
+    visibility = ["PUBLIC"],
+)
+
+docker_image(
     name = "bandit",
     dockerfile = "Dockerfile-bandit",
     image = "dracon-tool-bandit",

@@ -13,3 +13,11 @@ default-docker-repo = index.docker.io/thoughtmachine
 
 [go]
 importpath = github.com/thought-machine/dracon
+
+[python]
+defaultinterpreter = python3
+moduledir = third_party.python
+usepypi = true
+
+[proto]
+pythondep = //third_party/python:protobuf
