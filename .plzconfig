@@ -15,7 +15,7 @@ default-docker-repo = index.docker.io/thoughtmachine
 importpath = github.com/thought-machine/dracon
 
 [python]
-defaultinterpreter = python3.7
+defaultinterpreter = python3
 moduledir = third_party.python
 usepypi = true
 
