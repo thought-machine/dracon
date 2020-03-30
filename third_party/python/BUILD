@@ -24,7 +24,6 @@ pip_library(
     hashes = ["aca2ec09a5db08878b8b10ad2e278edf8e2af570"],
     licences = ["MIT"],
     version = "40.4.3",
-    visibility = ["PUBLIC"]
 )
 
 pip_library(
@@ -34,7 +33,6 @@ pip_library(
     licences = ["MIT"],
     version = "1.14.0",
     outs = ["six.py"],
-    visibility = ["PUBLIC"]
 )
 
 pip_library(
@@ -48,26 +46,22 @@ pip_library(
 pip_library(
     name = "urllib3",
     hashes = ["ead88fe14444ae6b459bfd72d708b08bf063a801"],
-    visibility = ["PUBLIC"],
     version = "1.25.8",
 )
 pip_library(
     name = "certifi",
     hashes = ["aac49ec341265281fad7ab9216150710d42a1750"],
-    visibility = ["PUBLIC"],
     version = "2019.11.28",
 )
 pip_library(
     name = "chardet",
     hashes = ["2266861b95169c95b78f9c85b5d4465182a1b23a"],
-    visibility = ["PUBLIC"],
     version = "3.0.4",
 )
 
 pip_library(
     name = "idna",
     hashes = ["9c9e76222692feddd706449c59910c377ae8e589"],
-    visibility = ["PUBLIC"],
     version = "2.9",
 )
 pip_library(
@@ -76,5 +70,4 @@ pip_library(
     licences = ["MIT"],
     deps = [":requests"],
     version = "1.1.3",
-    visibility = ["PUBLIC"]
 )
