@@ -1,22 +1,24 @@
 import unittest
 import tempfile
 import shutil
+import logging
 
-from google.protobuf.timestamp_pb2 import Timestamp
+from third_party.python.google.protobuf.timestamp_pb2 import Timestamp
 from unittest import mock
 from consumers.stdout_json import stdout_json
-from gen import engine_pb2
-from gen import issue_pb2
-import logging
-from utils import test_utils
+from api.proto import engine_pb2
+from api.proto import issue_pb2
 
 logger = logging.getLogger(__name__)
 
 
+class Config:
+    pvc_location = '/tmp/'
+
 class TestJSONConsumer(unittest.TestCase):
     
     def setUp(self):    
-        self.config = test_utils.ConsumerMockConfig()
+        self.config = Config()
         scan_start_time = Timestamp()
         scan_start_time.FromJsonString("1991-01-01T00:00:00Z")
         scan_info = engine_pb2.ScanInfo(
