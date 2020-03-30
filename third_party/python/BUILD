@@ -36,7 +36,6 @@ pip_library(
 
 pip_library(
     name = "requests",
-    visibility = ["PUBLIC"],
     version = "2.23.0",
     hashes = ["c87bcd4b18ad82110fb615085f9bf7e79ce4f94a"],
     deps = [":urllib3",":chardet",":certifi",":idna"]
