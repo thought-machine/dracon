@@ -32,5 +32,41 @@ pip_library(
     hashes = ["1555c64851feea9ec2b55a8540d4161302c9d744"],
     licences = ["MIT"],
     version = "1.14.0",
-    outs = ["six.py"]
+    outs = ["six.py"],
+)
+
+pip_library(
+    name = "requests",
+    version = "2.23.0",
+    hashes = ["c87bcd4b18ad82110fb615085f9bf7e79ce4f94a"],
+    deps = [":urllib3",":chardet",":certifi",":idna"]
+)
+
+pip_library(
+    name = "urllib3",
+    hashes = ["ead88fe14444ae6b459bfd72d708b08bf063a801"],
+    version = "1.25.8",
+)
+pip_library(
+    name = "certifi",
+    hashes = ["aac49ec341265281fad7ab9216150710d42a1750"],
+    version = "2019.11.28",
+)
+pip_library(
+    name = "chardet",
+    hashes = ["2266861b95169c95b78f9c85b5d4465182a1b23a"],
+    version = "3.0.4",
+)
+
+pip_library(
+    name = "idna",
+    hashes = ["9c9e76222692feddd706449c59910c377ae8e589"],
+    version = "2.9",
+)
+pip_library(
+    name = "defectdojo_api",
+    hashes = ["0d6908b24baf50e193fef2abdc79a777c4608e3d"],
+    licences = ["MIT"],
+    deps = [":requests"],
+    version = "1.1.3",
 )
