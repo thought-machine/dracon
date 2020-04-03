@@ -67,8 +67,9 @@ func WriteDraconOut(
 		cleanIssues = append(cleanIssues, iss)
 		log.Printf("found issue: %+v\n", iss)
 	}
-
-	return putil.WriteResults(toolName, cleanIssues, outFile)
+	scanStartTime := os.Getenv("EnvDraconStartTime")
+	scanUUUID := os.Getenv("EnvDraconScanID")
+	return putil.WriteResults(toolName, cleanIssues, outFile, scanUUUID, scanStartTime)
 }
 
 func getSource() string {
