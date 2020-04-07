@@ -1,27 +1,179 @@
 package main
 
 import (
+	"encoding/xml"
+	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
+	"strconv"
 
 	v1 "github.com/thought-machine/dracon/pkg/genproto/v1"
 	"github.com/thought-machine/dracon/producers"
 )
 
+type Jar struct {
+	XMLName xml.Name `xml:"Jar"`
+}
+
+type Project struct {
+	XMLName xml.Name `xml:"Project"`
+	Jar     *Jar     `xml:"Jar"`
+}
+
+type Method struct {
+	XMLName    xml.Name     `xml:"Method"`
+	Classname  string       `xml:"classname,attr"`
+	Name       string       `xml:"name,attr"`
+	Signature  string       `xml:"signature,attr"`
+	IsStatic   string       `xml:"isStatic,attr"`
+	SourceLine []SourceLine `xml:"SourceLine"`
+}
+type SourceLine struct {
+	XMLName       xml.Name `xml:"SourceLine"`
+	Classname     string   `xml:"classname,attr"`
+	Start         string   `xml:"start,attr"`
+	End           string   `xml:"end,attr"`
+	StartBytecode string   `xml:"startBytecode,attr"`
+	EndBytecode   string   `xml:"endBytecode,attr"`
+	Sourcefile    string   `xml:"sourcefile,attr"`
+	Sourcepath    string   `xml:"sourcepath,attr"`
+	Role          string   `xml:"role,attr"`
+}
+type Class struct {
+	XMLName    xml.Name     `xml:"Class"`
+	Classname  string       `xml:"classname,attr"`
+	Role       string       `xml:"role,attr"`
+	SourceLine []SourceLine `xml:"SourceLine"`
+}
+type Field struct {
+	XMLName    xml.Name     `xml:"Class"`
+	Classname  string       `xml:"classname,attr"`
+	SourceLine []SourceLine `xml:"SourceLine"`
+}
+type BugInstance struct {
+	XMLName      xml.Name     `xml:"BugInstance"`
+	Class        []Class      `xml:"Class"`
+	Method       []Method     `xml:"Method"`
+	SourceLine   []SourceLine `xml:"SourceLine"`
+	Field        []Field      `xml:"Field"`
+	LongMessage  string       `xml:"LongMessage"`
+	ShortMessage string       `xml:"ShortMessage"`
+	Type         string       `xml:"type,attr"`
+	Priority     string       `xml:"priority,attr"`
+	Rank         string       `xml:"rank,attr"`
+	Abbrev       string       `xml:"abbrev,attr"`
+	Category     string       `xml:"category,attr"`
+}
+type BugCollection struct {
+	XMLName     xml.Name      `xml:"BugCollection"`
+	Project     *Project      `xml:"Project"`
+	BugInstance []BugInstance `xml:"BugInstance"`
+}
+
+func loadXML(filename string) ([]byte, error) {
+	xmlFile, err := os.Open(filename)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer xmlFile.Close()
+	return ioutil.ReadAll(xmlFile)
+
+}
+func readXML(xmlFile []byte) []*v1.Issue {
+	/**
+	Reads a file containing spotbugs XML results
+	and converts the results in the "SECURITY" category
+	into an array Dracon issues
+	*/
+
+	output := []*v1.Issue{}	
+	var bugs BugCollection
+	if len(xmlFile) == 0{
+		return output
+	}
+	xml.Unmarshal(xmlFile, &bugs)
+	// fmt.Printf("%s",xmlFile)
+	fmt.Println("Instances ",len(bugs.BugInstance))
+	fmt.Println(bugs)
+	for _, instance := range(bugs.BugInstance){
+		//BUG!!! the following won't parse the case where buginstance just contains sourcelines -- i think it's fixed
+		// instance := bugs.BugInstance[i]
+		fmt.Println("analyzing instance "+instance.Abbrev)
+		for line := 0; line < len(instance.SourceLine); line++ {
+			fmt.Println("found line "+instance.SourceLine[line].Sourcepath)
+			output = append(output, parseLine(instance, instance.SourceLine[line]))
+		}
+		for field := 0; field < len(instance.Field); field++ {
+			for line := 0; line < len(instance.Method[field].SourceLine); line++ {
+				fmt.Println("found field "+instance.Method[field].SourceLine[line].Sourcepath)
+				output = append(output, parseLine(instance, instance.Field[field].SourceLine[line]))
+			}
+		}
+		for method := 0; method < len(instance.Method); method++ {
+			for line := 0; line < len(instance.Method[method].SourceLine); line++ {
+				fmt.Println("found method "+instance.Method[method].SourceLine[line].Sourcepath)
+				output = append(output, parseLine(instance, instance.Method[method].SourceLine[line]))
+			}
+		}
+		for j := 0; j < len(instance.Class); j++ {
+			cls := instance.Class[j]
+			for line := 0; line < len(cls.SourceLine); line++ {
+				sourceLine := cls.SourceLine[line]
+				fmt.Println("found class "+sourceLine.Sourcepath)
+				output = append(output, parseLine(instance, sourceLine))
+			}
+		}
+
+	}
+	return output
+}
+func parseLine(instance BugInstance, sourceLine SourceLine) *v1.Issue {
+	return &v1.Issue{
+		Target:      fmt.Sprintf("%s:%s-%s", sourceLine.Sourcepath, sourceLine.Start, sourceLine.End),
+		Type:        instance.Type,
+		Severity:    normalizeRank(instance.Rank),
+		Cvss:        0.0,
+		Confidence:  v1.Confidence(v1.Confidence_value[fmt.Sprintf("CONFIDENCE_%s", "MEDIUM")]),
+		Description: instance.LongMessage,
+		Title:       instance.ShortMessage,
+	}
+}
+func normalizeRank(rank string) v1.Severity {
+	/*
+			Normalizes the rank according to the following table
+			Scariest: ranked between 1 & 4.
+		Scary: ranked between 5 & 9.
+		Troubling: ranked between 10 & 14.
+		Of concern: ranked between 15 & 20.
+	*/
+	intRank, err := strconv.ParseInt(rank, 10, 64)
+	if err != nil {
+		fmt.Println(err)
+	}
+	if intRank > 1 && intRank < 4 {
+		return v1.Severity_SEVERITY_CRITICAL
+	} else if intRank > 5 && intRank < 9 {
+		return v1.Severity_SEVERITY_HIGH
+	} else if intRank > 10 && intRank < 14 {
+		return v1.Severity_SEVERITY_MEDIUM
+	} else if intRank > 15 && intRank < 20 {
+		return v1.Severity_SEVERITY_LOW
+	}
+	return v1.Severity_SEVERITY_INFO
+}
+
 func main() {
 	if err := producers.ParseFlags(); err != nil {
 		log.Fatal(err)
 	}
-
-	var results SpotBugsOut
+	xmlByteVal, _ := loadXML(producers.InResults)
+	// var results SpotBugsOut
 	// TODO(vj): XML parse and implement
-	if err := producers.ParseInFileJSON(&results); err != nil {
-		log.Fatal(err)
-	}
-
-	issues := []*v1.Issue{}
-	for _, res := range results.Issues {
-		issues = append(issues, parseResult(&res))
-	}
+	issues := readXML(xmlByteVal)
+	// if err := producers.ParseInFileJSON(&results); err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	if err := producers.WriteDraconOut(
 		"spotbugs",
@@ -29,34 +181,4 @@ func main() {
 	); err != nil {
 		log.Fatal(err)
 	}
-}
-
-func parseResult(r *SpotBugsIssue) *v1.Issue {
-	return &v1.Issue{
-		// Target:      fmt.Sprintf("%s:%v", r.File, r.Line),
-		// Type:        r.RuleID,
-		// Title:       r.Code,
-		// Severity:    v1.Severity(v1.Severity_value[fmt.Sprintf("SEVERITY_%s", r.Severity)]),
-		// Cvss:        0.0,
-		// Confidence:  v1.Confidence(v1.Confidence_value[fmt.Sprintf("CONFIDENCE_%s", r.Confidence)]),
-		// Description: r.Details,
-	}
-}
-
-// SpotBugsOut represents the output of a SpotBugs run
-type SpotBugsOut struct {
-	Issues []SpotBugsIssue `json:"Issues"`
-	// Stats  SpotBugsStats   `json:"Stats"`
-}
-
-// SpotBugsIssue represents a SpotBugs Result
-type SpotBugsIssue struct {
-	Severity   string `json:"severity"`
-	Confidence string `json:"confidence"`
-	RuleID     string `json:"rule_id"`
-	Details    string `json:"details"`
-	File       string `json:"file"`
-	Code       string `json:"code"`
-	Line       string `json:"line"`
-	Column     string `json:"column"`
 }

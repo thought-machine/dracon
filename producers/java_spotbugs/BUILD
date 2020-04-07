@@ -10,6 +10,18 @@ go_binary(
         "//producers",
     ],
 )
+go_test(
+    name = "java_spotbugs_test",
+    srcs = [
+        "main.go",
+        "main_test.go",
+    ],
+    deps = [
+        "//pkg/genproto/v1",
+        "//producers",
+        "//third_party/go:stretchr_testify",
+    ],
+)
 
 docker_image(
     name = "dracon-producer-java_spotbugs",
