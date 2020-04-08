@@ -16,10 +16,10 @@ func TestWriteDraconOut(t *testing.T) {
 	assert.Nil(t, err)
 	baseTime := time.Now().UTC()
 	timestamp := baseTime.Format(time.RFC3339)
-	os.Setenv("EnvDraconStartTime", timestamp)
-	os.Setenv("EnvDraconScanID", "ab3d3290-cd9f-482c-97dc-ec48bdfcc4de")
+	os.Setenv(EnvDraconStartTime, timestamp)
+	os.Setenv(EnvDraconScanID, "ab3d3290-cd9f-482c-97dc-ec48bdfcc4de")
 	defer os.Remove(tmpFile.Name())
-	outFile = tmpFile.Name()
+	OutFile = tmpFile.Name()
 	err = WriteDraconOut(
 		"dracon-test",
 		[]*v1.Issue{

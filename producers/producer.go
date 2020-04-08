@@ -11,30 +11,37 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	v1 "github.com/thought-machine/dracon/pkg/genproto/v1"
 	"github.com/thought-machine/dracon/pkg/putil"
 )
 
 var (
-	inResults string
-	outFile   string
+	InResults string
+	OutFile   string
 )
 
-const sourceDir = "/dracon/source"
+const (
+	sourceDir = "/dracon/source"
 
+	// EnvDraconStartTime Start Time of Dracon Scan in RFC3339
+	EnvDraconStartTime = "DRACON_SCAN_TIME"
+	// EnvDraconScanID the ID of the dracon scan
+	EnvDraconScanID = "DRACON_SCAN_ID"
+)
 func init() {
-	flag.StringVar(&inResults, "in", "", "")
-	flag.StringVar(&outFile, "out", "", "")
+	flag.StringVar(&InResults, "in", "", "")
+	flag.StringVar(&OutFile, "out", "", "")
 }
 
 // ParseFlags will parse the input flags for the producer and perform simple validation
 func ParseFlags() error {
 	flag.Parse()
-	if len(inResults) < 0 {
+	if len(InResults) < 0 {
 		return fmt.Errorf("in is undefined")
 	}
-	if len(outFile) < 0 {
+	if len(OutFile) < 0 {
 		return fmt.Errorf("out is undefined")
 	}
 	return nil
@@ -42,7 +49,7 @@ func ParseFlags() error {
 
 // ParseInFileJSON provides a generic method to parse a tool's JSON results into a given struct
 func ParseInFileJSON(structure interface{}) error {
-	inBytes, err := ioutil.ReadFile(inResults)
+	inBytes, err := ioutil.ReadFile(InResults)
 	if err != nil {
 		return err
 	}
@@ -67,9 +74,12 @@ func WriteDraconOut(
 		cleanIssues = append(cleanIssues, iss)
 		log.Printf("found issue: %+v\n", iss)
 	}
-	scanStartTime := os.Getenv("EnvDraconStartTime")
-	scanUUUID := os.Getenv("EnvDraconScanID")
-	return putil.WriteResults(toolName, cleanIssues, outFile, scanUUUID, scanStartTime)
+	scanStartTime := os.Getenv(EnvDraconStartTime)
+	if scanStartTime == "" {
+		scanStartTime = time.Now().UTC().Format(time.RFC3339)
+	}
+	scanUUUID := os.Getenv(EnvDraconScanID)
+	return putil.WriteResults(toolName, cleanIssues, OutFile, scanUUUID, scanStartTime)
 }
 
 func getSource() string {
