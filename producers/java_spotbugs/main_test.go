@@ -1,87 +1,87 @@
 package main
 
 import (
-  "testing"
-  "fmt"
+	"testing"
+
+	proto "github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/assert"
 	v1 "github.com/thought-machine/dracon/pkg/genproto/v1"
 )
 
-
 func TestReadXML(t *testing.T) {
-  var bytes []byte
+	var bytes []byte
 	issues := readXML(bytes)
-	assert.Equal(t, len(issues),0)
+	assert.Equal(t, len(issues), 0)
 
 	issues = readXML([]byte(exampleOutput))
 
-  expectedIssues := make([]*v1.Issue,9)
-  iss := &v1.Issue{
-		Target:      "com/h3xstream/findsecbugs/injection/BasicInjectionDetector.java:48-188",
+	expectedIssues := make([]*v1.Issue, 8)
+	classIssue := &v1.Issue{
+		Target:      "com/h3xstream/findsecbugs/injection/BasicInjectionDetector.ClassLine.java:48-188",
 		Type:        "PATH_TRAVERSAL_IN",
 		Title:       "Potential Path Traversal (file read)",
 		Severity:    v1.Severity_SEVERITY_MEDIUM,
 		Cvss:        0.0,
 		Confidence:  v1.Confidence_CONFIDENCE_MEDIUM,
 		Description: "This API (java/io/File.<init>(Ljava/lang/String;)V) reads a file whose location might be specified by user input",
-  }
-  expectedIssues[0] = iss
-  methodIssue := iss
-  methodIssue.Target = "com/h3xstream/findsecbugs/injection/BasicInjectionDetector.java:155-161"
-  expectedIssues[1] = methodIssue
+	}
+	expectedIssues[0] = classIssue
+	methodIssue := proto.Clone(classIssue).(*v1.Issue)
+	methodIssue.Target = "com/h3xstream/findsecbugs/injection/BasicInjectionDetector.MethodLine.java:155-161"
+	expectedIssues[1] = methodIssue
 
-  sourceIssue0 := methodIssue
-  sourceIssue0.Target = "com/h3xstream/findsecbugs/injection/BasicInjectionDetector.java:155-155"
-  expectedIssues[2] = sourceIssue0
+	sourceIssue0 := proto.Clone(methodIssue).(*v1.Issue)
+	sourceIssue0.Target = "com/h3xstream/findsecbugs/injection/BasicInjectionDetector.SourceLine0.java:155-155"
+	expectedIssues[2] = sourceIssue0
 
-  sourceIssue1 := sourceIssue0
-  sourceIssue1.Target = "com/h3xstream/findsecbugs/injection/BasicInjectionDetector.java:53-53"
-  expectedIssues[3] = sourceIssue1
+	sourceIssue1 := proto.Clone(sourceIssue0).(*v1.Issue)
+	sourceIssue1.Target = "com/h3xstream/findsecbugs/FindSecBugsGlobalConfig.SourceLine1.java:53-53"
+	expectedIssues[3] = sourceIssue1
 
-  iss = &v1.Issue{
-		Target:      "com/h3xstream/findsecbugs/injection/InjectionPoint.java:26-52",
+	classIssue = &v1.Issue{
+		Target:      "com/h3xstream/findsecbugs/injection/InjectionPoint.ClassLine.java:26-52",
 		Type:        "EI_EXPOSE_REP",
 		Title:       "May expose internal representation by returning reference to mutable object",
 		Severity:    v1.Severity_SEVERITY_LOW,
 		Cvss:        0.0,
 		Confidence:  v1.Confidence_CONFIDENCE_MEDIUM,
 		Description: "com.h3xstream.findsecbugs.injection.InjectionPoint.getInjectableArguments() may expose internal representation by returning InjectionPoint.injectableArguments",
-  }
-  expectedIssues[5] = iss
+	}
+	expectedIssues[4] = classIssue
 
-  methodIssue = iss
-  methodIssue.Target = "com/h3xstream/findsecbugs/injection/InjectionPoint.java:39-39"
-  expectedIssues[6] = methodIssue
+	methodIssue1 := proto.Clone(classIssue).(*v1.Issue)
+	methodIssue1.Target = "com/h3xstream/findsecbugs/injection/InjectionPoint.MethodLine.java:39-39"
+	expectedIssues[5] = methodIssue1
 
-  fieldIssue := iss
-  fieldIssue.Target = "com/h3xstream/findsecbugs/injection/InjectionPoint.java:"
-  expectedIssues[7] = fieldIssue
+	fieldIssue := proto.Clone(classIssue).(*v1.Issue)
+	fieldIssue.Target = "com/h3xstream/findsecbugs/injection/InjectionPoint.FieldLine.java:-"
+	expectedIssues[6] = fieldIssue
 
-  sourceIssue0 = methodIssue
-  sourceIssue0.Target = "com/h3xstream/findsecbugs/injection/InjectionPoint.java:39-39"
-  expectedIssues[8] = sourceIssue0
-  
-  found := 0
-  for issu := range(issues){
-    fmt.Println(issues[issu])
-  }
-  for i:=0; i<len(issues); i++{
-    for j:=0; j<len(expectedIssues); j++{
-      if expectedIssues[i].Target == issues[i].Target{
-        found++
-        // assert.EqualValues(t, expectedIssues[i].Target, issues[i].Target)
-        assert.EqualValues(t, expectedIssues[i].Type, issues[i].Type)
-        assert.EqualValues(t, expectedIssues[i].Title, issues[i].Title)
-        assert.EqualValues(t, expectedIssues[i].Severity, issues[i].Severity)
-        assert.EqualValues(t, expectedIssues[i].Cvss, issues[i].Cvss)
-        assert.EqualValues(t, expectedIssues[i].Confidence, issues[i].Confidence)
-        assert.EqualValues(t, expectedIssues[i].Description, issues[i].Description)
-        break;
-    }
-  }}
-  assert.Equal(t, len(expectedIssues),len(issues))
-  assert.Equal(t,found,len(issues))
+	sourceIssue2 := proto.Clone(classIssue).(*v1.Issue)
+	sourceIssue2.Target = "com/h3xstream/findsecbugs/injection/InjectionPoint.SourceLine1.java:39-40"
+	expectedIssues[7] = sourceIssue2
+
+	found := 0
+	assert.Equal(t, len(expectedIssues), len(issues))
+	for _, issue := range issues {
+		singleMatch := 0
+		for _, expected := range expectedIssues {
+			if expected.Target == issue.Target {
+				singleMatch++
+				found++
+				assert.Equal(t, singleMatch, 1)
+				assert.EqualValues(t, expected.Type, issue.Type)
+				assert.EqualValues(t, expected.Title, issue.Title)
+				assert.EqualValues(t, expected.Severity, issue.Severity)
+				assert.EqualValues(t, expected.Cvss, issue.Cvss)
+				assert.EqualValues(t, expected.Confidence, issue.Confidence)
+				assert.EqualValues(t, expected.Description, issue.Description)
+			}
+		}
+	}
+	assert.Equal(t, found, len(issues))
 }
+
 const exampleOutput = `
 <?xml version="1.0" encoding="UTF-8"?>
 
@@ -93,19 +93,19 @@ const exampleOutput = `
 <ShortMessage>Potential Path Traversal (file read)</ShortMessage>
 <LongMessage>This API (java/io/File.&lt;init&gt;(Ljava/lang/String;)V) reads a file whose location might be specified by user input</LongMessage>
 <Class classname="com.h3xstream.findsecbugs.injection.BasicInjectionDetector" primary="true">
-  <SourceLine classname="com.h3xstream.findsecbugs.injection.BasicInjectionDetector0" start="48" end="188" sourcefile="BasicInjectionDetector.java" 
-  sourcepath="com/h3xstream/findsecbugs/injection/BasicInjectionDetector0.java">
+  <SourceLine classname="com.h3xstream.findsecbugs.injection.BasicInjectionDetector" start="48" end="188" sourcefile="BasicInjectionDetector.java" 
+  sourcepath="com/h3xstream/findsecbugs/injection/BasicInjectionDetector.ClassLine.java">
 	<Message>At BasicInjectionDetector.java:[lines 48-188]</Message>
   </SourceLine>
   <Message>In class com.h3xstream.findsecbugs.injection.BasicInjectionDetector</Message>
 </Class>
 <Method classname="com.h3xstream.findsecbugs.injection.BasicInjectionDetector" name="loadCustomSinks" signature="(Ljava/lang/String;Ljava/lang/String;)V" isStatic="false" primary="true">
   <SourceLine classname="com.h3xstream.findsecbugs.injection.BasicInjectionDetector" start="155" end="161" startBytecode="0" endBytecode="460" 
-  sourcefile="BasicInjectionDetector.java" sourcepath="com/h3xstream/findsecbugs/injection/BasicInjectionDetector.java"/>
+  sourcefile="BasicInjectionDetector.java" sourcepath="com/h3xstream/findsecbugs/injection/BasicInjectionDetector.MethodLine.java"/>
   <Message>In method com.h3xstream.findsecbugs.injection.BasicInjectionDetector.loadCustomSinks(String, String)</Message>
 </Method>
-<SourceLine classname="com.h3xstream.findsecbugs.injection.BasicInjectionDetector1" primary="true" start="155" end="155" startBytecode="5" endBytecode="5" 
-sourcefile="BasicInjectionDetector.java" sourcepath="com/h3xstream/findsecbugs/injection/BasicInjectionDetector1.java">
+<SourceLine classname="com.h3xstream.findsecbugs.injection.BasicInjectionDetector" primary="true" start="155" end="155" startBytecode="5" endBytecode="5" 
+sourcefile="BasicInjectionDetector.java" sourcepath="com/h3xstream/findsecbugs/injection/BasicInjectionDetector.SourceLine0.java">
   <Message>At BasicInjectionDetector.java:[line 155]</Message>
 </SourceLine>
 <String value="java/io/File.&lt;init&gt;(Ljava/lang/String;)V" role="Sink method">
@@ -118,7 +118,7 @@ sourcefile="BasicInjectionDetector.java" sourcepath="com/h3xstream/findsecbugs/i
   <Message>Unknown source com/h3xstream/findsecbugs/injection/BasicInjectionDetector.loadCustomSinks(Ljava/lang/String;Ljava/lang/String;)V parameter 1</Message>
 </String>
 <SourceLine classname="com.h3xstream.findsecbugs.FindSecBugsGlobalConfig" start="53" end="53" startBytecode="1" 
-endBytecode="1" sourcefile="FindSecBugsGlobalConfig.java" sourcepath="com/h3xstream/findsecbugs/FindSecBugsGlobalConfig.java">
+endBytecode="1" sourcefile="FindSecBugsGlobalConfig.java" sourcepath="com/h3xstream/findsecbugs/FindSecBugsGlobalConfig.SourceLine1.java">
   <Message>At FindSecBugsGlobalConfig.java:[line 53]</Message>
 </SourceLine>
 </BugInstance>
@@ -127,24 +127,25 @@ endBytecode="1" sourcefile="FindSecBugsGlobalConfig.java" sourcepath="com/h3xstr
 <LongMessage>com.h3xstream.findsecbugs.injection.InjectionPoint.getInjectableArguments() may expose internal representation by returning InjectionPoint.injectableArguments</LongMessage>
 <Class classname="com.h3xstream.findsecbugs.injection.InjectionPoint" primary="true">
   <SourceLine classname="com.h3xstream.findsecbugs.injection.InjectionPoint0" start="26" end="52" sourcefile="InjectionPoint.java" 
-  sourcepath="com/h3xstream/findsecbugs/injection/InjectionPoint1.java">
+  sourcepath="com/h3xstream/findsecbugs/injection/InjectionPoint.ClassLine.java">
 	<Message>At InjectionPoint.java:[lines 26-52]</Message>
   </SourceLine>
   <Message>In class com.h3xstream.findsecbugs.injection.InjectionPoint</Message>
 </Class>
 <Method classname="com.h3xstream.findsecbugs.injection.InjectionPoint1" name="getInjectableArguments" signature="()[I" isStatic="false" primary="true">
-  <SourceLine classname="com.h3xstream.findsecbugs.injection.InjectionPoint" start="39" end="39" startBytecode="0" endBytecode="46" sourcefile="InjectionPoint.java" sourcepath="com/h3xstream/findsecbugs/injection/InjectionPoint.java"/>
+  <SourceLine classname="com.h3xstream.findsecbugs.injection.InjectionPoint" start="39" end="39" startBytecode="0" endBytecode="46" 
+  sourcefile="InjectionPoint.java" sourcepath="com/h3xstream/findsecbugs/injection/InjectionPoint.MethodLine.java"/>
   <Message>In method com.h3xstream.findsecbugs.injection.InjectionPoint.getInjectableArguments()</Message>
 </Method>
 <Field classname="com.h3xstream.findsecbugs.injection.InjectionPoint" name="injectableArguments" signature="[I" isStatic="false" primary="true">
-  <SourceLine classname="com.h3xstream.findsecbugs.injection.InjectionPoint2" sourcefile="InjectionPoint.java" 
-  sourcepath="com/h3xstream/findsecbugs/injection/InjectionPoint2.java">
+  <SourceLine classname="com.h3xstream.findsecbugs.injection.InjectionPoint" sourcefile="InjectionPoint.java" 
+  sourcepath="com/h3xstream/findsecbugs/injection/InjectionPoint.FieldLine.java">
 	<Message>In InjectionPoint.java</Message>
   </SourceLine>
   <Message>Field com.h3xstream.findsecbugs.injection.InjectionPoint.injectableArguments</Message>
 </Field>
-<SourceLine classname="com.h3xstream.findsecbugs.injection.InjectionPoint3" primary="true" start="39" end="39" startBytecode="4"
- endBytecode="4" sourcefile="InjectionPoint.java" sourcepath="com/h3xstream/findsecbugs/injection/InjectionPoint3.java">
+<SourceLine classname="com.h3xstream.findsecbugs.injection.InjectionPoint3" primary="true" start="39" end="40" startBytecode="4"
+ endBytecode="4" sourcefile="InjectionPoint.java" sourcepath="com/h3xstream/findsecbugs/injection/InjectionPoint.SourceLine1.java">
   <Message>At InjectionPoint.java:[line 39]</Message>
 </SourceLine>
 </BugInstance>

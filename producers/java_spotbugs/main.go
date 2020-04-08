@@ -47,7 +47,7 @@ type Class struct {
 	SourceLine []SourceLine `xml:"SourceLine"`
 }
 type Field struct {
-	XMLName    xml.Name     `xml:"Class"`
+	XMLName    xml.Name     `xml:"Field"`
 	Classname  string       `xml:"classname,attr"`
 	SourceLine []SourceLine `xml:"SourceLine"`
 }
@@ -93,35 +93,28 @@ func readXML(xmlFile []byte) []*v1.Issue {
 		return output
 	}
 	xml.Unmarshal(xmlFile, &bugs)
-	// fmt.Printf("%s",xmlFile)
-	fmt.Println("Instances ",len(bugs.BugInstance))
-	fmt.Println(bugs)
 	for _, instance := range(bugs.BugInstance){
-		//BUG!!! the following won't parse the case where buginstance just contains sourcelines -- i think it's fixed
-		// instance := bugs.BugInstance[i]
-		fmt.Println("analyzing instance "+instance.Abbrev)
-		for line := 0; line < len(instance.SourceLine); line++ {
-			fmt.Println("found line "+instance.SourceLine[line].Sourcepath)
-			output = append(output, parseLine(instance, instance.SourceLine[line]))
+
+		// parse standalone SourceLine elements
+		for _, line :=range(instance.SourceLine){
+			output = append(output, parseLine(instance, line))
 		}
-		for field := 0; field < len(instance.Field); field++ {
-			for line := 0; line < len(instance.Method[field].SourceLine); line++ {
-				fmt.Println("found field "+instance.Method[field].SourceLine[line].Sourcepath)
-				output = append(output, parseLine(instance, instance.Field[field].SourceLine[line]))
+		// parse SourceLines in Field elements
+		for _,field := range(instance.Field){
+			for _,line := range(field.SourceLine){
+				output = append(output, parseLine(instance, line))
 			}
 		}
-		for method := 0; method < len(instance.Method); method++ {
-			for line := 0; line < len(instance.Method[method].SourceLine); line++ {
-				fmt.Println("found method "+instance.Method[method].SourceLine[line].Sourcepath)
-				output = append(output, parseLine(instance, instance.Method[method].SourceLine[line]))
+		// parse SourceLines in Method elements
+		for _,method := range(instance.Method) {
+			for _,line := range(method.SourceLine) {
+				output = append(output, parseLine(instance, line))
 			}
 		}
-		for j := 0; j < len(instance.Class); j++ {
-			cls := instance.Class[j]
-			for line := 0; line < len(cls.SourceLine); line++ {
-				sourceLine := cls.SourceLine[line]
-				fmt.Println("found class "+sourceLine.Sourcepath)
-				output = append(output, parseLine(instance, sourceLine))
+		//parse SourceLines in Class elements
+		for _,cls := range(instance.Class){
+			for _,line := range(cls.SourceLine){
+				output = append(output, parseLine(instance, line))
 			}
 		}
 
@@ -168,13 +161,7 @@ func main() {
 		log.Fatal(err)
 	}
 	xmlByteVal, _ := loadXML(producers.InResults)
-	// var results SpotBugsOut
-	// TODO(vj): XML parse and implement
 	issues := readXML(xmlByteVal)
-	// if err := producers.ParseInFileJSON(&results); err != nil {
-	// 	log.Fatal(err)
-	// }
-
 	if err := producers.WriteDraconOut(
 		"spotbugs",
 		issues,
