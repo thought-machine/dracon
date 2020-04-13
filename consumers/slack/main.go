@@ -15,48 +15,21 @@ import (
 	v1 "github.com/thought-machine/dracon/pkg/genproto/v1"
 )
 
-var (
-	webhook     string
-	longFormtat bool
-)
-
-func init() {
-	flag.StringVar(&webhook, "webhook", "", "the webhook to push results to")
-	flag.BoolVar(&longFormtat, "long", true, "post the full results to webhook, not just metrics")
+// HTTPClient interface
+type HTTPClient interface {
+	Do(req *http.Request) (*http.Response, error)
 }
 
-func parseFlags() error {
-	if err := consumers.ParseFlags(); err != nil {
-		return err
-	}
-	if len(webhook) < 1 {
-		return fmt.Errorf("webhook is undefined")
-	}
-	return nil
-}
-
-func countRawMessages(responses []*v1.LaunchToolResponse) int {
-	result := 0
-	for _, res := range responses {
-		result += len(res.GetIssues())
-	}
-	return result
-}
-
-func countEnrichedMessages(responses []*v1.EnrichedLaunchToolResponse) int {
-	result := 0
-	for _, res := range responses {
-		result += len(res.GetIssues())
-	}
-	return result
-}
-func pushMetrics(issuesNo int, scanStartTime time.Time) {
-	message := fmt.Sprintf("Dracon Scan started on %s has been completed with %s issues\n", scanStartTime, issuesNo)
-	push([]byte(message))
+type Consumer struct {
+	Client     HTTPClient
+	Webhook    string
+	LongFormat bool
 }
 
 func main() {
-	if err := consumers.ParseFlags(); err != nil {
+	var cons = &Consumer{}
+
+	if err := cons.parseFlags(); err != nil {
 		log.Fatal(err)
 	}
 
@@ -65,45 +38,33 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		if longFormtat == false {
-			scanStartTime, _ := ptypes.Timestamp(responses[0].GetScanInfo().GetScanStartTime())
-			pushMetrics(countRawMessages(responses), scanStartTime)
-			return
-		}
-		for _, res := range responses {
-			scanStartTime, _ := ptypes.Timestamp(res.GetScanInfo().GetScanStartTime())
-			for _, iss := range res.GetIssues() {
-				b, err := getRawIssue(scanStartTime, res, iss)
-				if err != nil {
-					log.Fatal(err)
-				}
-				push(b)
-			}
-		}
+		cons.processRawMessages(responses)
 	} else {
 		responses, err := consumers.LoadEnrichedToolResponse()
 		if err != nil {
 			log.Fatal(err)
 		}
-		if longFormtat == false {
-			scanStartTime, _ := ptypes.Timestamp(responses[0].GetOriginalResults().GetScanInfo().GetScanStartTime())
-			pushMetrics(countEnrichedMessages(responses), scanStartTime)
-			return
-		}
-		for _, res := range responses {
-			scanStartTime, _ := ptypes.Timestamp(res.GetOriginalResults().GetScanInfo().GetScanStartTime())
-			for _, iss := range res.GetIssues() {
-				b, err := getEnrichedIssue(scanStartTime, res, iss)
-				if err != nil {
-					log.Fatal(err)
-				}
-				push(b)
-			}
-		}
+		cons.processEnrichedMessages(responses)
 	}
 }
 
-func getRawIssue(scanStartTime time.Time, res *v1.LaunchToolResponse, iss *v1.Issue) ([]byte, error) {
+func (c *Consumer) init() {
+	flag.StringVar(&c.Webhook, "Webhook", "", "the Webhook to push results to")
+	flag.BoolVar(&c.LongFormat, "long", true, "post the full results to Webhook, not just metrics")
+	c.Client = &http.Client{}
+}
+
+func (c *Consumer) parseFlags() error {
+	if err := consumers.ParseFlags(); err != nil {
+		return err
+	}
+	if len(c.Webhook) < 1 {
+		return fmt.Errorf("Webhook is undefined")
+	}
+	return nil
+}
+
+func (c *Consumer) getRawIssue(scanStartTime time.Time, res *v1.LaunchToolResponse, iss *v1.Issue) ([]byte, error) {
 	jBytes, err := json.Marshal(&fullDocument{
 		ScanStartTime: scanStartTime,
 		ScanID:        res.GetScanInfo().GetScanUuid(),
@@ -125,7 +86,7 @@ func getRawIssue(scanStartTime time.Time, res *v1.LaunchToolResponse, iss *v1.Is
 	return jBytes, nil
 }
 
-func getEnrichedIssue(scanStartTime time.Time, res *v1.EnrichedLaunchToolResponse, iss *v1.EnrichedIssue) ([]byte, error) {
+func (c *Consumer) getEnrichedIssue(scanStartTime time.Time, res *v1.EnrichedLaunchToolResponse, iss *v1.EnrichedIssue) ([]byte, error) {
 	firstSeenTime, _ := ptypes.Timestamp(iss.GetFirstSeen())
 	jBytes, err := json.Marshal(&fullDocument{
 		ScanStartTime: scanStartTime,
@@ -164,26 +125,85 @@ type fullDocument struct {
 	FalsePositive bool          `json:"false_positive"`
 }
 
-func push(b []byte) error {
+func (c *Consumer) processRawMessages(responses []*v1.LaunchToolResponse) {
+	if c.LongFormat == false {
+		scanStartTime, _ := ptypes.Timestamp(responses[0].GetScanInfo().GetScanStartTime())
+		c.pushMetrics(responses[0].GetScanInfo().GetScanUuid(), c.countRawMessages(responses), scanStartTime)
+		return
+	}
+	for _, res := range responses {
+		scanStartTime, _ := ptypes.Timestamp(res.GetScanInfo().GetScanStartTime())
+		for _, iss := range res.GetIssues() {
+			b, err := c.getRawIssue(scanStartTime, res, iss)
+			if err != nil {
+				log.Fatal(err)
+			}
+			c.push(string(b))
+		}
+	}
+}
+func (c *Consumer) processEnrichedMessages(responses []*v1.EnrichedLaunchToolResponse) {
+	if c.LongFormat == false {
+		scanStartTime, _ := ptypes.Timestamp(responses[0].GetOriginalResults().GetScanInfo().GetScanStartTime())
+		c.pushMetrics(responses[0].GetOriginalResults().GetScanInfo().GetScanUuid(), c.countEnrichedMessages(responses), scanStartTime)
+		return
+	}
+	for _, res := range responses {
+		scanStartTime, _ := ptypes.Timestamp(res.GetOriginalResults().GetScanInfo().GetScanStartTime())
+		for _, iss := range res.GetIssues() {
+			b, err := c.getEnrichedIssue(scanStartTime, res, iss)
+			if err != nil {
+				log.Fatal(err)
+			}
+			c.push(string(b))
+		}
+	}
+}
+
+func (c *Consumer) countRawMessages(responses []*v1.LaunchToolResponse) int {
+	result := 0
+	for _, res := range responses {
+		result += len(res.GetIssues())
+	}
+	return result
+}
+
+func (c *Consumer) countEnrichedMessages(responses []*v1.EnrichedLaunchToolResponse) int {
+	result := 0
+	for _, res := range responses {
+		result += len(res.GetIssues())
+	}
+	return result
+}
+func (c *Consumer) pushMetrics(scanUUID string, issuesNo int, scanStartTime time.Time) {
+	message := fmt.Sprintf("Dracon scan %s started on %s has been completed with %d issues\n", scanUUID, scanStartTime, issuesNo)
+	c.push(message)
+}
+
+func (c *Consumer) push(b string) error {
 	type SlackRequestBody struct {
 		Text string `json:"text"`
 	}
 	var err error
-	body, _ := json.Marshal(SlackRequestBody{Text: string(b)})
-	req, err := http.NewRequest(http.MethodPost, webhook, bytes.NewBuffer(body))
+	body, _ := json.Marshal(SlackRequestBody{Text: b})
+	req, err := http.NewRequest(http.MethodPost, c.Webhook, bytes.NewBuffer(body))
 	if err != nil {
 		return err
 	}
 
 	req.Header.Add("Content-Type", "application/json")
 
-	client := &http.Client{Timeout: 10 * time.Second}
-	resp, err := client.Do(req)
+	fmt.Println(c.Client)
+
+	resp, err := c.Client.Do(req)
 	if err != nil {
 		return err
 	}
 
 	buf := new(bytes.Buffer)
+	fmt.Println(resp)
+	fmt.Println(resp.Body)
+
 	buf.ReadFrom(resp.Body)
 	if buf.String() != "ok" {
 		return errors.New("Non-ok response returned from Slack")
