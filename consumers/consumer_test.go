@@ -26,19 +26,20 @@ func TestLoadToolResponse(t *testing.T) {
 			Description: "/dracon/source/example.yaml",
 		},
 	}
-	err = putil.WriteResults("test-tool", issues, tmpFile.Name())
+	timestamp := time.Now().UTC().Format(time.RFC3339)
+	scanID := "ab3d3290-cd9f-482c-97dc-ec48bdfcc4de"
+	os.Setenv(EnvDraconStartTime, timestamp)
+	os.Setenv(EnvDraconScanID, scanID)
+	err = putil.WriteResults("test-tool", issues, tmpFile.Name(), scanID, timestamp)
 	assert.Nil(t, err)
 
 	log.Println(tmpDir)
 	inResults = path.Dir(tmpDir)
 
-	draconStartTime := time.Now().UTC()
-	os.Setenv(EnvDraconStartTime, draconStartTime.Format(time.RFC3339))
-	os.Setenv(EnvDraconScanID, "test-id")
 	toolRes, err := LoadToolResponse()
 	assert.Nil(t, err)
 	log.Println(toolRes)
 
 	assert.Equal(t, "test-tool", toolRes[0].GetToolName())
-	assert.Equal(t, "test-id", toolRes[0].GetScanInfo().GetScanUuid())
+	assert.Equal(t, scanID, toolRes[0].GetScanInfo().GetScanUuid())
 }

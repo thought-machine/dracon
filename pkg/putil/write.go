@@ -6,8 +6,10 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/gogo/protobuf/proto"
+	"github.com/golang/protobuf/ptypes"
 	v1 "github.com/thought-machine/dracon/pkg/genproto/v1"
 )
 
@@ -41,11 +43,26 @@ func WriteResults(
 	toolName string,
 	issues []*v1.Issue,
 	outFile string,
+	scanUUID string,
+	scanStartTime string,
 ) error {
 	if err := os.MkdirAll(filepath.Dir(outFile), os.ModePerm); err != nil {
 		return err
 	}
+	timeVal, err := time.Parse(time.RFC3339, scanStartTime)
+	if err != nil {
+		return err
+	}
+	timestamp, err := ptypes.TimestampProto(timeVal)
+	if err != nil {
+		return err
+	}
+	scanInfo := v1.ScanInfo{
+		ScanUuid:      scanUUID,
+		ScanStartTime: timestamp,
+	}
 	out := v1.LaunchToolResponse{
+		ScanInfo: &scanInfo,
 		ToolName: toolName,
 		Issues:   issues,
 	}
