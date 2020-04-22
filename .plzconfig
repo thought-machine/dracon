@@ -10,6 +10,7 @@
 
 [buildconfig]
 default-docker-repo = index.docker.io/thoughtmachine
+protoc-deps = //third_party/proto:protoc_deps
 
 [go]
 importpath = github.com/thought-machine/dracon
@@ -20,4 +21,5 @@ moduledir = third_party.python
 usepypi = true
 
 [proto]
+protoctool = //third_party/proto:protoc
 pythondep = //third_party/python:protobuf
