@@ -8,8 +8,9 @@ import (
 	"os"
 	"time"
 
+	v1 "api/proto/v1"
+
 	"github.com/golang/protobuf/ptypes"
-	v1 "github.com/thought-machine/dracon/pkg/genproto/v1"
 	"github.com/thought-machine/dracon/pkg/putil"
 )
 

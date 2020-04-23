@@ -44,7 +44,7 @@ go_get(
 )
 
 go_get(
-    name = "golang_protobuf",
+    name = "protobuf",
     get = "github.com/golang/protobuf",
     install = [
         "proto",
@@ -54,6 +54,15 @@ go_get(
         "ptypes/timestamp",
     ],
     revision = "v1.3.2",
+)
+
+go_get(
+    name = "protoc-gen-go",
+    binary = True,
+    get = [],
+    install = ["github.com/golang/protobuf/protoc-gen-go"],
+    licences = ["bsd-3-clause"],
+    deps = [":protobuf"],
 )
 
 go_get(

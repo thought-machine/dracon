@@ -6,9 +6,10 @@ import (
 	"testing"
 	"time"
 
+	v1 "api/proto/v1"
+
 	"github.com/gogo/protobuf/proto"
 	"github.com/stretchr/testify/assert"
-	v1 "github.com/thought-machine/dracon/pkg/genproto/v1"
 )
 
 func TestWriteDraconOut(t *testing.T) {

@@ -5,10 +5,10 @@ go_library(
     ],
     visibility = ["//consumers/..."],
     deps = [
-        "//pkg/genproto/v1",
+        "//api/proto:v1",
         "//pkg/putil",
         "//third_party/go:gogo_protobuf",
-        "//third_party/go:golang_protobuf",
+        "//third_party/go:protobuf",
     ],
 )
 
@@ -19,23 +19,24 @@ go_test(
         "consumer_test.go",
     ],
     deps = [
-        "//pkg/genproto/v1",
+        "//api/proto:v1",
         "//pkg/putil",
         "//third_party/go:gogo_protobuf",
-        "//third_party/go:golang_protobuf",
+        "//third_party/go:protobuf",
         "//third_party/go:stretchr_testify",
     ],
 )
+
 python_test(
     name = "consumers_py_test",
     srcs = [
-            "consumer_test.py"
-            ],
+        "consumer_test.py",
+    ],
     deps = [
-            "//third_party/python:protobuf",
-            "//api/proto:engine",
-            ":consumers_base_python",
-            ]
+        "//third_party/python:protobuf",
+        "//api/proto:v1",
+        ":consumers_base_python",
+    ],
 )
 
 python_binary(
@@ -43,6 +44,6 @@ python_binary(
     main = "consumer.py",
     visibility = ["//consumers/..."],
     deps = [
-            "//third_party/python:protobuf"
-            ],
+        "//third_party/python:protobuf",
+    ],
 )

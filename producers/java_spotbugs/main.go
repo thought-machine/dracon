@@ -8,7 +8,8 @@ import (
 	"os"
 	"strconv"
 
-	v1 "github.com/thought-machine/dracon/pkg/genproto/v1"
+	v1 "api/proto/v1"
+
 	"github.com/thought-machine/dracon/producers"
 )
 
@@ -87,33 +88,33 @@ func readXML(xmlFile []byte) []*v1.Issue {
 	into an array Dracon issues
 	*/
 
-	output := []*v1.Issue{}	
+	output := []*v1.Issue{}
 	var bugs BugCollection
-	if len(xmlFile) == 0{
+	if len(xmlFile) == 0 {
 		return output
 	}
 	xml.Unmarshal(xmlFile, &bugs)
-	for _, instance := range(bugs.BugInstance){
+	for _, instance := range bugs.BugInstance {
 
 		// parse standalone SourceLine elements
-		for _, line :=range(instance.SourceLine){
+		for _, line := range instance.SourceLine {
 			output = append(output, parseLine(instance, line))
 		}
 		// parse SourceLines in Field elements
-		for _,field := range(instance.Field){
-			for _,line := range(field.SourceLine){
+		for _, field := range instance.Field {
+			for _, line := range field.SourceLine {
 				output = append(output, parseLine(instance, line))
 			}
 		}
 		// parse SourceLines in Method elements
-		for _,method := range(instance.Method) {
-			for _,line := range(method.SourceLine) {
+		for _, method := range instance.Method {
+			for _, line := range method.SourceLine {
 				output = append(output, parseLine(instance, line))
 			}
 		}
 		//parse SourceLines in Class elements
-		for _,cls := range(instance.Class){
-			for _,line := range(cls.SourceLine){
+		for _, cls := range instance.Class {
+			for _, line := range cls.SourceLine {
 				output = append(output, parseLine(instance, line))
 			}
 		}

@@ -7,8 +7,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	v1 "api/proto/v1"
+
 	"github.com/gogo/protobuf/proto"
-	v1 "github.com/thought-machine/dracon/pkg/genproto/v1"
 )
 
 // LoadToolResponse loads raw results

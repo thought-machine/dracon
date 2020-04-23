@@ -3,9 +3,10 @@ package main
 import (
 	"testing"
 
+	v1 "api/proto/v1"
+
 	proto "github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/assert"
-	v1 "github.com/thought-machine/dracon/pkg/genproto/v1"
 )
 
 func TestReadXML(t *testing.T) {
@@ -93,18 +94,18 @@ const exampleOutput = `
 <ShortMessage>Potential Path Traversal (file read)</ShortMessage>
 <LongMessage>This API (java/io/File.&lt;init&gt;(Ljava/lang/String;)V) reads a file whose location might be specified by user input</LongMessage>
 <Class classname="com.h3xstream.findsecbugs.injection.BasicInjectionDetector" primary="true">
-  <SourceLine classname="com.h3xstream.findsecbugs.injection.BasicInjectionDetector" start="48" end="188" sourcefile="BasicInjectionDetector.java" 
+  <SourceLine classname="com.h3xstream.findsecbugs.injection.BasicInjectionDetector" start="48" end="188" sourcefile="BasicInjectionDetector.java"
   sourcepath="com/h3xstream/findsecbugs/injection/BasicInjectionDetector.ClassLine.java">
 	<Message>At BasicInjectionDetector.java:[lines 48-188]</Message>
   </SourceLine>
   <Message>In class com.h3xstream.findsecbugs.injection.BasicInjectionDetector</Message>
 </Class>
 <Method classname="com.h3xstream.findsecbugs.injection.BasicInjectionDetector" name="loadCustomSinks" signature="(Ljava/lang/String;Ljava/lang/String;)V" isStatic="false" primary="true">
-  <SourceLine classname="com.h3xstream.findsecbugs.injection.BasicInjectionDetector" start="155" end="161" startBytecode="0" endBytecode="460" 
+  <SourceLine classname="com.h3xstream.findsecbugs.injection.BasicInjectionDetector" start="155" end="161" startBytecode="0" endBytecode="460"
   sourcefile="BasicInjectionDetector.java" sourcepath="com/h3xstream/findsecbugs/injection/BasicInjectionDetector.MethodLine.java"/>
   <Message>In method com.h3xstream.findsecbugs.injection.BasicInjectionDetector.loadCustomSinks(String, String)</Message>
 </Method>
-<SourceLine classname="com.h3xstream.findsecbugs.injection.BasicInjectionDetector" primary="true" start="155" end="155" startBytecode="5" endBytecode="5" 
+<SourceLine classname="com.h3xstream.findsecbugs.injection.BasicInjectionDetector" primary="true" start="155" end="155" startBytecode="5" endBytecode="5"
 sourcefile="BasicInjectionDetector.java" sourcepath="com/h3xstream/findsecbugs/injection/BasicInjectionDetector.SourceLine0.java">
   <Message>At BasicInjectionDetector.java:[line 155]</Message>
 </SourceLine>
@@ -117,7 +118,7 @@ sourcefile="BasicInjectionDetector.java" sourcepath="com/h3xstream/findsecbugs/i
 <String value="com/h3xstream/findsecbugs/injection/BasicInjectionDetector.loadCustomSinks(Ljava/lang/String;Ljava/lang/String;)V parameter 1" role="Unknown source">
   <Message>Unknown source com/h3xstream/findsecbugs/injection/BasicInjectionDetector.loadCustomSinks(Ljava/lang/String;Ljava/lang/String;)V parameter 1</Message>
 </String>
-<SourceLine classname="com.h3xstream.findsecbugs.FindSecBugsGlobalConfig" start="53" end="53" startBytecode="1" 
+<SourceLine classname="com.h3xstream.findsecbugs.FindSecBugsGlobalConfig" start="53" end="53" startBytecode="1"
 endBytecode="1" sourcefile="FindSecBugsGlobalConfig.java" sourcepath="com/h3xstream/findsecbugs/FindSecBugsGlobalConfig.SourceLine1.java">
   <Message>At FindSecBugsGlobalConfig.java:[line 53]</Message>
 </SourceLine>
@@ -126,19 +127,19 @@ endBytecode="1" sourcefile="FindSecBugsGlobalConfig.java" sourcepath="com/h3xstr
 <ShortMessage>May expose internal representation by returning reference to mutable object</ShortMessage>
 <LongMessage>com.h3xstream.findsecbugs.injection.InjectionPoint.getInjectableArguments() may expose internal representation by returning InjectionPoint.injectableArguments</LongMessage>
 <Class classname="com.h3xstream.findsecbugs.injection.InjectionPoint" primary="true">
-  <SourceLine classname="com.h3xstream.findsecbugs.injection.InjectionPoint0" start="26" end="52" sourcefile="InjectionPoint.java" 
+  <SourceLine classname="com.h3xstream.findsecbugs.injection.InjectionPoint0" start="26" end="52" sourcefile="InjectionPoint.java"
   sourcepath="com/h3xstream/findsecbugs/injection/InjectionPoint.ClassLine.java">
 	<Message>At InjectionPoint.java:[lines 26-52]</Message>
   </SourceLine>
   <Message>In class com.h3xstream.findsecbugs.injection.InjectionPoint</Message>
 </Class>
 <Method classname="com.h3xstream.findsecbugs.injection.InjectionPoint1" name="getInjectableArguments" signature="()[I" isStatic="false" primary="true">
-  <SourceLine classname="com.h3xstream.findsecbugs.injection.InjectionPoint" start="39" end="39" startBytecode="0" endBytecode="46" 
+  <SourceLine classname="com.h3xstream.findsecbugs.injection.InjectionPoint" start="39" end="39" startBytecode="0" endBytecode="46"
   sourcefile="InjectionPoint.java" sourcepath="com/h3xstream/findsecbugs/injection/InjectionPoint.MethodLine.java"/>
   <Message>In method com.h3xstream.findsecbugs.injection.InjectionPoint.getInjectableArguments()</Message>
 </Method>
 <Field classname="com.h3xstream.findsecbugs.injection.InjectionPoint" name="injectableArguments" signature="[I" isStatic="false" primary="true">
-  <SourceLine classname="com.h3xstream.findsecbugs.injection.InjectionPoint" sourcefile="InjectionPoint.java" 
+  <SourceLine classname="com.h3xstream.findsecbugs.injection.InjectionPoint" sourcefile="InjectionPoint.java"
   sourcepath="com/h3xstream/findsecbugs/injection/InjectionPoint.FieldLine.java">
 	<Message>In InjectionPoint.java</Message>
   </SourceLine>

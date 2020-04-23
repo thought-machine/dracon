@@ -6,7 +6,7 @@ go_binary(
         "main.go",
     ],
     deps = [
-        "//pkg/genproto/v1",
+        "//api/proto:v1",
         "//producers",
     ],
 )
@@ -18,7 +18,7 @@ go_test(
         "main_test.go",
     ],
     deps = [
-        "//pkg/genproto/v1",
+        "//api/proto:v1",
         "//producers",
         "//third_party/go:stretchr_testify",
     ],

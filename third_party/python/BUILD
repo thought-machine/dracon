@@ -1,29 +1,28 @@
 package(default_visibility = ["PUBLIC"])
 
-
 pip_library(
     name = "grpc",
     package_name = "grpcio",
     hashes = ["beea5295ad7f122708d25b76ef4d8520c2234c1d"],
     licences = ["Apache 2.0"],
-    version = "1.27.2"
+    version = "1.27.2",
 )
 
 pip_library(
     name = "protobuf",
     outs = ["google/protobuf"],
-    hashes=["eb641f83c54084dd1e5d02abbd6a88b905b4191a"],
-    licences=["BSD 3-Clause"],
-    version="3.11.3",
-    deps = [":six"]
+    hashes = ["eb641f83c54084dd1e5d02abbd6a88b905b4191a"],
+    licences = ["BSD 3-Clause"],
+    version = "3.11.3",
+    deps = [":six"],
 )
 
 pip_library(
     name = "pkg_resources",
     package_name = "setuptools",
-    hashes = ["aca2ec09a5db08878b8b10ad2e278edf8e2af570"],
+    hashes = ["06de74586ea19d084852a0503dd546c45ec86f6e"],
     licences = ["MIT"],
-    version = "40.4.3"
+    version = "40.4.3",
 )
 
 pip_library(
@@ -39,7 +38,12 @@ pip_library(
     name = "requests",
     version = "2.23.0",
     hashes = ["c87bcd4b18ad82110fb615085f9bf7e79ce4f94a"],
-    deps = [":urllib3",":chardet",":certifi",":idna"]
+    deps = [
+        ":urllib3",
+        ":chardet",
+        ":certifi",
+        ":idna",
+    ],
 )
 
 pip_library(
@@ -47,11 +51,13 @@ pip_library(
     hashes = ["ead88fe14444ae6b459bfd72d708b08bf063a801"],
     version = "1.25.8",
 )
+
 pip_library(
     name = "certifi",
     hashes = ["aac49ec341265281fad7ab9216150710d42a1750"],
     version = "2019.11.28",
 )
+
 pip_library(
     name = "chardet",
     hashes = ["2266861b95169c95b78f9c85b5d4465182a1b23a"],
@@ -63,9 +69,10 @@ pip_library(
     hashes = ["9c9e76222692feddd706449c59910c377ae8e589"],
     version = "2.9",
 )
+
 pip_library(
     name = "defectdojo_api",
-    hashes = ["0d6908b24baf50e193fef2abdc79a777c4608e3d"],
+    hashes = ["34a6b0482c5d4db9ec8d0b6e9eac6928b19a475b"],
     licences = ["MIT"],
     deps = [":requests"],
     version = "1.1.3",

@@ -23,3 +23,5 @@ usepypi = true
 [proto]
 protoctool = //third_party/proto:protoc
 pythondep = //third_party/python:protobuf
+godep = //third_party/go:protobuf
+protocgoplugin = //third_party/go:protoc-gen-go

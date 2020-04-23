@@ -5,9 +5,9 @@ go_library(
     ],
     visibility = ["//producers/..."],
     deps = [
-        "//pkg/genproto/v1",
+        "//api/proto:v1",
         "//pkg/putil",
-        "//third_party/go:golang_protobuf",
+        "//third_party/go:protobuf",
     ],
 )
 
@@ -18,10 +18,10 @@ go_test(
         "producer_test.go",
     ],
     deps = [
-        "//pkg/genproto/v1",
+        "//api/proto:v1",
         "//pkg/putil",
         "//third_party/go:gogo_protobuf",
-        "//third_party/go:golang_protobuf",
+        "//third_party/go:protobuf",
         "//third_party/go:stretchr_testify",
     ],
 )

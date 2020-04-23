@@ -6,23 +6,23 @@ python_binary(
     deps = [
         "//consumers:consumers_base_python",
         "//third_party/python:protobuf",
-        "//api/proto:config",
-        "//api/proto:engine",
-        "//api/proto:issue",
+        "//api/proto:v1",
     ],
 )
+
 python_test(
     name = "stdout_json_test",
     srcs = [
-            "stdout_json_test.py"
-            ],
+        "stdout_json_test.py",
+    ],
     deps = [
-            "//third_party/python:protobuf",
-            "//api/proto:engine",
-            "//consumers:consumers_base_python",
-            ":stdout_json",
-            ]
+        "//third_party/python:protobuf",
+        "//api/proto:v1",
+        "//consumers:consumers_base_python",
+        ":stdout_json",
+    ],
 )
+
 docker_image(
     name = "dracon-consumer-stdout",
     srcs = [
