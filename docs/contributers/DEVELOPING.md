@@ -27,3 +27,10 @@ docker run --rm -it \
 ```
 
 Building the docker images is a little bit more tricky as you would need to mount the docker socket in to the container. At the moment we don't support doing this. Instead, you'll need to install please.
+
+## Ensuring everything is building and testing
+```bash
+plz build //...
+plz test //...
+scripts/dev-images.sh
+```
