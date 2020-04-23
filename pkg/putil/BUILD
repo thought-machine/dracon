@@ -6,8 +6,8 @@ go_library(
     ],
     visibility = ["PUBLIC"],
     deps = [
-        "//pkg/genproto/v1",
+        "//api/proto:v1",
         "//third_party/go:gogo_protobuf",
-        "//third_party/go:golang_protobuf"
+        "//third_party/go:protobuf",
     ],
 )

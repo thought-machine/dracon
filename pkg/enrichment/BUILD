@@ -6,7 +6,7 @@ go_library(
     visibility = ["//cmd/enricher"],
     deps = [
         "//pkg/enrichment/db",
-        "//pkg/genproto/v1",
-        "//third_party/go:golang_protobuf",
+        "//api/proto:v1",
+        "//third_party/go:protobuf",
     ],
 )

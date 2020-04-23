@@ -13,7 +13,8 @@ import (
 	"strings"
 	"time"
 
-	v1 "github.com/thought-machine/dracon/pkg/genproto/v1"
+	v1 "api/proto/v1"
+
 	"github.com/thought-machine/dracon/pkg/putil"
 )
 
@@ -30,6 +31,7 @@ const (
 	// EnvDraconScanID the ID of the dracon scan
 	EnvDraconScanID = "DRACON_SCAN_ID"
 )
+
 func init() {
 	flag.StringVar(&InResults, "in", "", "")
 	flag.StringVar(&OutFile, "out", "", "")

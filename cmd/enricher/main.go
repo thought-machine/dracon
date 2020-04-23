@@ -4,12 +4,15 @@ import (
 	"fmt"
 	"log"
 	"path/filepath"
+	"time"
 
+	v1 "api/proto/v1"
+
+	"github.com/golang/protobuf/ptypes"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/thought-machine/dracon/pkg/enrichment"
 	"github.com/thought-machine/dracon/pkg/enrichment/db"
-	v1 "github.com/thought-machine/dracon/pkg/genproto/v1"
 	"github.com/thought-machine/dracon/pkg/putil"
 )
 
@@ -47,7 +50,18 @@ var rootCmd = &cobra.Command{
 			); err != nil {
 				return err
 			}
-			putil.WriteResults(r.GetToolName(), r.GetIssues(), filepath.Join(writePath, fmt.Sprintf("%s.raw.pb", r.GetToolName())))
+			scanStartTime, err := ptypes.Timestamp(r.GetScanInfo().GetScanStartTime())
+
+			if err != nil {
+				return fmt.Errorf("could not decode proto timestamp: %w", err)
+			}
+			putil.WriteResults(
+				r.GetToolName(),
+				r.GetIssues(),
+				filepath.Join(writePath, fmt.Sprintf("%s.raw.pb", r.GetToolName())),
+				r.GetScanInfo().GetScanUuid(),
+				scanStartTime.Format(time.RFC3339),
+			)
 		}
 
 		return nil

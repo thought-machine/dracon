@@ -9,9 +9,10 @@ import (
 	"io"
 	"log"
 
+	v1 "api/proto/v1"
+
 	"github.com/golang/protobuf/ptypes"
 	"github.com/thought-machine/dracon/pkg/enrichment/db"
-	v1 "github.com/thought-machine/dracon/pkg/genproto/v1"
 )
 
 // GetHash returns the hash of an issue

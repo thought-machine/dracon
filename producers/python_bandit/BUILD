@@ -6,7 +6,7 @@ go_binary(
         "main.go",
     ],
     deps = [
-        "//pkg/genproto/v1",
+        "//api/proto:v1",
         "//producers",
     ],
 )
