@@ -6,7 +6,8 @@ import (
 	"io/ioutil"
 	"log"
 
-	v1 "github.com/thought-machine/dracon/pkg/genproto/v1"
+	v1 "api/proto/v1"
+
 	"github.com/thought-machine/dracon/producers"
 )
 
