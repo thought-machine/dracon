@@ -1,7 +1,7 @@
 subinclude("@pleasings//docker")
 
 go_binary(
-    name = "slack_c",
+    name = "slack",
     srcs = [
         "main.go",
     ],
@@ -29,7 +29,7 @@ go_test(
 )
 
 docker_image(
-    name = "dracon-consumer-slack",
+    name = "image",
     srcs = [
         ":slack_c",
     ],

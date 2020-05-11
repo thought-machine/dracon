@@ -21,13 +21,13 @@ type HTTPClient interface {
 }
 
 type Consumer struct {
-	Client     HTTPClient
-	Webhook    string
-	LongFormat bool
+	Client     HTTPClient //the http client object handling connections (and stubbed in tests)
+	Webhook    string     // the webhook url to post to
+	LongFormat bool       //boolean, False by default, if set to True it dumps all findings in JSON format to the webhook url
 }
 
 func main() {
-	var cons = &Consumer{}
+	cons := &Consumer{Client: &http.Client{}}
 
 	if err := cons.parseFlags(); err != nil {
 		log.Fatal(err)
@@ -51,14 +51,13 @@ func main() {
 func (c *Consumer) init() {
 	flag.StringVar(&c.Webhook, "Webhook", "", "the Webhook to push results to")
 	flag.BoolVar(&c.LongFormat, "long", true, "post the full results to Webhook, not just metrics")
-	c.Client = &http.Client{}
 }
 
 func (c *Consumer) parseFlags() error {
 	if err := consumers.ParseFlags(); err != nil {
 		return err
 	}
-	if len(c.Webhook) < 1 {
+	if c.Webhook == "" {
 		return fmt.Errorf("Webhook is undefined")
 	}
 	return nil
