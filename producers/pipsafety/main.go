@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 
 	v1 "api/proto/v1"
@@ -34,26 +33,6 @@ func (i *SafetyIssue) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func main() {
-	if err := producers.ParseFlags(); err != nil {
-		log.Fatal(err)
-	}
-	jsonBytes, err := ioutil.ReadFile(producers.InResults)
-	if err != nil {
-		log.Fatal(err)
-	}
-	issues := []SafetyIssue{}
-	if err := json.Unmarshal(jsonBytes, &issues); err != nil {
-		log.Fatal(err)
-	}
-	if err := producers.WriteDraconOut(
-		"pipsafety",
-		parseIssues(issues),
-	); err != nil {
-		log.Fatal(err)
-	}
-}
-
 func parseIssues(out []SafetyIssue) []*v1.Issue {
 	issues := []*v1.Issue{}
 	for _, r := range out {
@@ -68,4 +47,18 @@ func parseIssues(out []SafetyIssue) []*v1.Issue {
 		})
 	}
 	return issues
+}
+
+func main() {
+	if err := producers.ParseFlags(); err != nil {
+		log.Fatal(err)
+	}
+	issues := []SafetyIssue{}
+	producers.ParseInFileJSON(&issues)
+	if err := producers.WriteDraconOut(
+		"pipsafety",
+		parseIssues(issues),
+	); err != nil {
+		log.Fatal(err)
+	}
 }

@@ -1,7 +1,7 @@
 subinclude("@pleasings//docker")
 
 go_binary(
-    name = "python_pipsafety",
+    name = "pipsafety",
     srcs = [
         "main.go",
     ],
@@ -12,10 +12,10 @@ go_binary(
 )
 
 go_test(
-    name = "python_pipsafety-test",
+    name = "pipsafety-test",
     srcs = [
-        "main.go",
-        "main_test.go",
+            "main.go",
+            "main_test.go"
     ],
     deps = [
         "//api/proto:v1",
@@ -27,7 +27,7 @@ go_test(
 docker_image(
     name = "dracon-producer-pipsafety",
     srcs = [
-        ":python_pipsafety",
+        ":pipsafety",
     ],
     base_image = "//build/docker:dracon-base-go",
     image = "dracon-producer-pipsafety",
