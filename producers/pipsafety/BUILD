@@ -8,6 +8,7 @@ go_binary(
     deps = [
         "//api/proto:v1",
         "//producers",
+        "//producers/pipsafety/types",
     ],
 )
 
@@ -20,6 +21,7 @@ go_test(
     deps = [
         "//api/proto:v1",
         "//producers",
+        "//producers/pipsafety/types",
         "//third_party/go:stretchr_testify",
     ],
 )

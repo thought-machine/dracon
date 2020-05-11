@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"producers/pipsafety/types"
 	"testing"
 
 	v1 "api/proto/v1"
@@ -28,10 +29,9 @@ const exampleOutput = `[
 `
 
 func TestParseIssues(t *testing.T) {
-	safetyIssues := []SafetyIssue{}
+	safetyIssues := []types.SafetyIssue{}
 	err := json.Unmarshal([]byte(exampleOutput), &safetyIssues)
 	assert.Nil(t, err)
-
 	draconIssues := parseIssues(safetyIssues)
 
 	expectedIssue := &v1.Issue{
