@@ -27,7 +27,7 @@ go_test(
 )
 
 docker_image(
-    name = "dracon-producer-pipsafety",
+    name = "image",
     srcs = [
         ":pipsafety",
     ],
