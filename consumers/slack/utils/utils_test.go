@@ -11,6 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+//TODO tests: process* count* get*
 func TestPushMetrics(t *testing.T) {
 	want := "OK"
 	scanUUID := "test-uuid"

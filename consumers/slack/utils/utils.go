@@ -37,23 +37,6 @@ func push(b string, webhook string) error {
 	}
 	return nil
 }
-
-func CountRawMessages(responses []*v1.LaunchToolResponse) int {
-	result := 0
-	for _, res := range responses {
-		result += len(res.GetIssues())
-	}
-	return result
-}
-
-func CountEnrichedMessages(responses []*v1.EnrichedLaunchToolResponse) int {
-	result := 0
-	for _, res := range responses {
-		result += len(res.GetIssues())
-	}
-	return result
-}
-
 func getRawIssue(scanStartTime time.Time, res *v1.LaunchToolResponse, iss *v1.Issue) ([]byte, error) {
 	jBytes, err := json.Marshal(&types.FullDocument{
 		ScanStartTime: scanStartTime,
@@ -144,4 +127,19 @@ func PushMetrics(scanUUID string, issuesNo int, scanStartTime time.Time, webhook
 }
 func PushMessage(b string, webhook string) {
 	push(b, webhook)
+}
+func CountRawMessages(responses []*v1.LaunchToolResponse) int {
+	result := 0
+	for _, res := range responses {
+		result += len(res.GetIssues())
+	}
+	return result
+}
+
+func CountEnrichedMessages(responses []*v1.EnrichedLaunchToolResponse) int {
+	result := 0
+	for _, res := range responses {
+		result += len(res.GetIssues())
+	}
+	return result
 }
