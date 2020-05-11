@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -51,12 +52,17 @@ func ParseFlags() error {
 
 // ParseInFileJSON provides a generic method to parse a tool's JSON results into a given struct
 func ParseInFileJSON(structure interface{}) error {
-	inBytes, err := ioutil.ReadFile(InResults)
+	inFile, err := os.Open(InResults)
 	if err != nil {
 		return err
 	}
-	if err := json.Unmarshal(inBytes, structure); err != nil {
-		return err
+	dec := json.NewDecoder(inFile)
+	for {
+		if err := dec.Decode(structure); err == io.EOF {
+			break
+		} else if err != nil {
+			return err
+		}
 	}
 	return nil
 }
