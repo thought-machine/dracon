@@ -1,3 +1,5 @@
+subinclude("@pleasings//docker")
+
 go_binary(
     name = "dependency_check",
     srcs = [
@@ -20,4 +22,13 @@ go_test(
         "//producers",
         "//third_party/go:stretchr_testify",
     ],
+)
+
+docker_image(
+    name = "dracon-producer-dependency-check",
+    srcs = [
+        ":dependency_check",
+    ],
+    base_image = "//build/docker:dracon-base-go",
+    image = "dracon-producer-dependency-check",
 )
