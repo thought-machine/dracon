@@ -1,7 +1,8 @@
-package main
+package utils
 
 import (
 	"bytes"
+
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -24,11 +25,7 @@ func TestPushMetrics(t *testing.T) {
 		w.Write([]byte(want))
 	}))
 	defer slackStub.Close()
-
-	var consumer = &Consumer{}
-	consumer.Client = &http.Client{}
-	consumer.Webhook = slackStub.URL
-	consumer.pushMetrics(scanUUID, issuesNo, scanStartTime)
+	PushMetrics(scanUUID, issuesNo, scanStartTime, slackStub.URL)
 
 }
 
@@ -45,9 +42,6 @@ func TestPush(t *testing.T) {
 	}))
 	defer slackStub.Close()
 
-	var consumer = &Consumer{}
-	consumer.Client = &http.Client{}
-	consumer.Webhook = slackStub.URL
-	consumer.push(testMessage)
+	PushMessage(testMessage, slackStub.URL)
 
 }
