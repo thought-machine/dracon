@@ -58,8 +58,6 @@ func UnmarshalJSON(jsonBytes []byte) []DependencyVulnerability {
 					cvss2:       cvss2,
 					description: vv["description"].(string),
 				})
-				// fmt.Printf("target:%#v\ncvss3:%#v\ncwes:%#v\nnotes:%#v\nreferences:%#v\nsource:%#v\nname:%#v\nsevertiy:%#v\ncvss2:%#v\ndescription:%#v\nvulnerableSoftware%#v\n",
-				// target, vv["cvss3"], vv["cwes"], vv["notes"], vv["references"], vv["source"], vv["name"], vv["severtiy"], vv["cvss2"], vv["description"], vv["vulnerableSoftware"])
 			}
 		}
 	}
