@@ -5,10 +5,8 @@ import (
 	"log"
 
 	v1 "api/proto/v1"
-
+	"producers"
 	"producers/pipsafety/types"
-
-	"github.com/thought-machine/dracon/producers"
 )
 
 func parseIssues(out []types.SafetyIssue) []*v1.Issue {

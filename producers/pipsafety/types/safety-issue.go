@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 )
 
+// SafetyIssue represents a pip-safety finding
 type SafetyIssue struct {
 	Name              string
 	VersionConstraint string
@@ -11,7 +12,8 @@ type SafetyIssue struct {
 	Description       string
 }
 
-//read semi-unstructured safety json into struct
+//UnmarshalJSON is autocalled on any JSON unmarshalling into the SafetyIssue struct
+// read semi-unstructured safety json into struct
 func (i *SafetyIssue) UnmarshalJSON(data []byte) error {
 
 	var v []interface{}
