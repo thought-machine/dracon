@@ -19,12 +19,17 @@ import (
 )
 
 var (
-	esURL   string
-	esIndex string
+	esURL             string
+	esIndex           string
+	basicAuthUsername string
+	basicAuthPassword string
 )
 
 func init() {
 	flag.StringVar(&esIndex, "es-index", "", "the index in elasticsearch to push results to")
+	flag.StringVar(&basicAuthUsername, "basic-auth-user", "", "[OPTIONAL] the basic auth username")
+	flag.StringVar(&basicAuthPassword, "basic-auth-pass", "", "[OPTIONAL] the basic auth password")
+
 }
 
 func parseFlags() error {
@@ -168,7 +173,10 @@ func getESClient() error {
 	// case '6':
 	// 	esClient, err = elasticsearchv6.NewDefaultClient()
 	case '7':
-		esClient, err = elasticsearchv7.NewDefaultClient()
+		esClient, err = elasticsearchv7.NewDefaultClient(elasticsearchv7.Config{
+			Username: basicAuthUsername,
+			Password: basicAuthPassword,
+		})
 	default:
 		err = fmt.Errorf("unsupported version %s", info.Version.Number)
 	}
