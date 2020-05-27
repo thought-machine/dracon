@@ -48,35 +48,38 @@ func main() {
 	}
 
 	if err := getESClient(); err != nil {
-		log.Fatal(err)
+		log.Fatal("Could not contact remote Elasticsearch, error is: ", err)
 	}
 
 	if consumers.Raw {
+		log.Print("Parsing Raw results")
 		responses, err := consumers.LoadToolResponse()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal("Could not load raw results, file malformed. Error is: ", err)
 		}
 		for _, res := range responses {
 			scanStartTime, _ := ptypes.Timestamp(res.GetScanInfo().GetScanStartTime())
 			for _, iss := range res.GetIssues() {
+				fmt.Printf("Pushing %d, issues to es \n", len(responses))
 				b, err := getRawIssue(scanStartTime, res, iss)
 				if err != nil {
-					log.Fatal(err)
+					log.Fatal("Could not parse raw issue", err)
 				}
 				esPush(b)
 			}
 		}
 	} else {
+		log.Print("Parsing Enriched results")
 		responses, err := consumers.LoadEnrichedToolResponse()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal("Could not load enriched results, file malformed. Error is: ", err)
 		}
 		for _, res := range responses {
 			scanStartTime, _ := ptypes.Timestamp(res.GetOriginalResults().GetScanInfo().GetScanStartTime())
 			for _, iss := range res.GetIssues() {
 				b, err := getEnrichedIssue(scanStartTime, res, iss)
 				if err != nil {
-					log.Fatal(err)
+					log.Fatal("Could not parse enriched issue", err)
 				}
 				esPush(b)
 			}
@@ -148,11 +151,19 @@ type esDocument struct {
 var esClient interface{}
 
 func getESClient() error {
-	es, err := elasticsearchv7.NewDefaultClient()
+	var es *elasticsearchv7.Client
+	var err error = nil
+	if len(basicAuthUsername) > 0 && len(basicAuthPassword) > 0 {
+		es, err = elasticsearchv7.NewClient(elasticsearchv7.Config{
+			Username: basicAuthUsername,
+			Password: basicAuthPassword,
+		})
+	} else {
+		es, err = elasticsearchv7.NewDefaultClient()
+	}
 	if err != nil {
 		return err
 	}
-
 	type esInfo struct {
 		Version struct {
 			Number string `json:"number"`
@@ -167,16 +178,22 @@ func getESClient() error {
 	if err := json.NewDecoder(res.Body).Decode(&info); err != nil {
 		return err
 	}
+
 	switch info.Version.Number[0] {
 	// case '5':
 	// 	esClient, err = elasticsearchv5.NewDefaultClient()
 	// case '6':
 	// 	esClient, err = elasticsearchv6.NewDefaultClient()
 	case '7':
-		esClient, err = elasticsearchv7.NewDefaultClient(elasticsearchv7.Config{
-			Username: basicAuthUsername,
-			Password: basicAuthPassword,
-		})
+		if len(basicAuthUsername) > 0 {
+			esClient, err = elasticsearchv7.NewClient(elasticsearchv7.Config{
+				Username: basicAuthUsername,
+				Password: basicAuthPassword,
+			})
+		} else {
+			esClient, err = elasticsearchv7.NewDefaultClient()
+		}
+
 	default:
 		err = fmt.Errorf("unsupported version %s", info.Version.Number)
 	}
@@ -186,6 +203,7 @@ func getESClient() error {
 func esPush(b []byte) error {
 	var err error
 	var res interface{}
+	// fmt.Printf("Sending: %s \n", b)
 	switch x := esClient.(type) {
 	// case *elasticsearchv5.Client:
 	// 	res, err = x.Index(esIndex, bytes.NewBuffer(b), x.Index.WithDocumentType("doc"))
