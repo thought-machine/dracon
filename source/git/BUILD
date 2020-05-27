@@ -1,4 +1,4 @@
-subinclude("@pleasings//docker")
+subinclude("@third_party/subrepos/pleasings//docker")
 
 docker_image(
     name = "dracon-source-git",

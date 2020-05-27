@@ -1,4 +1,4 @@
-subinclude("@pleasings//docker")
+subinclude("@third_party/subrepos/pleasings//docker")
 
 python_binary(
     name = "stdout_json",

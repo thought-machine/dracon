@@ -1,4 +1,4 @@
-subinclude("@pleasings//docker")
+subinclude("@third_party/subrepos/pleasings//docker")
 
 # Can be used to build Dracon if you don't want to set up a build environment
 docker_image(
