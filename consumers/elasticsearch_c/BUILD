@@ -1,4 +1,4 @@
-subinclude("@pleasings//docker")
+subinclude("@third_party/subrepos/pleasings//docker")
 
 go_binary(
     name = "elasticsearch_c",
@@ -13,6 +13,7 @@ go_binary(
         "//third_party/go:protobuf",
     ],
 )
+
 
 docker_image(
     name = "dracon-consumer-elasticsearch",
