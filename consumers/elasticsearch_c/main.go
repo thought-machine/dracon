@@ -11,7 +11,7 @@ import (
 	//  TODO(hjenkins): Support multiple versions of ES
 	// elasticsearchv5 "github.com/elastic/go-elasticsearch/v5"
 	// elasticsearchv6 "github.com/elastic/go-elasticsearch/v6"
-	v1 "api/proto/v1"
+	"api/proto/v1"
 
 	elasticsearchv7 "github.com/elastic/go-elasticsearch"
 	"github.com/golang/protobuf/ptypes"
@@ -19,12 +19,17 @@ import (
 )
 
 var (
-	esURL   string
-	esIndex string
+	esURL         string
+	esIndex       string
+	basicAuthUser string
+	basicAuthPass string
 )
 
 func init() {
 	flag.StringVar(&esIndex, "es-index", "", "the index in elasticsearch to push results to")
+	flag.StringVar(&basicAuthUser, "basic-auth-user", "", "[OPTIONAL] the basic auth username")
+	flag.StringVar(&basicAuthPass, "basic-auth-pass", "", "[OPTIONAL] the basic auth password")
+
 }
 
 func parseFlags() error {
@@ -43,35 +48,38 @@ func main() {
 	}
 
 	if err := getESClient(); err != nil {
-		log.Fatal(err)
+		log.Fatal("could not contact remote Elasticsearch: ", err)
 	}
 
 	if consumers.Raw {
+		log.Print("Parsing Raw results")
 		responses, err := consumers.LoadToolResponse()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal("could not load raw results, file malformed: ", err)
 		}
 		for _, res := range responses {
 			scanStartTime, _ := ptypes.Timestamp(res.GetScanInfo().GetScanStartTime())
 			for _, iss := range res.GetIssues() {
+				fmt.Printf("Pushing %d, issues to es \n", len(responses))
 				b, err := getRawIssue(scanStartTime, res, iss)
 				if err != nil {
-					log.Fatal(err)
+					log.Fatal("Could not parse raw issue", err)
 				}
 				esPush(b)
 			}
 		}
 	} else {
+		log.Print("Parsing Enriched results")
 		responses, err := consumers.LoadEnrichedToolResponse()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal("could not load enriched results, file malformed: ", err)
 		}
 		for _, res := range responses {
 			scanStartTime, _ := ptypes.Timestamp(res.GetOriginalResults().GetScanInfo().GetScanStartTime())
 			for _, iss := range res.GetIssues() {
 				b, err := getEnrichedIssue(scanStartTime, res, iss)
 				if err != nil {
-					log.Fatal(err)
+					log.Fatal("Could not parse enriched issue", err)
 				}
 				esPush(b)
 			}
@@ -143,11 +151,19 @@ type esDocument struct {
 var esClient interface{}
 
 func getESClient() error {
-	es, err := elasticsearchv7.NewDefaultClient()
+	var es *elasticsearchv7.Client
+	var err error = nil
+	if basicAuthUser != "" && basicAuthPass != "" {
+		es, err = elasticsearchv7.NewClient(elasticsearchv7.Config{
+			Username: basicAuthUser,
+			Password: basicAuthPass,
+		})
+	} else {
+		es, err = elasticsearchv7.NewDefaultClient()
+	}
 	if err != nil {
 		return err
 	}
-
 	type esInfo struct {
 		Version struct {
 			Number string `json:"number"`
@@ -168,7 +184,15 @@ func getESClient() error {
 	// case '6':
 	// 	esClient, err = elasticsearchv6.NewDefaultClient()
 	case '7':
-		esClient, err = elasticsearchv7.NewDefaultClient()
+		if basicAuthUser != "" && basicAuthPass != "" {
+			esClient, err = elasticsearchv7.NewClient(elasticsearchv7.Config{
+				Username: basicAuthUser,
+				Password: basicAuthPass,
+			})
+		} else {
+			esClient, err = elasticsearchv7.NewDefaultClient()
+		}
+
 	default:
 		err = fmt.Errorf("unsupported version %s", info.Version.Number)
 	}
