@@ -11,7 +11,7 @@ import (
 	//  TODO(hjenkins): Support multiple versions of ES
 	// elasticsearchv5 "github.com/elastic/go-elasticsearch/v5"
 	// elasticsearchv6 "github.com/elastic/go-elasticsearch/v6"
-	v1 "api/proto/v1"
+	"api/proto/v1"
 
 	elasticsearchv7 "github.com/elastic/go-elasticsearch"
 	"github.com/golang/protobuf/ptypes"
@@ -19,16 +19,16 @@ import (
 )
 
 var (
-	esURL             string
-	esIndex           string
-	basicAuthUsername string
-	basicAuthPassword string
+	esURL         string
+	esIndex       string
+	basicAuthUser string
+	basicAuthPass string
 )
 
 func init() {
 	flag.StringVar(&esIndex, "es-index", "", "the index in elasticsearch to push results to")
-	flag.StringVar(&basicAuthUsername, "basic-auth-user", "", "[OPTIONAL] the basic auth username")
-	flag.StringVar(&basicAuthPassword, "basic-auth-pass", "", "[OPTIONAL] the basic auth password")
+	flag.StringVar(&basicAuthUser, "basic-auth-user", "", "[OPTIONAL] the basic auth username")
+	flag.StringVar(&basicAuthPass, "basic-auth-pass", "", "[OPTIONAL] the basic auth password")
 
 }
 
@@ -48,14 +48,14 @@ func main() {
 	}
 
 	if err := getESClient(); err != nil {
-		log.Fatal("Could not contact remote Elasticsearch, error is: ", err)
+		log.Fatal("could not contact remote Elasticsearch: ", err)
 	}
 
 	if consumers.Raw {
 		log.Print("Parsing Raw results")
 		responses, err := consumers.LoadToolResponse()
 		if err != nil {
-			log.Fatal("Could not load raw results, file malformed. Error is: ", err)
+			log.Fatal("could not load raw results, file malformed: ", err)
 		}
 		for _, res := range responses {
 			scanStartTime, _ := ptypes.Timestamp(res.GetScanInfo().GetScanStartTime())
@@ -72,7 +72,7 @@ func main() {
 		log.Print("Parsing Enriched results")
 		responses, err := consumers.LoadEnrichedToolResponse()
 		if err != nil {
-			log.Fatal("Could not load enriched results, file malformed. Error is: ", err)
+			log.Fatal("could not load enriched results, file malformed: ", err)
 		}
 		for _, res := range responses {
 			scanStartTime, _ := ptypes.Timestamp(res.GetOriginalResults().GetScanInfo().GetScanStartTime())
@@ -153,10 +153,10 @@ var esClient interface{}
 func getESClient() error {
 	var es *elasticsearchv7.Client
 	var err error = nil
-	if len(basicAuthUsername) > 0 && len(basicAuthPassword) > 0 {
+	if basicAuthUser != "" && basicAuthPass != "" {
 		es, err = elasticsearchv7.NewClient(elasticsearchv7.Config{
-			Username: basicAuthUsername,
-			Password: basicAuthPassword,
+			Username: basicAuthUser,
+			Password: basicAuthPass,
 		})
 	} else {
 		es, err = elasticsearchv7.NewDefaultClient()
@@ -178,17 +178,16 @@ func getESClient() error {
 	if err := json.NewDecoder(res.Body).Decode(&info); err != nil {
 		return err
 	}
-
 	switch info.Version.Number[0] {
 	// case '5':
 	// 	esClient, err = elasticsearchv5.NewDefaultClient()
 	// case '6':
 	// 	esClient, err = elasticsearchv6.NewDefaultClient()
 	case '7':
-		if len(basicAuthUsername) > 0 {
+		if basicAuthUser != "" && basicAuthPass != "" {
 			esClient, err = elasticsearchv7.NewClient(elasticsearchv7.Config{
-				Username: basicAuthUsername,
-				Password: basicAuthPassword,
+				Username: basicAuthUser,
+				Password: basicAuthPass,
 			})
 		} else {
 			esClient, err = elasticsearchv7.NewDefaultClient()
@@ -203,7 +202,6 @@ func getESClient() error {
 func esPush(b []byte) error {
 	var err error
 	var res interface{}
-	// fmt.Printf("Sending: %s \n", b)
 	switch x := esClient.(type) {
 	// case *elasticsearchv5.Client:
 	// 	res, err = x.Index(esIndex, bytes.NewBuffer(b), x.Index.WithDocumentType("doc"))

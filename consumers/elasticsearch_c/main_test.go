@@ -1,7 +1,7 @@
 package main
 
 import (
-	v1 "api/proto/v1"
+	"api/proto/v1"
 	"bytes"
 	"encoding/json"
 	"net/http"
@@ -70,8 +70,8 @@ func TestEsPushBasicAuth(t *testing.T) {
 	os.Setenv("ELASTICSEARCH_URL", esStub.URL)
 
 	// basic auth ops
-	basicAuthUsername = "foo"
-	basicAuthPassword = "bar"
+	basicAuthUser = "foo"
+	basicAuthPass = "bar"
 	assert.Nil(t, getESClient())
 	esPush(esIn)
 }
