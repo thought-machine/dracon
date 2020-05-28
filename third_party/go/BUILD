@@ -52,6 +52,7 @@ go_get(
         "ptypes/any",
         "ptypes/duration",
         "ptypes/timestamp",
+        "jsonpb",
     ],
     revision = "v1.3.2",
 )
@@ -118,6 +119,7 @@ go_get(
     install = [
         "",
         "assert",
+        "mock"
     ],
     revision = "v1.2.2",
     strip = [

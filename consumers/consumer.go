@@ -32,7 +32,7 @@ func init() {
 	flag.BoolVar(&Raw, "raw", false, "if the non-enriched results should be used")
 }
 
-// ParseFlags will parse the input flags for the producer and perform simple validation
+// ParseFlags will parse the input flags for the consumer and perform simple validation
 func ParseFlags() error {
 	flag.Parse()
 	if len(inResults) < 1 {
