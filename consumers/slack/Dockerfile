@@ -1,5 +1,5 @@
 FROM //build/docker:dracon-base-go
 
-COPY slack_c /consume
+COPY slack /consume
 
 ENTRYPOINT ["/consume"]
