@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/golang/protobuf/ptypes"
-	v1 "github.com/thought-machine/dracon/pkg/genproto/v1"
+	"api/proto/v1"
 )
 
 func push(b string, webhook string) error {

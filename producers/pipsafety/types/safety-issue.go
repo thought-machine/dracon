@@ -23,6 +23,6 @@ func (i *SafetyIssue) UnmarshalJSON(data []byte) error {
 	i.Name, _ = v[0].(string)
 	i.VersionConstraint, _ = v[1].(string)
 	i.CurrentVersion, _ = v[2].(string)
-	i.Descriptionm, _ = v[3].(string)
+	i.Description, _ = v[3].(string)
 	return nil
 }

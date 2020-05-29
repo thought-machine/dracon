@@ -7,6 +7,6 @@ go_library(
     visibility = [
         "//consumers/slack/...",
     ],
-    deps = ["//pkg/genproto/v1",]
+    deps = ["//api/proto:v1",]
         
 )

@@ -1,4 +1,4 @@
-subinclude("@pleasings//docker")
+subinclude("@third_party/subrepos/pleasings//docker")
 
 
 go_binary(
@@ -9,8 +9,8 @@ go_binary(
     deps = [
         "//consumers",
         "//consumers/slack/utils:utils",
-        "//pkg/genproto/v1",
-        "//third_party/go:golang_protobuf",
+        "//api/proto:v1",
+        "//third_party/go:protobuf",
     ],
 )
 
