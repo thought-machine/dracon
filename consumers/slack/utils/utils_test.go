@@ -11,7 +11,7 @@ import (
 
 	"github.com/golang/protobuf/ptypes"
 	"github.com/stretchr/testify/assert"
-	v1 "github.com/thought-machine/dracon/pkg/genproto/v1"
+	"api/proto/v1"
 )
 
 //TODO tests: count* get*

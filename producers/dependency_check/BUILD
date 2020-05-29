@@ -1,4 +1,4 @@
-subinclude("@pleasings//docker")
+subinclude("@third_party/subrepos/pleasings//docker")
 
 go_binary(
     name = "dependency_check",
