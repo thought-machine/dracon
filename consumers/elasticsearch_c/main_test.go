@@ -20,19 +20,21 @@ var (
 	scanStartTime, _ = time.Parse("2006-01-02T15:04:05.000Z", "2020-04-13 11:51:53+01:00")
 
 	esIn, _ = json.Marshal(&esDocument{
-		ScanStartTime: scanStartTime,
-		ScanID:        scanUUID,
-		ToolName:      "es-unit-tests",
-		Source:        "es-tests-source",
-		Title:         "es-tests-title",
-		Target:        "es-tests-target",
-		Type:          "es-tests-type",
-		Severity:      v1.Severity_SEVERITY_INFO,
-		CVSS:          0.01,
-		Confidence:    v1.Confidence_CONFIDENCE_INFO,
-		Description:   "es-tests-description",
-		FirstFound:    scanStartTime,
-		FalsePositive: false,
+		ScanStartTime:  scanStartTime,
+		ScanID:         scanUUID,
+		ToolName:       "es-unit-tests",
+		Source:         "es-tests-source",
+		Title:          "es-tests-title",
+		Target:         "es-tests-target",
+		Type:           "es-tests-type",
+		Severity:       v1.Severity_SEVERITY_INFO,
+		SeverityText:   "Info",
+		CVSS:           0.01,
+		Confidence:     v1.Confidence_CONFIDENCE_INFO,
+		ConfidenceText: "Info",
+		Description:    "es-tests-description",
+		FirstFound:     scanStartTime,
+		FalsePositive:  false,
 	})
 )
 

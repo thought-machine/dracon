@@ -108,23 +108,57 @@ func getRawIssue(scanStartTime time.Time, res *v1.LaunchToolResponse, iss *v1.Is
 	}
 	return jBytes, nil
 }
+func severtiyToText(severity v1.Severity) string {
+	switch severity {
+	case v1.Severity_SEVERITY_INFO:
+		return "Info"
+	case v1.Severity_SEVERITY_LOW:
+		return "Low"
+	case v1.Severity_SEVERITY_MEDIUM:
+		return "Medium"
+	case v1.Severity_SEVERITY_HIGH:
+		return "High"
+	case v1.Severity_SEVERITY_CRITICAL:
+		return "Critical"
+	default:
+		return "N/A"
+	}
+}
+func confidenceToText(confidence v1.Confidence) string {
+	switch confidence {
+	case v1.Confidence_CONFIDENCE_INFO:
+		return "Info"
+	case v1.Confidence_CONFIDENCE_LOW:
+		return "Low"
+	case v1.Confidence_CONFIDENCE_MEDIUM:
+		return "Medium"
+	case v1.Confidence_CONFIDENCE_HIGH:
+		return "High"
+	case v1.Confidence_CONFIDENCE_CRITICAL:
+		return "Critical"
+	default:
+		return "N/A"
+	}
 
+}
 func getEnrichedIssue(scanStartTime time.Time, res *v1.EnrichedLaunchToolResponse, iss *v1.EnrichedIssue) ([]byte, error) {
 	firstSeenTime, _ := ptypes.Timestamp(iss.GetFirstSeen())
 	jBytes, err := json.Marshal(&esDocument{
-		ScanStartTime: scanStartTime,
-		ScanID:        res.GetOriginalResults().GetScanInfo().GetScanUuid(),
-		ToolName:      res.GetOriginalResults().GetToolName(),
-		Source:        iss.GetRawIssue().GetSource(),
-		Title:         iss.GetRawIssue().GetTitle(),
-		Target:        iss.GetRawIssue().GetTarget(),
-		Type:          iss.GetRawIssue().GetType(),
-		Severity:      iss.GetRawIssue().GetSeverity(),
-		CVSS:          iss.GetRawIssue().GetCvss(),
-		Confidence:    iss.GetRawIssue().GetConfidence(),
-		Description:   iss.GetRawIssue().GetDescription(),
-		FirstFound:    firstSeenTime,
-		FalsePositive: iss.GetFalsePositive(),
+		ScanStartTime:  scanStartTime,
+		ScanID:         res.GetOriginalResults().GetScanInfo().GetScanUuid(),
+		ToolName:       res.GetOriginalResults().GetToolName(),
+		Source:         iss.GetRawIssue().GetSource(),
+		Title:          iss.GetRawIssue().GetTitle(),
+		Target:         iss.GetRawIssue().GetTarget(),
+		Type:           iss.GetRawIssue().GetType(),
+		Severity:       iss.GetRawIssue().GetSeverity(),
+		CVSS:           iss.GetRawIssue().GetCvss(),
+		Confidence:     iss.GetRawIssue().GetConfidence(),
+		Description:    iss.GetRawIssue().GetDescription(),
+		FirstFound:     firstSeenTime,
+		FalsePositive:  iss.GetFalsePositive(),
+		SeverityText:   severtiyToText(iss.GetRawIssue().GetSeverity()),
+		ConfidenceText: confidenceToText(iss.GetRawIssue().GetConfidence()),
 	})
 	if err != nil {
 		return []byte{}, err
@@ -133,19 +167,21 @@ func getEnrichedIssue(scanStartTime time.Time, res *v1.EnrichedLaunchToolRespons
 }
 
 type esDocument struct {
-	ScanStartTime time.Time     `json:"scan_start_time"`
-	ScanID        string        `json:"scan_id"`
-	ToolName      string        `json:"tool_name"`
-	Source        string        `json:"source"`
-	Target        string        `json:"target"`
-	Type          string        `json:"type"`
-	Title         string        `json:"title"`
-	Severity      v1.Severity   `json:"severity"`
-	CVSS          float64       `json:"cvss"`
-	Confidence    v1.Confidence `json:"confidence"`
-	Description   string        `json:"description"`
-	FirstFound    time.Time     `json:"first_found"`
-	FalsePositive bool          `json:"false_positive"`
+	ScanStartTime  time.Time   `json:"scan_start_time"`
+	ScanID         string      `json:"scan_id"`
+	ToolName       string      `json:"tool_name"`
+	Source         string      `json:"source"`
+	Target         string      `json:"target"`
+	Type           string      `json:"type"`
+	Title          string      `json:"title"`
+	Severity       v1.Severity `json:"severity"`
+	SeverityText   string
+	CVSS           float64       `json:"cvss"`
+	Confidence     v1.Confidence `json:"confidence"`
+	ConfidenceText string
+	Description    string    `json:"description"`
+	FirstFound     time.Time `json:"first_found"`
+	FalsePositive  bool      `json:"false_positive"`
 }
 
 var esClient interface{}
