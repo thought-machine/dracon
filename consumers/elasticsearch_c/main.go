@@ -175,10 +175,10 @@ type esDocument struct {
 	Type           string      `json:"type"`
 	Title          string      `json:"title"`
 	Severity       v1.Severity `json:"severity"`
-	SeverityText   string
+	SeverityText   string      `json:"severity_text"`
 	CVSS           float64       `json:"cvss"`
 	Confidence     v1.Confidence `json:"confidence"`
-	ConfidenceText string
+	ConfidenceText string 	 `json:"confidence_text"`
 	Description    string    `json:"description"`
 	FirstFound     time.Time `json:"first_found"`
 	FalsePositive  bool      `json:"false_positive"`
