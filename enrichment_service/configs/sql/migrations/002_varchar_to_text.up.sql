@@ -1,0 +1,3 @@
+ALTER TABLE issues ALTER COLUMN source TYPE text;
+ALTER TABLE issues ALTER COLUMN target TYPE text;
+ALTER TABLE issues ALTER COLUMN title TYPE text;
