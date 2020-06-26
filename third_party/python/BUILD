@@ -3,7 +3,7 @@ package(default_visibility = ["PUBLIC"])
 pip_library(
     name = "grpc",
     package_name = "grpcio",
-    hashes = ["beea5295ad7f122708d25b76ef4d8520c2234c1d"],
+    hashes = ["a287cfbf4d674eb826e9686d0fc5def34bfadaf1"],
     licences = ["Apache 2.0"],
     version = "1.27.2",
 )
@@ -11,7 +11,7 @@ pip_library(
 pip_library(
     name = "protobuf",
     outs = ["google/protobuf"],
-    hashes = ["eb641f83c54084dd1e5d02abbd6a88b905b4191a"],
+    hashes = ["6ad6b86dcf7d29e8868decb0269c145f003f04c9"],
     licences = ["BSD 3-Clause"],
     version = "3.11.3",
     deps = [":six"],
@@ -20,7 +20,7 @@ pip_library(
 pip_library(
     name = "pkg_resources",
     package_name = "setuptools",
-    hashes = ["06de74586ea19d084852a0503dd546c45ec86f6e"],
+    hashes = ["96d9674fba0dd86980f1bd484b69de2dc2079f75"],
     licences = ["MIT"],
     version = "40.4.3",
 )
@@ -28,7 +28,7 @@ pip_library(
 pip_library(
     name = "six",
     package_name = "six",
-    hashes = ["1555c64851feea9ec2b55a8540d4161302c9d744"],
+    hashes = ["1555c64851feea9ec2b55a8540d4161302c9d744","cf7af9d5871157d18d2f491202f9e0ed3854bfd4"],
     licences = ["MIT"],
     version = "1.14.0",
     outs = ["six.py"],
@@ -37,7 +37,7 @@ pip_library(
 pip_library(
     name = "requests",
     version = "2.23.0",
-    hashes = ["c87bcd4b18ad82110fb615085f9bf7e79ce4f94a"],
+    hashes = ["a864f264eb58c13e03408ad4becbe896ce9f510f"],
     deps = [
         ":urllib3",
         ":chardet",
@@ -48,31 +48,31 @@ pip_library(
 
 pip_library(
     name = "urllib3",
-    hashes = ["ead88fe14444ae6b459bfd72d708b08bf063a801"],
+    hashes = ["a116a02e43b5ffe5d316c9e9ef2ffa946143030b"],
     version = "1.25.8",
 )
 
 pip_library(
     name = "certifi",
-    hashes = ["aac49ec341265281fad7ab9216150710d42a1750"],
+    hashes = ["cf6e1706ad1119c9e474033c2302aa0f0af42865"],
     version = "2019.11.28",
 )
 
 pip_library(
     name = "chardet",
-    hashes = ["2266861b95169c95b78f9c85b5d4465182a1b23a"],
+    hashes = ["d6644e25f4f93987dc58b527f57832491d88eae1"],
     version = "3.0.4",
 )
 
 pip_library(
     name = "idna",
-    hashes = ["9c9e76222692feddd706449c59910c377ae8e589"],
+    hashes = ["ef35db113f6d552c3cf08cc8d5501e9871f1107c"],
     version = "2.9",
 )
 
 pip_library(
     name = "defectdojo_api",
-    hashes = ["0d6908b24baf50e193fef2abdc79a777c4608e3d"],
+    hashes = ["df99c8fee0c6e6538beaa2dbde73d16516480bfd"],
     licences = ["MIT"],
     deps = [":requests"],
     version = "1.1.3",
