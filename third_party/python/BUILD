@@ -28,7 +28,7 @@ pip_library(
 pip_library(
     name = "six",
     package_name = "six",
-    hashes = ["1555c64851feea9ec2b55a8540d4161302c9d744","cf7af9d5871157d18d2f491202f9e0ed3854bfd4"],
+    hashes = ["cf7af9d5871157d18d2f491202f9e0ed3854bfd4"],
     licences = ["MIT"],
     version = "1.14.0",
     outs = ["six.py"],
