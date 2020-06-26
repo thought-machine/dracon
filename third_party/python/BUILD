@@ -72,7 +72,6 @@ pip_library(
 
 pip_library(
     name = "defectdojo_api",
-    hashes = ["df99c8fee0c6e6538beaa2dbde73d16516480bfd"],
     licences = ["MIT"],
     deps = [":requests"],
     version = "1.1.3",
