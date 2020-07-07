@@ -15,7 +15,7 @@ plz query alltargets //... --include docker-build | sed 's/$/_push/g' | plz -p -
 
 # Get all image tags
 plz query alltargets //... --include docker-build | sed 's/$/_fqn/g' | plz -p -v 2 --colour build
-all_tag_files=$(find . -type f -name "*_fqn")
+all_tag_files=$(find . -type f -name "*_fqn" | grep -v metadata)
 all_tags=""
 for tag_file in ${all_tag_files}; do
   tag=$(cat ${tag_file})
