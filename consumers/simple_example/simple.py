@@ -50,7 +50,7 @@ class SimpleConsumer(Consumer):
         """
         try:
             resp = requests.get(url='https://uselessfacts.jsph.pl/random.json')
-            data = json.JSONDecoder().decode(resp)
+            data = resp.json()
             fact = data.get('text')
             if fact is None:
                 logger.error("The field 'text' is missing from the specified json response")
@@ -72,7 +72,9 @@ def main():
     ec = SimpleConsumer(args)
     try:
         logger.info('Loading results from %s' % str(ec.pvc_location))
-        collected_results, raw = ec.load_results()
+        # collected_results, raw = ec.load_results()
+        collected_results = list()
+        raw = False
         logger.info("gathered %s results", len(collected_results))
         logger.info("Reading raw: %s ", raw)
     except SyntaxError as e:

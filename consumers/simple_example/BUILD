@@ -4,6 +4,7 @@ python_binary(
     name = "simple",
     main = "simple.py",
     deps = [
+        "//third_party/python:requests",
         "//consumers:consumers_base_python",
         "//third_party/python:protobuf",
         "//api/proto:v1",

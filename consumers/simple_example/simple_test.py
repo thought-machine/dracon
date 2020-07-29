@@ -2,6 +2,7 @@ import unittest
 import tempfile
 import shutil
 import json
+import requests
 import logging
 
 from third_party.python.google.protobuf.timestamp_pb2 import Timestamp
@@ -94,8 +95,12 @@ class TestSimpleConsumer(unittest.TestCase):
         "third_party.python.requests"
         ".get")
     def test_send_results(self, mocked_print_data):
-        json_resp = {'text': '<some_fact>', 'other args': 'random stuff'}
-        mocked_print_data.return_value = json.JSONEncoder().encode(json_resp)
+        # mocked_json = json.JSONEncoder().encode({'text': '<some_fact>', 'other args': 'random stuff'})
+        mocked_resp = requests.Response()
+        mocked_resp._content = b'{"text": "<some_fact>", "other args": "random stuff"}'
+
+
+        mocked_print_data.return_value = mocked_resp
 
         expected_url = "https://uselessfacts.jsph.pl/random.json"
         expected_output = "Here's a random fact, <some_fact> " + \
