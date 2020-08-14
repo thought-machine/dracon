@@ -1,0 +1,67 @@
+defaultValues:
+  ## Generic Jira issue fields. Uncomment the ones you want to customise. Keep the values as arrays (['Foo'] instead of 'Foo')
+  issueFields:
+    # Configure at least these 4 fields
+    project: ['KEY']
+    issueType: ['Vulnerability']
+    components: ['A', 'B', 'C']
+    affectsVersions: ['Version 1', 'Version 2']
+    # labels: ['Label1', 'Label2']
+  
+  ## Customfields that your workspace uses (e.g. Vulnerability Type, etc) and you want to fill in with default values
+  ## You can obtain the IDs of your customfields from your Jira Workspace Settings
+  customFields:
+    ## This example will fill in the customfield_10050, a single-value field, with the value 'Foo'
+    # - id: 'customfield_10050'
+    #   fieldType: single-value
+    #   values: ['Foo']
+
+    ## This example will fill in the customfield_10050, a multi-value field, with the value 'Foo' and 'Bar'
+    # - id: 'customfield_10050'
+    #   fieldType: multi-value
+    #   values: ['Foo', 'Bar']
+
+    ## This example will fill in the customfield_10050, a float value field, with the number 55.3  
+    # - id: 'customfield_10050'
+    #   fieldType: float
+    #   values: ['55.3']   # Note, this is still specified as a string input
+
+## More explanation on fieldTypes:
+## single-value: can only be populated by one value  (e.g. Project Key)
+## multi-value: can be populated by multiple values  (e.g. Components)
+## float: can be populated by only one numeric value (e.g. CVSS)
+
+## Uncomment the fields you want included in the Issue's Description
+addToDescription:
+  - scan_start_time
+  # - scan_id
+  - tool_name
+  # - source
+  - target
+  - type
+  # - severity_text
+  # - cvss
+  - confidence_text
+  # - first_found
+  # - false_positive
+
+## You can map fields from the Dracon Result into customfields specific to your Jira Workspace
+## Note: You don't have to map all (or any) of the fields
+mappings:
+  ## This example will map the 'severity_text' field to the customfield_10050 on your Issues
+  # - draconField: severity_text   # you want to map the severity_text field
+  #   jiraField: customfield_10050 # to this specific customfield used by your workspace
+  #   fieldType: single-value      # this customfield is a single-value field (see more info above)  
+  
+  ## Below are all the possible draconFields you can map. Use the example above to configure them
+  # - draconField: scan_start_time
+  # - draconField: scan_id
+  # - draconField: tool_name
+  # - draconField: source
+  # - draconField: target
+  # - draconField: type
+  # - draconField: severity_text
+  # - draconField: cvss
+  # - draconField: confidence_text
+  # - draconField: first_found
+  # - draconField: false_positive
