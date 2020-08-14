@@ -23,6 +23,10 @@ var sampleResult = map[string]string{
 	"false_positive":  "true",
 }
 
+func TestGetConfig(t *testing.T) {
+	_ = getConfig()
+}
+
 func TestParseDraconMessage(t *testing.T) {
 	res, err := parseDraconMessage(sampleMessage)
 

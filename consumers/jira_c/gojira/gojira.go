@@ -3,11 +3,9 @@ package gojira
 import (
 	"io/ioutil"
 	"log"
-	"os"
 
 	"github.com/andygrunwald/go-jira"
 	"github.com/trivago/tgo/tcontainer"
-	yaml "gopkg.in/yaml.v2"
 )
 
 const (
@@ -21,29 +19,6 @@ type goJiraClient struct {
 	Configs    config
 }
 
-type customField struct {
-	ID        string   `yaml:"id"`
-	FieldType string   `yaml:"fieldType"`
-	Values    []string `yaml:"values"`
-}
-
-type defaultValues struct {
-	IssueFields  map[string][]string `yaml:"issueFields,omitempty"`
-	CustomFields []customField       `yaml:"customFields,omitempty"`
-}
-
-type mappings struct {
-	DraconField string `yaml:"draconField"`
-	JiraField   string `yaml:"jiraField"`
-	FieldType   string `yaml:"fieldType"`
-}
-
-type config struct {
-	DefaultValues     defaultValues `yaml:"defaultValues"`
-	Mappings          []mappings    `yaml:"mappings"`
-	DescriptionExtras []string      `yaml:"addToDescription"`
-}
-
 // NewGoJiraClient returns a goJiraClient containing the authentication details and the configuration settings
 func NewGoJiraClient(user, token, url string, dryRun bool) *goJiraClient {
 	return &goJiraClient{
@@ -51,21 +26,6 @@ func NewGoJiraClient(user, token, url string, dryRun bool) *goJiraClient {
 		DryRunMode: dryRun,
 		Configs:    getConfig(),
 	}
-}
-
-// getConfig parses the configuration from config.yaml and returns a config struct
-func getConfig() config {
-	configFile, err := ioutil.ReadFile(os.Getenv(EnvConfigPath))
-	if err != nil {
-		log.Printf("Error while reading config file:   #%v ", err)
-	}
-
-	var newConfig config
-	err = yaml.Unmarshal(configFile, &newConfig)
-	if err != nil {
-		log.Fatalf("Unmarshal: %v", err)
-	}
-	return newConfig
 }
 
 // authJiraClient authenticates the client with the given Username, API token, and URL domain

@@ -17,8 +17,10 @@ There are more instructions in the config.yaml file for how to format those thre
 ### Authentication through the Jira API
 Authentication details for the Jira API are passed as environment variables. These can be set up in the pipeline.yaml file or in the Dockerfile.
 
-DRACON_JIRA_USER="user@email.com" 
+DRACON_JIRA_USER="user@email.com"
+
 DRACON_JIRA_TOKEN="your api token"
+
 DRACON_JIRA_URL="domain your jira workspace is hosted on"
 
 

@@ -39,10 +39,6 @@ func TestNewGoJiraClient(t *testing.T) {
 	assert.NotEmpty(t, goJiraClient)
 }
 
-func TestGetConfig(t *testing.T) {
-	_ = getConfig()
-}
-
 func TestAuthJiraClient(t *testing.T) {
 	client := authJiraClient("test_user", "test_token", "test_url")
 	assert.NotEmpty(t, client)

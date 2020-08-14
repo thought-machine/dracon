@@ -3,12 +3,53 @@ package gojira
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
 	"strconv"
 
 	"github.com/andygrunwald/go-jira"
+	yaml "gopkg.in/yaml.v2"
 )
+
+type customField struct {
+	ID        string   `yaml:"id"`
+	FieldType string   `yaml:"fieldType"`
+	Values    []string `yaml:"values"`
+}
+
+type defaultValues struct {
+	IssueFields  map[string][]string `yaml:"issueFields,omitempty"`
+	CustomFields []customField       `yaml:"customFields,omitempty"`
+}
+
+type mappings struct {
+	DraconField string `yaml:"draconField"`
+	JiraField   string `yaml:"jiraField"`
+	FieldType   string `yaml:"fieldType"`
+}
+
+type config struct {
+	DefaultValues     defaultValues `yaml:"defaultValues"`
+	Mappings          []mappings    `yaml:"mappings"`
+	DescriptionExtras []string      `yaml:"addToDescription"`
+}
+
+// getConfig parses the configuration from config.yaml and returns a config struct
+func getConfig() config {
+	configFile, err := ioutil.ReadFile(os.Getenv(EnvConfigPath))
+	if err != nil {
+		log.Printf("Error while reading config file:   #%v ", err)
+	}
+
+	var newConfig config
+	err = yaml.Unmarshal(configFile, &newConfig)
+	if err != nil {
+		log.Fatalf("Unmarshal: %v", err)
+	}
+	return newConfig
+}
 
 // parseDraconMessage returns a hashmap of the parsed dracon message
 func parseDraconMessage(message string) (map[string]string, error) {
