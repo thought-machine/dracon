@@ -8,11 +8,6 @@ import (
 	"github.com/trivago/tgo/tcontainer"
 )
 
-const (
-	// EnvConfigPath the path towards the config.yaml file
-	EnvConfigPath = "DRACON_JIRA_CONFIG_PATH"
-)
-
 type goJiraClient struct {
 	JiraClient *jira.Client
 	DryRunMode bool

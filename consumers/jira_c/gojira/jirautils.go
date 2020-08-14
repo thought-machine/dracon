@@ -13,6 +13,11 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
+const (
+	// EnvConfigPath the path towards the config.yaml file
+	EnvConfigPath = "DRACON_JIRA_CONFIG_PATH"
+)
+
 type customField struct {
 	ID        string   `yaml:"id"`
 	FieldType string   `yaml:"fieldType"`

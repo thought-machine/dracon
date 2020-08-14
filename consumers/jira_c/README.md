@@ -1,6 +1,6 @@
 # Jira Consumer
 
-The Jira Consumer allows you to publish Vulnerabiltiy Issues to your organisation's Jira workspace straight from the Dracon pipeline results. Result fields such as 'target', 'cvss', 'severity', can either be written in the description or mapped to specific customfields used by your workspace.
+The Jira Consumer allows you to publish Vulnerability Issues to your organisation's Jira workspace straight from the Dracon pipeline results. Result fields such as 'target', 'cvss', 'severity', can either be written in the description or mapped to specific customfields used by your workspace.
 
 ## Setting Up
 
