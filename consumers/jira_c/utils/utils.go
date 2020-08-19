@@ -10,25 +10,8 @@ import (
 	"github.com/thought-machine/dracon/consumers"
 
 	v1 "api/proto/v1"
+	"consumers/jira_c/types/document"
 )
-
-type Document struct {
-	ScanStartTime  time.Time `json:"scan_start_time"`
-	ScanID         string    `json:"scan_id"`
-	ToolName       string    `json:"tool_name"`
-	Source         string    `json:"source"`
-	Target         string    `json:"target"`
-	Type           string    `json:"type"`
-	Title          string    `json:"title"`
-	SeverityText   string    `json:"severity_text"`
-	CVSS           string    `json:"cvss"`
-	ConfidenceText string    `json:"confidence_text"`
-	Description    string    `json:"description"`
-	FirstFound     time.Time `json:"first_found"`
-	FalsePositive  string    `json:"false_positive"`
-	// Severity   v1.Severity   `json:"severity"`
-	// Confidence v1.Confidence `json:"confidence"`
-}
 
 func float64ToString(f float64) string {
 	return strconv.FormatFloat(f, 'f', 3, 64)
@@ -74,7 +57,7 @@ func confidenceToText(confidence v1.Confidence) string {
 }
 
 func getRawIssue(scanStartTime time.Time, res *v1.LaunchToolResponse, iss *v1.Issue) ([]byte, error) {
-	jBytes, err := json.Marshal(&Document{
+	jBytes, err := json.Marshal(&document.Document{
 		ScanStartTime:  scanStartTime,
 		ScanID:         res.GetScanInfo().GetScanUuid(),
 		ToolName:       res.GetToolName(),
@@ -100,7 +83,7 @@ func getRawIssue(scanStartTime time.Time, res *v1.LaunchToolResponse, iss *v1.Is
 
 func getEnrichedIssue(scanStartTime time.Time, res *v1.EnrichedLaunchToolResponse, iss *v1.EnrichedIssue) ([]byte, error) {
 	firstSeenTime, _ := ptypes.Timestamp(iss.GetFirstSeen())
-	jBytes, err := json.Marshal(&Document{
+	jBytes, err := json.Marshal(&document.Document{
 		ScanStartTime:  scanStartTime,
 		ScanID:         res.GetOriginalResults().GetScanInfo().GetScanUuid(),
 		ToolName:       res.GetOriginalResults().GetToolName(),
@@ -127,7 +110,7 @@ func getEnrichedIssue(scanStartTime time.Time, res *v1.EnrichedLaunchToolRespons
 // ProcessMessages returns a list of stringified v1.LaunchToolResponse if consumers.Raw is true, or v1.EnrichedLaunchToolResponse otherwise
 // This esentially avoids if/else statements, since the return type is the same in both scenarios
 // :param responses: list of LaunchToolResponse protobufs
-func ProcessMessages(allowDuplicates, allowFP bool, sevThreshold int) ([]string, int, error) {
+func ProcessMessages(allowDuplicates, allowFP bool, sevThreshold int) ([]map[string]string, int, error) {
 	if consumers.Raw {
 		log.Print("Parsing Raw results")
 		responses, err := consumers.LoadToolResponse()
@@ -157,9 +140,9 @@ func ProcessMessages(allowDuplicates, allowFP bool, sevThreshold int) ([]string,
 	}
 }
 
-// returns a list of stringified v1.LaunchToolResponse
-func ProcessRawMessages(responses []*v1.LaunchToolResponse, sevThreshold int) ([]string, int, error) {
-	messages := []string{}
+// ProcessRawMessages returns a list of stringified v1.LaunchToolResponse
+func ProcessRawMessages(responses []*v1.LaunchToolResponse, sevThreshold int) ([]map[string]string, int, error) {
+	messages := []map[string]string{}
 	for _, res := range responses {
 		scanStartTime, _ := ptypes.Timestamp(GetRawScanInfo(res).GetScanStartTime())
 		for _, iss := range res.GetIssues() {
@@ -171,16 +154,22 @@ func ProcessRawMessages(responses []*v1.LaunchToolResponse, sevThreshold int) ([
 			if err != nil {
 				return nil, 0, err
 			}
-			messages = append(messages, string(b))
+			// Convert the issue into a hashmap of string
+			var issueMap map[string]string
+			err = json.Unmarshal(b, &issueMap)
+			if err != nil {
+				return nil, 0, err
+			}
+			messages = append(messages, issueMap)
 		}
 	}
 	return messages, 0, nil
 }
 
-// returns a list of stringified v1.EnrichedLaunchToolResponse
-func ProcessEnrichedMessages(responses []*v1.EnrichedLaunchToolResponse, allowDuplicate, allowFP bool, sevThreshold int) ([]string, int, error) {
+// ProcessEnrichedMessages returns a list of stringified v1.EnrichedLaunchToolResponse
+func ProcessEnrichedMessages(responses []*v1.EnrichedLaunchToolResponse, allowDuplicate, allowFP bool, sevThreshold int) ([]map[string]string, int, error) {
 	discardedMsgs := 0
-	messages := []string{}
+	messages := []map[string]string{}
 	for _, res := range responses {
 		scanStartTime, _ := ptypes.Timestamp(GetEnrichedScanInfo(res).GetScanStartTime())
 		for _, iss := range res.GetIssues() {
@@ -196,7 +185,13 @@ func ProcessEnrichedMessages(responses []*v1.EnrichedLaunchToolResponse, allowDu
 			if err != nil {
 				return nil, 0, err
 			}
-			messages = append(messages, string(b))
+			// Convert the issue into a hashmap of string
+			var issueMap map[string]string
+			err = json.Unmarshal(b, &issueMap)
+			if err != nil {
+				return nil, 0, err
+			}
+			messages = append(messages, issueMap)
 		}
 	}
 	return messages, discardedMsgs, nil

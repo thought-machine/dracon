@@ -19,7 +19,7 @@ func TestProcessEnrichedMessages(t *testing.T) {
 	tstamp, _ = time.Parse("2008-01-02T15:04:05.000Z", "2020-04-13 11:51:53+01:00")
 	updatedAt, _ := ptypes.TimestampProto(tstamp)
 
-	expectedMessage := `{"scan_start_time":"0001-01-01T00:00:00Z","scan_id":"babbb83-4627-41c6-8ba0-70ee866290e9","tool_name":"test","source":"//foo/bar:baz","target":"//foo1/bar1:baz2","type":"test type","title":"Unit Test Title","severity_text":"Info","cvss":"0.000","confidence_text":"Info","description":"this is a test description","first_found":"0001-01-01T00:00:00Z","false_positive":"true"}`
+	expectedMessage := map[string]string{"scan_start_time": "0001-01-01T00:00:00Z", "scan_id": "babbb83-4627-41c6-8ba0-70ee866290e9", "tool_name": "test", "source": "//foo/bar:baz", "target": "//foo1/bar1:baz2", "type": "test type", "title": "Unit Test Title", "severity_text": "Info", "cvss": "0.000", "confidence_text": "Info", "description": "this is a test description", "first_found": "0001-01-01T00:00:00Z", "false_positive": "true"}
 	response := []*v1.EnrichedLaunchToolResponse{
 		&v1.EnrichedLaunchToolResponse{
 			OriginalResults: &v1.LaunchToolResponse{
@@ -70,7 +70,7 @@ func TestProcessEnrichedMessages(t *testing.T) {
 func TestProcessRawMessages(t *testing.T) {
 	tstamp, _ := time.Parse("2006-01-02T15:04:05.000Z", "2020-04-13 11:51:53+01:00")
 	startTime, _ := ptypes.TimestampProto(tstamp)
-	expectedMessage := `{"scan_start_time":"0001-01-01T00:00:00Z","scan_id":"babbb83-4627-41c6-8ba0-70ee866290e9","tool_name":"test","source":"//foo/bar:baz","target":"//foo1/bar1:baz2","type":"test type","title":"Unit Test Title","severity_text":"Info","cvss":"0.000","confidence_text":"Info","description":"this is a test description","first_found":"0001-01-01T00:00:00Z","false_positive":"false"}`
+	expectedMessage := map[string]string{"scan_start_time": "0001-01-01T00:00:00Z", "scan_id": "babbb83-4627-41c6-8ba0-70ee866290e9", "tool_name": "test", "source": "//foo/bar:baz", "target": "//foo1/bar1:baz2", "type": "test type", "title": "Unit Test Title", "severity_text": "Info", "cvss": "0.000", "confidence_text": "Info", "description": "this is a test description", "first_found": "0001-01-01T00:00:00Z", "false_positive": "false"}
 
 	response := []*v1.LaunchToolResponse{
 		&v1.LaunchToolResponse{

@@ -1,67 +1,59 @@
-package gojira
+package jira
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"os"
 	"path/filepath"
 	"strconv"
 
 	"github.com/andygrunwald/go-jira"
-	yaml "gopkg.in/yaml.v2"
+	"github.com/trivago/tgo/tcontainer"
+
+	"consumers/jira_c/types/config"
 )
 
-const (
-	// EnvConfigPath the path towards the config.yaml file
-	EnvConfigPath = "DRACON_JIRA_CONFIG_PATH"
-)
-
-type customField struct {
-	ID        string   `yaml:"id"`
-	FieldType string   `yaml:"fieldType"`
-	Values    []string `yaml:"values"`
+type defaults struct {
+	Project         jira.Project
+	IssueType       jira.IssueType
+	Components      []*jira.Component
+	AffectsVersions []*jira.AffectsVersion
+	Labels          []string
+	CustomFields    tcontainer.MarshalMap
 }
 
-type defaultValues struct {
-	IssueFields  map[string][]string `yaml:"issueFields,omitempty"`
-	CustomFields []customField       `yaml:"customFields,omitempty"`
-}
+var defaultFields defaults
 
-type mappings struct {
-	DraconField string `yaml:"draconField"`
-	JiraField   string `yaml:"jiraField"`
-	FieldType   string `yaml:"fieldType"`
-}
-
-type config struct {
-	DefaultValues     defaultValues `yaml:"defaultValues"`
-	Mappings          []mappings    `yaml:"mappings"`
-	DescriptionExtras []string      `yaml:"addToDescription"`
-}
-
-// getConfig parses the configuration from config.yaml and returns a config struct
-func getConfig() config {
-	configFile, err := ioutil.ReadFile(os.Getenv(EnvConfigPath))
-	if err != nil {
-		log.Printf("Error while reading config file:   #%v ", err)
+// setDefaultFields creates the fields for Project, IssueType, Components, AffectsVersions and CustomFields
+// with the default values specified in config.yaml and serializes them into Jira Fields
+func setDefaultFields(config config.Config) {
+	defaultFields.Project = jira.Project{
+		Key: config.DefaultValues.IssueFields["project"][0],
 	}
 
-	var newConfig config
-	err = yaml.Unmarshal(configFile, &newConfig)
-	if err != nil {
-		log.Fatalf("Unmarshal: %v", err)
+	defaultFields.IssueType = jira.IssueType{
+		Name: config.DefaultValues.IssueFields["issueType"][0],
 	}
-	return newConfig
-}
 
-// parseDraconMessage returns a hashmap of the parsed dracon message
-func parseDraconMessage(message string) (map[string]string, error) {
-	jBytes := []byte(message)
-	var draconResult map[string]string
-	err := json.Unmarshal(jBytes, &draconResult)
-	return draconResult, err
+	components := []*jira.Component{}
+	for _, v := range config.DefaultValues.IssueFields["components"] {
+		components = append(components, &jira.Component{Name: v})
+	}
+	defaultFields.Components = components
+
+	affectsVersions := []*jira.AffectsVersion{}
+	for _, v := range config.DefaultValues.IssueFields["affectsVersions"] {
+		affectsVersions = append(affectsVersions, &jira.AffectsVersion{Name: v})
+	}
+	defaultFields.AffectsVersions = affectsVersions
+
+	defaultFields.Labels = config.DefaultValues.IssueFields["labels"]
+
+	// Assign the default CustomField values specified in the configuration
+	customFields := tcontainer.NewMarshalMap()
+	for _, cf := range config.DefaultValues.CustomFields {
+		customFields[cf.ID] = makeCustomField(cf.FieldType, cf.Values)
+	}
+	defaultFields.CustomFields = customFields
 }
 
 // makeCustomField returns the appropriate interface for a jira CustomField given it's type and values
@@ -85,41 +77,10 @@ func makeCustomField(fieldType string, values []string) interface{} {
 			log.Fatalf("Error parsing float field-type: %v", err)
 		}
 	default:
+		log.Printf("Warning: Field type %s is not supported. Edit your config.yaml file, as this field will not be displayed correctly.", fieldType)
 		return nil
 	}
 	return nil
-}
-
-// makeProjectField returns a jira.Project object with the given key value
-func makeProjectField(value string) jira.Project {
-	return jira.Project{
-		Key: value,
-	}
-}
-
-// makeIssueTypeField returns a jira.IssueType object with the given name value
-func makeIssueTypeField(value string) jira.IssueType {
-	return jira.IssueType{
-		Name: value,
-	}
-}
-
-// makeComponentsField returns a []jira.Components object with the given name value(s)
-func makeComponentsField(values []string) []*jira.Component {
-	components := []*jira.Component{}
-	for _, v := range values {
-		components = append(components, &jira.Component{Name: v})
-	}
-	return components
-}
-
-// makeAffectsVersionsField returns a []jira.AffectsVersion object with the given name value(s)
-func makeAffectsVersionsField(values []string) []*jira.AffectsVersion {
-	affectsVersions := []*jira.AffectsVersion{}
-	for _, v := range values {
-		affectsVersions = append(affectsVersions, &jira.AffectsVersion{Name: v})
-	}
-	return affectsVersions
 }
 
 // makeDescription creates the description of an issue's enhanced with extra information from the Dracon Result

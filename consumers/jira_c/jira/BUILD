@@ -1,14 +1,13 @@
 go_library(
-    name = "gojira",
+    name = "jira",
     srcs = [
-        "gojira.go",
-        "jirautils.go",
+        "api.go",
+        "apiutils.go",
     ],
     deps = [
         "//third_party/go:go-jira",
         "//third_party/go:tgo",
-        "//third_party/go:yaml.v2",
-        "//consumers/jira_c:config",
+        "//consumers/jira_c/types:config",
     ],
     visibility = [
         "//consumers/jira_c/...",
@@ -17,14 +16,14 @@ go_library(
 
 
 go_test(
-    name = "gojira_test",
+    name = "jira_test",
     srcs = [
-        "jirautils_test.go",
-        "gojira_test.go",
+        "api_test.go",
+        "apiutils_test.go",
     ],
     visibility = ["//consumers/jira_c/..."],
     deps = [
-        ":gojira",
+        ":jira",
         "//third_party/go:go-jira",
         "//third_party/go:stretchr_testify",
     ],

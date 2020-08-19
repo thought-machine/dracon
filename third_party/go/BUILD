@@ -51,17 +51,6 @@ go_get(
 )
 
 go_get(
-    name = "jwt",
-    binary = True,
-    get = [],
-    install = [
-        "github.com/dgrijalva/jwt-go/cmd/jwt/...",
-    ],
-    licences = ["mit"],
-    deps = [":jwt-go"],
-)
-
-go_get(
     name = "structs",
     get = "github.com/fatih/structs",
     licences = ["mit"],
@@ -76,7 +65,7 @@ go_get(
         "treflect",
     ],
     licences = ["BSD 3-Clause"],
-    revision = "v1.0.0",
+    revision = "v1.0.7",
 )
 
 go_get(

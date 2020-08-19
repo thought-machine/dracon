@@ -8,6 +8,7 @@ go_library(
     ],
     deps = [
         "//consumers",
+        "//consumers/jira_c/types:document",
         "//api/proto:v1",
         "//third_party/go:protobuf",
         ],
