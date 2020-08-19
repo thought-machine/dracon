@@ -47,10 +47,12 @@ class StdoutJsonConsumer(Consumer):
                     scan = sc
                     issue = iss
                     first_found = scan.scan_info.scan_start_time.ToJsonString()
+                    count = 1
                     false_positive = False
                 else:
                     issue = iss.raw_issue
                     first_found = iss.first_seen.ToJsonString()
+                    count = iss.count
                     false_positive = iss.false_positive
                     scan = sc.original_results
                 data = {
@@ -65,6 +67,7 @@ class StdoutJsonConsumer(Consumer):
                     'confidence': issue.confidence,
                     'description': issue.description,
                     'first_found': first_found,
+                    'count': count,
                     'false_positive': false_positive
                 }
                 self.print_data(data)

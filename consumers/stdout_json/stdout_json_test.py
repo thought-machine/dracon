@@ -109,6 +109,7 @@ class TestJSONConsumer(unittest.TestCase):
             'confidence': 1,
             'description': "test.description",
             'first_found': '',
+            'count': 1,
             'false_positive': ''
         }
 
@@ -127,6 +128,7 @@ class TestJSONConsumer(unittest.TestCase):
 
         consumer.send_results(results, raw)
         data['first_found'] = "1992-02-02T00:00:00Z"
+        data['count'] = 2
         data['false_positive'] = True
         mocked_print_data.assert_called_with(data)
 

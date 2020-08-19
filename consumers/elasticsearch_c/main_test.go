@@ -1,7 +1,7 @@
 package main
 
 import (
-	"api/proto/v1"
+	v1 "api/proto/v1"
 	"bytes"
 	"encoding/json"
 	"net/http"
@@ -34,6 +34,7 @@ var (
 		ConfidenceText: "Info",
 		Description:    "es-tests-description",
 		FirstFound:     scanStartTime,
+		Count:          2,
 		FalsePositive:  false,
 	})
 )
