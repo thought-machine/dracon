@@ -13,14 +13,6 @@ import (
 	"consumers/jira_c/types/document"
 )
 
-func float64ToString(f float64) string {
-	return strconv.FormatFloat(f, 'f', 3, 64)
-}
-
-func boolToString(b bool) string {
-	return strconv.FormatBool(b)
-}
-
 func severtiyToText(severity v1.Severity) string {
 	switch severity {
 	case v1.Severity_SEVERITY_INFO:
@@ -66,10 +58,11 @@ func getRawIssue(scanStartTime time.Time, res *v1.LaunchToolResponse, iss *v1.Is
 		Target:         iss.GetTarget(),
 		Type:           iss.GetType(),
 		SeverityText:   severtiyToText(iss.GetSeverity()),
-		CVSS:           float64ToString(iss.GetCvss()),
+		CVSS:           strconv.FormatFloat(iss.GetCvss(), 'f', 3, 64), // formatted as string
 		ConfidenceText: confidenceToText(iss.GetConfidence()),
 		Description:    iss.GetDescription(),
 		FirstFound:     scanStartTime,
+		Count:          "1",
 		FalsePositive:  "false",
 		// Severity:       iss.GetSeverity(),
 		// Confidence:     iss.GetConfidence(),
@@ -92,11 +85,12 @@ func getEnrichedIssue(scanStartTime time.Time, res *v1.EnrichedLaunchToolRespons
 		Target:         iss.GetRawIssue().GetTarget(),
 		Type:           iss.GetRawIssue().GetType(),
 		SeverityText:   severtiyToText(iss.GetRawIssue().GetSeverity()),
-		CVSS:           float64ToString(iss.GetRawIssue().GetCvss()),
+		CVSS:           strconv.FormatFloat(iss.GetRawIssue().GetCvss(), 'f', 3, 64), // formatted as string
 		ConfidenceText: confidenceToText(iss.GetRawIssue().GetConfidence()),
 		Description:    iss.GetRawIssue().GetDescription(),
 		FirstFound:     firstSeenTime,
-		FalsePositive:  boolToString(iss.GetFalsePositive()),
+		Count:          strconv.Itoa(int(iss.GetCount())),          // formatted as string
+		FalsePositive:  strconv.FormatBool(iss.GetFalsePositive()), // formatted as string
 		// Severity:       iss.GetRawIssue().GetSeverity(),
 		// Confidence:     iss.GetRawIssue().GetConfidence(),
 

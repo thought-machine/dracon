@@ -17,6 +17,7 @@ type Document struct {
 	ConfidenceText string    `json:"confidence_text"`
 	Description    string    `json:"description"`
 	FirstFound     time.Time `json:"first_found"`
+	Count          string    `json:"count"`
 	FalsePositive  string    `json:"false_positive"`
 	// Severity   v1.Severity   `json:"severity"`
 	// Confidence v1.Confidence `json:"confidence"`
