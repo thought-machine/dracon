@@ -3,15 +3,15 @@ go_library(
     srcs = [
         "utils.go",
     ],
-    visibility = [
-        "//consumers/jira_c/...",
-    ],
     deps = [
         "//consumers",
-        "//consumers/jira_c/types:document",
+        "//consumers/jira_c/document:document",
         "//api/proto:v1",
         "//third_party/go:protobuf",
         ],
+    visibility = [
+        "//consumers/jira_c:jira_c",
+    ],
 )
 
 go_test(
@@ -20,7 +20,6 @@ go_test(
         "utils_test.go",
 
     ],
-    visibility = ["//consumers/jira_c/..."],
     deps = [
         ":utils",
         "//consumers",

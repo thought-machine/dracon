@@ -24,19 +24,16 @@ DRACON_JIRA_TOKEN="your api token"
 DRACON_JIRA_URL="domain your jira workspace is hosted on"
 
 
-## Testing locally
+## Testing
 The following command will test that the app and configuration is working correctly.
 `plz test //consumers/jira_c/...`
 
-
-## Running as part of the Dracon Pipeline
-// TO COMPLETE
-
-The following arguments can be specified:
+## Flags
+The consumer supports the following flags:
 ```
-   --dryRun              For debugging. Tickets will not be created
-   --raw                 If the non-enriched results should be used
-   --allowFP             Allows issues tagged as 'false positive to be created.
-   --allowDuplicates     Allows duplicate issues to be created.
-   --severityThreshold   Only issues equal or above this threshold will get processed. {0: All, 1: Minor, 2: Moderate, 3: High, 4: Critical,   Default: 4}
+   --dry-run              For debugging. Tickets will not be created, but will be logged
+   --raw                  If the non-enriched results should be used
+   --allow-fp             Allows issues tagged as 'false positive' by the enricher to be created.
+   --allow-duplicates     Allows issues tagged as 'duplicate' by the enricher to be created.
+   --severity-threshold   Only issues equal or above this threshold will get published. {0: All, 1: Minor, 2: Moderate, 3: High, 4: Critical,   Default: 3}
 ```

@@ -9,9 +9,9 @@ import (
 )
 
 func TestSetDefaultFields(t *testing.T) {
-	setDefaultFields(sampleConfig)
+	res := getDefaultFields(sampleConfig)
 
-	expectedDefaultFields := defaults{
+	exp := defaultJiraFields{
 		Project: jira.Project{
 			Key: "TOY",
 		},
@@ -33,7 +33,7 @@ func TestSetDefaultFields(t *testing.T) {
 		},
 	}
 
-	assert.EqualValues(t, defaultFields, expectedDefaultFields)
+	assert.EqualValues(t, res, exp)
 }
 
 func TestMakeCustomField(t *testing.T) {

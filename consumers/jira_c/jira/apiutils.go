@@ -9,10 +9,10 @@ import (
 	"github.com/andygrunwald/go-jira"
 	"github.com/trivago/tgo/tcontainer"
 
-	"consumers/jira_c/types/config"
+	config "consumers/jira_c/config/types"
 )
 
-type defaults struct {
+type defaultJiraFields struct {
 	Project         jira.Project
 	IssueType       jira.IssueType
 	Components      []*jira.Component
@@ -21,32 +21,31 @@ type defaults struct {
 	CustomFields    tcontainer.MarshalMap
 }
 
-var defaultFields defaults
-
-// setDefaultFields creates the fields for Project, IssueType, Components, AffectsVersions and CustomFields
+// getDefaultFields creates the fields for Project, IssueType, Components, AffectsVersions and CustomFields
 // with the default values specified in config.yaml and serializes them into Jira Fields
-func setDefaultFields(config config.Config) {
+func getDefaultFields(config config.Config) defaultJiraFields {
+	defaultFields := defaultJiraFields{}
 	defaultFields.Project = jira.Project{
-		Key: config.DefaultValues.IssueFields["project"][0],
+		Key: config.DefaultValues.Project,
 	}
 
 	defaultFields.IssueType = jira.IssueType{
-		Name: config.DefaultValues.IssueFields["issueType"][0],
+		Name: config.DefaultValues.IssueType,
 	}
 
 	components := []*jira.Component{}
-	for _, v := range config.DefaultValues.IssueFields["components"] {
+	for _, v := range config.DefaultValues.Components {
 		components = append(components, &jira.Component{Name: v})
 	}
 	defaultFields.Components = components
 
 	affectsVersions := []*jira.AffectsVersion{}
-	for _, v := range config.DefaultValues.IssueFields["affectsVersions"] {
+	for _, v := range config.DefaultValues.AffectsVersions {
 		affectsVersions = append(affectsVersions, &jira.AffectsVersion{Name: v})
 	}
 	defaultFields.AffectsVersions = affectsVersions
 
-	defaultFields.Labels = config.DefaultValues.IssueFields["labels"]
+	defaultFields.Labels = config.DefaultValues.Labels
 
 	// Assign the default CustomField values specified in the configuration
 	customFields := tcontainer.NewMarshalMap()
@@ -54,6 +53,8 @@ func setDefaultFields(config config.Config) {
 		customFields[cf.ID] = makeCustomField(cf.FieldType, cf.Values)
 	}
 	defaultFields.CustomFields = customFields
+
+	return defaultFields
 }
 
 // makeCustomField returns the appropriate interface for a jira CustomField given it's type and values

@@ -7,18 +7,17 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/trivago/tgo/tcontainer"
 
-	"consumers/jira_c/types/config"
+	config "consumers/jira_c/config/types"
 )
 
 var (
 	sampleConfig = config.Config{
 		DefaultValues: config.DefaultValues{
-			IssueFields: map[string][]string{
-				"project":         []string{"TOY"},
-				"issueType":       []string{"Vulnerability"},
-				"components":      []string{"c1", "c2", "c3"},
-				"affectsVersions": []string{"V1", "V2"},
-			},
+			Project:         "TOY",
+			IssueType:       "Vulnerability",
+			Components:      []string{"c1", "c2", "c3"},
+			AffectsVersions: []string{"V1", "V2"},
+			Labels:          []string(nil),
 			CustomFields: []config.CustomField{{
 				ID:        "customfield_10000",
 				FieldType: "multi-value",
@@ -80,13 +79,14 @@ var (
 			},
 		},
 	}
-)
 
-var sampleClient = &client{
-	JiraClient: authJiraClient("test_user", "test_token", "test_url"),
-	DryRunMode: true,
-	Config:     sampleConfig,
-}
+	sampleClient = &client{
+		JiraClient:    authJiraClient("test_user", "test_token", "test_url"),
+		DryRunMode:    true,
+		Config:        sampleConfig,
+		DefaultFields: getDefaultFields(sampleConfig),
+	}
+)
 
 func TestNewClient(t *testing.T) {
 	client := NewClient("test_user", "test_token", "test_url", true, sampleConfig)

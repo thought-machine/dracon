@@ -7,10 +7,10 @@ go_library(
     deps = [
         "//third_party/go:go-jira",
         "//third_party/go:tgo",
-        "//consumers/jira_c/types:config",
+        "//consumers/jira_c/config:types",
     ],
     visibility = [
-        "//consumers/jira_c/...",
+        "//consumers/jira_c:jira_c",
     ],
 )
 
@@ -21,7 +21,6 @@ go_test(
         "api_test.go",
         "apiutils_test.go",
     ],
-    visibility = ["//consumers/jira_c/..."],
     deps = [
         ":jira",
         "//third_party/go:go-jira",

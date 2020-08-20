@@ -14,8 +14,12 @@ type CustomField struct {
 }
 
 type DefaultValues struct {
-	IssueFields  map[string][]string `yaml:"issueFields,omitempty"`
-	CustomFields []CustomField       `yaml:"customFields,omitempty"`
+	Project         string        `yaml:"project"`
+	IssueType       string        `yaml:"issueType"`
+	Components      []string      `yaml:"components"`
+	AffectsVersions []string      `yaml:"affectsVersions"`
+	Labels          []string      `yaml:"labels,omitempty"`
+	CustomFields    []CustomField `yaml:"customFields,omitempty"`
 }
 
 type Mappings struct {

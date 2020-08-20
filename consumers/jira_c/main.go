@@ -7,7 +7,7 @@ import (
 
 	"github.com/thought-machine/dracon/consumers"
 
-	"consumers/jira_c/configuration"
+	"consumers/jira_c/config/config"
 	"consumers/jira_c/jira"
 	"consumers/jira_c/utils"
 )
@@ -37,10 +37,10 @@ func init() {
 	authUser = os.Getenv(EnvJiraUser)
 	authToken = os.Getenv(EnvJiraToken)
 	jiraURL = os.Getenv(EnvJiraURL)
-	flag.BoolVar(&dryRunMode, "dryRun", false, "Dry run. Tickets will not be created.")
-	flag.BoolVar(&allowDuplicates, "allowDuplicates", false, "Allow duplicate issues to be created.")
-	flag.BoolVar(&allowFP, "allowFP", false, "Allow issues tagged as 'false positive' to be created.")
-	flag.IntVar(&severityThreshold, "severityThreshold", 3, "Only issues equal or above this threshold will get processed. Must be one of: {0: Info, 1: Minor / Localized, 2: Moderate / Limited, 3: Significant / Large, 4: Extensive / Widespread}")
+	flag.BoolVar(&dryRunMode, "dry-run", false, "Dry run. Tickets will not be created.")
+	flag.BoolVar(&allowDuplicates, "allow-duplicates", false, "Allow duplicate issues to be created.")
+	flag.BoolVar(&allowFP, "allow-fp", false, "Allow issues tagged as 'false positive' to be created.")
+	flag.IntVar(&severityThreshold, "severity-threshold", 3, "Only issues equal or above this threshold will get processed. Must be one of: {0: Info, 1: Minor / Localized, 2: Moderate / Limited, 3: Significant / Large, 4: Extensive / Widespread}")
 }
 
 func main() {
@@ -54,7 +54,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Could not open config file:   #%v ", err)
 	}
-	config, err := configuration.GetConfig(file)
+	config, err := config.New(file)
 	if err != nil {
 		log.Fatalf("Could not parse config file: %v", err)
 	}

@@ -1,29 +1,26 @@
-package configuration
+package config
 
 import (
 	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-
-	"consumers/jira_c/types/config"
 )
 
-var sampleConfig = config.Config{
-	DefaultValues: config.DefaultValues{
-		IssueFields: map[string][]string{
-			"project":         []string{"TOY"},
-			"issueType":       []string{"Vulnerability"},
-			"components":      []string{"c1", "c2", "c3"},
-			"affectsVersions": []string{"V1", "V2"},
-		},
-		CustomFields: []config.CustomField{{
+var sampleConfig = Config{
+	DefaultValues: DefaultValues{
+		Project:         "TOY",
+		IssueType:       "Vulnerability",
+		Components:      []string{"c1", "c2", "c3"},
+		AffectsVersions: []string{"V1", "V2"},
+		Labels:          []string(nil),
+		CustomFields: []CustomField{{
 			ID:        "customfield_10000",
 			FieldType: "multi-value",
 			Values:    []string{"foo", "bar"},
 		}},
 	},
-	Mappings: []config.Mappings{{
+	Mappings: []Mappings{{
 		DraconField: "cvss",
 		JiraField:   "customfield_10001",
 		FieldType:   "float",
@@ -34,11 +31,10 @@ var sampleConfig = config.Config{
 func TestGetConfig(t *testing.T) {
 	testConfig := `
 defaultValues:
-  issueFields:
-    project: ['TOY']
-    issueType: ['Vulnerability']
-    components: ['c1', 'c2', 'c3']
-    affectsVersions: ['V1', 'V2']
+  project: 'TOY'
+  issueType: 'Vulnerability'
+  components: ['c1', 'c2', 'c3']
+  affectsVersions: ['V1', 'V2']
 
   customFields:
     - id: 'customfield_10000'
@@ -56,7 +52,7 @@ mappings:
 `
 
 	reader := strings.NewReader(testConfig)
-	res, err := GetConfig(reader)
+	res, err := New(reader)
 
 	assert.NoError(t, err)
 	assert.EqualValues(t, res, sampleConfig)

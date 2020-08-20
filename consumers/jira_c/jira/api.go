@@ -6,23 +6,23 @@ import (
 
 	"github.com/andygrunwald/go-jira"
 
-	"consumers/jira_c/types/config"
+	config "consumers/jira_c/config/types"
 )
 
 type client struct {
-	JiraClient *jira.Client
-	DryRunMode bool
-	Config     config.Config
+	JiraClient    *jira.Client
+	DryRunMode    bool
+	Config        config.Config
+	DefaultFields defaultJiraFields
 }
 
 // NewClient returns a client containing the authentication details and the configuration settings
 func NewClient(user, token, url string, dryRun bool, config config.Config) *client {
-	setDefaultFields(config)
-
 	return &client{
-		JiraClient: authJiraClient(user, token, url),
-		DryRunMode: dryRun,
-		Config:     config,
+		JiraClient:    authJiraClient(user, token, url),
+		DryRunMode:    dryRun,
+		Config:        config,
+		DefaultFields: getDefaultFields(config),
 	}
 }
 
@@ -42,20 +42,20 @@ func authJiraClient(user, token, url string) *jira.Client {
 // assembleIssue parses the Dracon message and serializes it into a Jira Issue object
 func (client client) assembleIssue(draconResult map[string]string) *jira.Issue {
 	// Mappings the Dracon Result fields to their corresponding Jira fields specified in the configuration
-	customFields := defaultFields.CustomFields.Clone()
+	customFields := client.DefaultFields.CustomFields.Clone()
 	for _, m := range client.Config.Mappings {
 		customFields[m.JiraField] = makeCustomField(m.FieldType, []string{draconResult[m.DraconField]})
 	}
 
 	return &jira.Issue{
 		Fields: &jira.IssueFields{
-			Project:         defaultFields.Project,   //makeProjectField(client.Config.DefaultValues.IssueFields["project"][0]),
-			Type:            defaultFields.IssueType, //makeIssueTypeField(client.Config.DefaultValues.IssueFields["issueType"][0]),
+			Project:         client.DefaultFields.Project,   //makeProjectField(client.Config.DefaultValues.IssueFields["project"][0]),
+			Type:            client.DefaultFields.IssueType, //makeIssueTypeField(client.Config.DefaultValues.IssueFields["issueType"][0]),
 			Description:     makeDescription(draconResult, client.Config.DescriptionExtras),
 			Summary:         makeSummary(draconResult),
-			Components:      defaultFields.Components,      //makeComponentsField(client.Config.DefaultValues.IssueFields["components"]),
-			AffectsVersions: defaultFields.AffectsVersions, //makeAffectsVersionsField(client.Config.DefaultValues.IssueFields["affectsVersions"]),
-			Labels:          defaultFields.Labels,          //client.Config.DefaultValues.IssueFields["labels"],
+			Components:      client.DefaultFields.Components,      //makeComponentsField(client.Config.DefaultValues.IssueFields["components"]),
+			AffectsVersions: client.DefaultFields.AffectsVersions, //makeAffectsVersionsField(client.Config.DefaultValues.IssueFields["affectsVersions"]),
+			Labels:          client.DefaultFields.Labels,          //client.Config.DefaultValues.IssueFields["labels"],
 			Unknowns:        customFields,
 		},
 	}

@@ -1,12 +1,11 @@
 defaultValues:
-  ## Generic Jira issue fields. Uncomment the ones you want to customise. Keep the values as arrays (['Foo'] instead of 'Foo')
-  issueFields:
-    # Configure at least these 4 fields
-    project: ['KEY']
-    issueType: ['Vulnerability']
-    components: ['A', 'B', 'C']
-    affectsVersions: ['Version 1', 'Version 2']
-    # labels: ['Label1', 'Label2']
+  ## Generic Jira issue fields. Uncomment the ones you want to customise
+  # Configure at least these 4 fields
+  project: 'KEY'
+  issueType: 'Vulnerability'
+  components: ['A', 'B', 'C']
+  affectsVersions: ['Version 1', 'Version 2']
+  # labels: ['Label1', 'Label2']
   
   ## Customfields that your workspace uses (e.g. Vulnerability Type, etc) and you want to fill in with default values
   ## You can obtain the IDs of your customfields from your Jira Workspace Settings
