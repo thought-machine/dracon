@@ -8,12 +8,13 @@ import (
 	"github.com/thought-machine/dracon/consumers"
 
 	v1 "api/proto/v1"
-	"consumers/jira_c/document/document"
+	"consumers/jira_c/document"
 )
 
-// ProcessMessages returns a list of stringified v1.LaunchToolResponse if consumers.Raw is true, or v1.EnrichedLaunchToolResponse otherwise
-// This esentially avoids if/else statements, since the return type is the same in both scenarios
-// :param responses: list of LaunchToolResponse protobufs
+// ProcessMessages processess all the v1.LaunchToolResponses (or v1.EnrichedToolResponses if consumers.Raw is false) and returns:
+// :return messages - a list of HashMaps containing all the parsed dracon issues that are equal & above the specified severity threshold
+// :return discardedMsgs - the number of messages that have been discarded by the allowDuplicates or allowFP policies
+// :return error - if there is any error throughout the processing
 func ProcessMessages(allowDuplicates, allowFP bool, sevThreshold int) ([]map[string]string, int, error) {
 	if consumers.Raw {
 		log.Print("Parsing Raw results")
@@ -44,7 +45,7 @@ func ProcessMessages(allowDuplicates, allowFP bool, sevThreshold int) ([]map[str
 	}
 }
 
-// ProcessRawMessages returns a list of stringified v1.LaunchToolResponse
+// ProcessRawMessages returns a list of HashMaps of the v1.LaunchToolResponses
 func ProcessRawMessages(responses []*v1.LaunchToolResponse, sevThreshold int) ([]map[string]string, int, error) {
 	messages := []map[string]string{}
 	for _, res := range responses {
@@ -70,7 +71,7 @@ func ProcessRawMessages(responses []*v1.LaunchToolResponse, sevThreshold int) ([
 	return messages, 0, nil
 }
 
-// ProcessEnrichedMessages returns a list of stringified v1.EnrichedLaunchToolResponse
+// ProcessEnrichedMessages returns a list of HashMaps of the v1.EnrichedLaunchToolResponses
 func ProcessEnrichedMessages(responses []*v1.EnrichedLaunchToolResponse, allowDuplicate, allowFP bool, sevThreshold int) ([]map[string]string, int, error) {
 	discardedMsgs := 0
 	messages := []map[string]string{}

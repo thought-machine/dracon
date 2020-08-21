@@ -16,11 +16,16 @@ go_binary(
     ],
 )
 
+filegroup(
+    name = "config_file",
+    srcs = ["config.yaml"],
+)
+
 docker_image(
     name = "image",
     srcs = [
         ":jira_c",
-        "//consumers/jira_c/config:config_file",
+        ":config_file",
     ],
     base_image = "//build/docker:dracon-base-go",
     image = "dracon-consumer-jira",

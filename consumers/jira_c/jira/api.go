@@ -6,7 +6,7 @@ import (
 
 	"github.com/andygrunwald/go-jira"
 
-	config "consumers/jira_c/config/types"
+	"consumers/jira_c/config"
 )
 
 type client struct {
@@ -49,13 +49,13 @@ func (client client) assembleIssue(draconResult map[string]string) *jira.Issue {
 
 	return &jira.Issue{
 		Fields: &jira.IssueFields{
-			Project:         client.DefaultFields.Project,   //makeProjectField(client.Config.DefaultValues.IssueFields["project"][0]),
-			Type:            client.DefaultFields.IssueType, //makeIssueTypeField(client.Config.DefaultValues.IssueFields["issueType"][0]),
+			Project:         client.DefaultFields.Project,
+			Type:            client.DefaultFields.IssueType,
 			Description:     makeDescription(draconResult, client.Config.DescriptionExtras),
 			Summary:         makeSummary(draconResult),
-			Components:      client.DefaultFields.Components,      //makeComponentsField(client.Config.DefaultValues.IssueFields["components"]),
-			AffectsVersions: client.DefaultFields.AffectsVersions, //makeAffectsVersionsField(client.Config.DefaultValues.IssueFields["affectsVersions"]),
-			Labels:          client.DefaultFields.Labels,          //client.Config.DefaultValues.IssueFields["labels"],
+			Components:      client.DefaultFields.Components,
+			AffectsVersions: client.DefaultFields.AffectsVersions,
+			Labels:          client.DefaultFields.Labels,
 			Unknowns:        customFields,
 		},
 	}

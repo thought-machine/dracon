@@ -8,11 +8,11 @@ import (
 	"github.com/golang/protobuf/ptypes"
 
 	v1 "api/proto/v1"
-	document "consumers/jira_c/document/types"
 )
 
+// NewRaw returns an []byte containing the parsed Document (dracon result) from the given raw issue
 func NewRaw(scanStartTime time.Time, res *v1.LaunchToolResponse, iss *v1.Issue) ([]byte, error) {
-	jBytes, err := json.Marshal(&document.Document{
+	jBytes, err := json.Marshal(&Document{
 		ScanStartTime:  scanStartTime,
 		ScanID:         res.GetScanInfo().GetScanUuid(),
 		ToolName:       res.GetToolName(),
@@ -27,6 +27,7 @@ func NewRaw(scanStartTime time.Time, res *v1.LaunchToolResponse, iss *v1.Issue) 
 		FirstFound:     scanStartTime,
 		Count:          "1",
 		FalsePositive:  "false",
+		// The fields below are not used in this consumer. We use the text versions instead.
 		// Severity:       iss.GetSeverity(),
 		// Confidence:     iss.GetConfidence(),
 
@@ -37,9 +38,10 @@ func NewRaw(scanStartTime time.Time, res *v1.LaunchToolResponse, iss *v1.Issue) 
 	return jBytes, nil
 }
 
+// NewEnriched returns an []byte containing the parsed Document (dracon result) from the given enriched issue
 func NewEnriched(scanStartTime time.Time, res *v1.EnrichedLaunchToolResponse, iss *v1.EnrichedIssue) ([]byte, error) {
 	firstSeenTime, _ := ptypes.Timestamp(iss.GetFirstSeen())
-	jBytes, err := json.Marshal(&document.Document{
+	jBytes, err := json.Marshal(&Document{
 		ScanStartTime:  scanStartTime,
 		ScanID:         res.GetOriginalResults().GetScanInfo().GetScanUuid(),
 		ToolName:       res.GetOriginalResults().GetToolName(),
@@ -54,6 +56,7 @@ func NewEnriched(scanStartTime time.Time, res *v1.EnrichedLaunchToolResponse, is
 		FirstFound:     firstSeenTime,
 		Count:          strconv.Itoa(int(iss.GetCount())),          // formatted as string
 		FalsePositive:  strconv.FormatBool(iss.GetFalsePositive()), // formatted as string
+		// The fields below are not used in this consumer. We use the text versions instead.
 		// Severity:       iss.GetRawIssue().GetSeverity(),
 		// Confidence:     iss.GetRawIssue().GetConfidence(),
 
@@ -64,6 +67,8 @@ func NewEnriched(scanStartTime time.Time, res *v1.EnrichedLaunchToolResponse, is
 	return jBytes, nil
 }
 
+// The Severity field is normally mapped into the jira 'Impact' field, so the assumption
+// is that Severity = Impact; which in practice is generally true with small exceptions
 func severtiyToText(severity v1.Severity) string {
 	switch severity {
 	case v1.Severity_SEVERITY_INFO:

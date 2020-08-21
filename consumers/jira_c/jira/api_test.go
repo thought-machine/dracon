@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/trivago/tgo/tcontainer"
 
-	config "consumers/jira_c/config/types"
+	"consumers/jira_c/config"
 )
 
 var (

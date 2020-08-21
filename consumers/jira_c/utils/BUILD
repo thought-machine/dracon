@@ -18,7 +18,6 @@ go_test(
     name = "utils_test",
     srcs = [
         "utils_test.go",
-
     ],
     deps = [
         ":utils",
