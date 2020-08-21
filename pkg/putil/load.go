@@ -1,6 +1,7 @@
 package putil
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -16,6 +17,9 @@ import (
 func LoadToolResponse(inPath string) ([]*v1.LaunchToolResponse, error) {
 	responses := []*v1.LaunchToolResponse{}
 	if err := filepath.Walk(inPath, func(path string, f os.FileInfo, err error) error {
+		if f == nil {
+			return fmt.Errorf("Path %s doesn't exist", path)
+		}
 		if !f.IsDir() && (strings.HasSuffix(f.Name(), ".pb")) {
 			pbBytes, err := ioutil.ReadFile(path)
 			if err != nil {
@@ -39,6 +43,9 @@ func LoadToolResponse(inPath string) ([]*v1.LaunchToolResponse, error) {
 func LoadEnrichedToolResponse(inPath string) ([]*v1.EnrichedLaunchToolResponse, error) {
 	responses := []*v1.EnrichedLaunchToolResponse{}
 	if err := filepath.Walk(inPath, func(path string, f os.FileInfo, err error) error {
+		if f == nil {
+			return fmt.Errorf("Path %s doesn't exist", path)
+		}
 		if !f.IsDir() && (strings.HasSuffix(f.Name(), ".pb")) {
 			pbBytes, err := ioutil.ReadFile(path)
 			if err != nil {

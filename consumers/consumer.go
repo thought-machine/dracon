@@ -5,6 +5,7 @@ package consumers
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -76,6 +77,7 @@ func LoadEnrichedToolResponse() ([]*v1.EnrichedLaunchToolResponse, error) {
 func getScanInfo() (*v1.ScanInfo, error) {
 	t, err := time.Parse(time.RFC3339, os.Getenv(EnvDraconStartTime))
 	if err != nil {
+		log.Printf("Could not parse the environment variable %s", EnvDraconStartTime)
 		return nil, err
 	}
 	tp, err := ptypes.TimestampProto(t)

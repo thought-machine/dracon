@@ -35,7 +35,7 @@ func main() {
 func parseResult(r *BanditResult) *v1.Issue {
 	return &v1.Issue{
 		Target:      fmt.Sprintf("%s:%v", r.Filename, r.LineRange),
-		Type:        r.TestName,
+		Type:        r.TestID,
 		Title:       r.TestName,
 		Severity:    v1.Severity(v1.Severity_value[fmt.Sprintf("SEVERITY_%s", r.IssueSeverity)]),
 		Cvss:        0.0,
@@ -63,7 +63,7 @@ type BanditResult struct {
 	LineRange       []uint64 `json:"line_range"`
 	MoreInfo        string   `json:"more_info"`
 	TestID          string   `json:"test_id"`
-	TestName        string   `json:"blacklist"`
+	TestName        string   `json:"test_name"`
 }
 
 // // BanditMetric represents a Bandit Metric
