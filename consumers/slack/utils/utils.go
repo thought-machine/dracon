@@ -9,8 +9,9 @@ import (
 	"net/http"
 	"time"
 
+	v1 "api/proto/v1"
+
 	"github.com/golang/protobuf/ptypes"
-	"api/proto/v1"
 )
 
 func push(b string, webhook string) error {
@@ -51,6 +52,7 @@ func getRawIssue(scanStartTime time.Time, res *v1.LaunchToolResponse, iss *v1.Is
 		Confidence:    iss.GetConfidence(),
 		Description:   iss.GetDescription(),
 		FirstFound:    scanStartTime,
+		Count:         1,
 		FalsePositive: false,
 	})
 	if err != nil {
@@ -74,6 +76,7 @@ func getEnrichedIssue(scanStartTime time.Time, res *v1.EnrichedLaunchToolRespons
 		Confidence:    iss.GetRawIssue().GetConfidence(),
 		Description:   iss.GetRawIssue().GetDescription(),
 		FirstFound:    firstSeenTime,
+		Count:         iss.GetCount(),
 		FalsePositive: iss.GetFalsePositive(),
 	})
 	if err != nil {

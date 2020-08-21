@@ -11,7 +11,7 @@ import (
 	//  TODO(hjenkins): Support multiple versions of ES
 	// elasticsearchv5 "github.com/elastic/go-elasticsearch/v5"
 	// elasticsearchv6 "github.com/elastic/go-elasticsearch/v6"
-	"api/proto/v1"
+	v1 "api/proto/v1"
 
 	elasticsearchv7 "github.com/elastic/go-elasticsearch"
 	"github.com/golang/protobuf/ptypes"
@@ -101,6 +101,7 @@ func getRawIssue(scanStartTime time.Time, res *v1.LaunchToolResponse, iss *v1.Is
 		Confidence:    iss.GetConfidence(),
 		Description:   iss.GetDescription(),
 		FirstFound:    scanStartTime,
+		Count:         1,
 		FalsePositive: false,
 	})
 	if err != nil {
@@ -156,6 +157,7 @@ func getEnrichedIssue(scanStartTime time.Time, res *v1.EnrichedLaunchToolRespons
 		Confidence:     iss.GetRawIssue().GetConfidence(),
 		Description:    iss.GetRawIssue().GetDescription(),
 		FirstFound:     firstSeenTime,
+		Count:          iss.GetCount(),
 		FalsePositive:  iss.GetFalsePositive(),
 		SeverityText:   severtiyToText(iss.GetRawIssue().GetSeverity()),
 		ConfidenceText: confidenceToText(iss.GetRawIssue().GetConfidence()),
@@ -167,21 +169,22 @@ func getEnrichedIssue(scanStartTime time.Time, res *v1.EnrichedLaunchToolRespons
 }
 
 type esDocument struct {
-	ScanStartTime  time.Time   `json:"scan_start_time"`
-	ScanID         string      `json:"scan_id"`
-	ToolName       string      `json:"tool_name"`
-	Source         string      `json:"source"`
-	Target         string      `json:"target"`
-	Type           string      `json:"type"`
-	Title          string      `json:"title"`
-	Severity       v1.Severity `json:"severity"`
-	SeverityText   string      `json:"severity_text"`
+	ScanStartTime  time.Time     `json:"scan_start_time"`
+	ScanID         string        `json:"scan_id"`
+	ToolName       string        `json:"tool_name"`
+	Source         string        `json:"source"`
+	Target         string        `json:"target"`
+	Type           string        `json:"type"`
+	Title          string        `json:"title"`
+	Severity       v1.Severity   `json:"severity"`
+	SeverityText   string        `json:"severity_text"`
 	CVSS           float64       `json:"cvss"`
 	Confidence     v1.Confidence `json:"confidence"`
-	ConfidenceText string 	 `json:"confidence_text"`
-	Description    string    `json:"description"`
-	FirstFound     time.Time `json:"first_found"`
-	FalsePositive  bool      `json:"false_positive"`
+	ConfidenceText string        `json:"confidence_text"`
+	Description    string        `json:"description"`
+	FirstFound     time.Time     `json:"first_found"`
+	Count          uint64        `json:"count"`
+	FalsePositive  bool          `json:"false_positive"`
 }
 
 var esClient interface{}

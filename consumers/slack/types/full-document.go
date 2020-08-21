@@ -19,5 +19,6 @@ type FullDocument struct {
 	Confidence    v1.Confidence `json:"confidence"`
 	Description   string        `json:"description"`
 	FirstFound    time.Time     `json:"first_found"`
+	Count         uint64        `json:"count"`
 	FalsePositive bool          `json:"false_positive"`
 }
