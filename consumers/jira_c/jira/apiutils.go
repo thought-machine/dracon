@@ -118,10 +118,7 @@ func makeSummary(draconResult map[string]string) string {
 	case "spotbugs":
 		return filepath.Base(draconResult["target"]) + " " + draconResult["title"]
 	case "bandit":
-		// Note: setting character limit to 100 until the bandit producer's 'title' gets fixed
-		return fmt.Sprintf("%.120s", (filepath.Base(draconResult["target"]) + " " + draconResult["description"]))
-		// Replace the line with this once PR#47 gets merged
-		// return filepath.Base(draconResult["target"]) + " " + draconResult["title"]
+		return filepath.Base(draconResult["target"]) + " " + draconResult["title"]
 	}
 	return ""
 }
