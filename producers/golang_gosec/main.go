@@ -35,11 +35,11 @@ func parseIssues(out *GoSecOut) []*v1.Issue {
 		issues = append(issues, &v1.Issue{
 			Target:      fmt.Sprintf("%s:%v", r.File, r.Line),
 			Type:        r.RuleID,
-			Title:       r.Code,
+			Title:       r.Details,
 			Severity:    v1.Severity(v1.Severity_value[fmt.Sprintf("SEVERITY_%s", r.Severity)]),
 			Cvss:        0.0,
 			Confidence:  v1.Confidence(v1.Confidence_value[fmt.Sprintf("CONFIDENCE_%s", r.Confidence)]),
-			Description: r.Details,
+			Description: r.Code,
 		})
 	}
 	return issues

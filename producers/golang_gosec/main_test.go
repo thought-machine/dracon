@@ -41,11 +41,11 @@ func TestParseIssues(t *testing.T) {
 	expectedIssue := &v1.Issue{
 		Target:      "/tmp/source/foo.go:33",
 		Type:        "G304",
-		Title:       "ioutil.ReadFile(path)",
+		Title:       "Potential file inclusion via variable",
 		Severity:    v1.Severity_SEVERITY_MEDIUM,
 		Cvss:        0.0,
 		Confidence:  v1.Confidence_CONFIDENCE_HIGH,
-		Description: "Potential file inclusion via variable",
+		Description: "ioutil.ReadFile(path)",
 	}
 
 	assert.Equal(t, []*v1.Issue{expectedIssue}, issues)
