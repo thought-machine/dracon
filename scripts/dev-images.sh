@@ -4,7 +4,7 @@ plz query alltargets //... --include docker-build | sed 's/$/_load/g' | plz -p -
 
 # get all tags
 plz query alltargets //... --include docker-build | sed 's/$/_fqn/g' | plz -p -v 2 --colour build
-all_tag_files=$(find . -type f -name "*_fqn")
+all_tag_files=$(find . -type f -name "*_fqn" -not -name '.target_*')
 all_tags=""
 for tag_file in ${all_tag_files}; do
   tag=$(cat ${tag_file})
