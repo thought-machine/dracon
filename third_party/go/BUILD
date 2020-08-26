@@ -21,6 +21,54 @@ package(default_visibility = ["PUBLIC"])
 # )
 
 go_get(
+    name = "go-jira",
+    get = "github.com/andygrunwald/go-jira",
+    licences = ["MIT"],
+    revision = "v1.12.0",
+    deps = [
+        ":pkg_errors",
+        ":go-querystring",
+        ":jwt-go",
+        ":structs",
+        ":tgo",
+    ],
+)
+
+go_get(
+    name = "go-querystring",
+    get = "github.com/google/go-querystring/query",
+    licences = [
+        "BSD-3-Clause",
+    ],
+    revision = "v1.0.0",
+)
+
+go_get(
+    name = "jwt-go",
+    get = "github.com/dgrijalva/jwt-go",
+    licences = ["mit"],
+    revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e",
+)
+
+go_get(
+    name = "structs",
+    get = "github.com/fatih/structs",
+    licences = ["mit"],
+    revision = "f5faa72e73092639913f5833b75e1ac1d6bc7a63",
+)
+
+go_get(
+    name = "tgo",
+    get = "github.com/trivago/tgo",
+    install = [
+        "tcontainer",
+        "treflect",
+    ],
+    licences = ["BSD 3-Clause"],
+    revision = "v1.0.7",
+)
+
+go_get(
     name = "elastic_go-elasticsearch_v7",
     get = "github.com/elastic/go-elasticsearch",
     install = [
