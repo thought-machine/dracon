@@ -14,6 +14,7 @@ go_library(
         "//third_party/go:golang-migrate_migrate",
         "//third_party/go:protobuf",
         "//third_party/go:jmoiron_sqlx",
+        "//third_party/go:lib_pq",
         "//third_party/go:rakyll_statik",
     ],
 )
