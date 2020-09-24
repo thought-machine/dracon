@@ -5,7 +5,10 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code into the Go module directory
+      - name: Install python dependencies
+        run: sudo apt-get update && sudo apt-get install -y python3-setuptools python3-pip && cat /etc/pip.conf
+
+      - name: Check out code
         uses: actions/checkout@v2
 
       - name: Build
