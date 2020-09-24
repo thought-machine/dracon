@@ -1,0 +1,2 @@
+[go]
+gotool = //third_party/lang:go
