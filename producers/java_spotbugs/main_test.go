@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	v1 "api/proto/v1"
+	v1 "github.com/thought-machine/dracon/api/proto/v1"
 
 	proto "github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/assert"

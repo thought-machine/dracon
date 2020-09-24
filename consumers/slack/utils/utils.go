@@ -2,14 +2,14 @@ package utils
 
 import (
 	"bytes"
-	"consumers/slack/types"
+	"github.com/thought-machine/dracon/consumers/slack/types"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"time"
 
-	v1 "api/proto/v1"
+	v1 "github.com/thought-machine/dracon/api/proto/v1"
 
 	"github.com/golang/protobuf/ptypes"
 )

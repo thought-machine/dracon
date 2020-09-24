@@ -4,7 +4,7 @@ import (
 	"flag"
 	"log"
 
-	"consumers/slack/utils"
+	"github.com/thought-machine/dracon/consumers/slack/utils"
 
 	"github.com/golang/protobuf/ptypes"
 	"github.com/thought-machine/dracon/consumers"

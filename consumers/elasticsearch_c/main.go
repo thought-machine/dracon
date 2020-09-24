@@ -11,7 +11,7 @@ import (
 	//  TODO(hjenkins): Support multiple versions of ES
 	// elasticsearchv5 "github.com/elastic/go-elasticsearch/v5"
 	// elasticsearchv6 "github.com/elastic/go-elasticsearch/v6"
-	v1 "api/proto/v1"
+	v1 "github.com/thought-machine/dracon/api/proto/v1"
 
 	elasticsearchv7 "github.com/elastic/go-elasticsearch"
 	"github.com/golang/protobuf/ptypes"
