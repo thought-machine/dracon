@@ -6,7 +6,7 @@ import (
 
 	"github.com/andygrunwald/go-jira"
 
-	"consumers/jira_c/config"
+	"github.com/thought-machine/dracon/consumers/jira_c/config"
 )
 
 type client struct {

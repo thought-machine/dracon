@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	v1 "api/proto/v1"
+	v1 "github.com/thought-machine/dracon/api/proto/v1"
 
 	"github.com/stretchr/testify/assert"
 )

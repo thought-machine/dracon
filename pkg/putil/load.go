@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	v1 "api/proto/v1"
+	v1 "github.com/thought-machine/dracon/api/proto/v1"
 
 	"github.com/gogo/protobuf/proto"
 )

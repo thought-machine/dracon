@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
-	v1 "api/proto/v1"
-	"producers"
-	"producers/pipsafety/types"
+	v1 "github.com/thought-machine/dracon/api/proto/v1"
+	"github.com/thought-machine/dracon/producers"
+	"github.com/thought-machine/dracon/producers/pipsafety/types"
 )
 
 func parseIssues(out []types.SafetyIssue) []*v1.Issue {

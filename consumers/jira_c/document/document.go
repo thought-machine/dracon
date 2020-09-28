@@ -7,7 +7,7 @@ import (
 
 	"github.com/golang/protobuf/ptypes"
 
-	v1 "api/proto/v1"
+	v1 "github.com/thought-machine/dracon/api/proto/v1"
 )
 
 // NewRaw returns an []byte containing the parsed Document (dracon result) from the given raw issue

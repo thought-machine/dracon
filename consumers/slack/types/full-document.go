@@ -3,7 +3,7 @@ package types
 import (
 	"time"
 
-	v1 "api/proto/v1"
+	v1 "github.com/thought-machine/dracon/api/proto/v1"
 )
 
 type FullDocument struct {

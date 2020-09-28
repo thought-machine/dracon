@@ -7,9 +7,9 @@ import (
 
 	"github.com/thought-machine/dracon/consumers"
 
-	"consumers/jira_c/config"
-	"consumers/jira_c/jira"
-	"consumers/jira_c/utils"
+	"github.com/thought-machine/dracon/consumers/jira_c/config"
+	"github.com/thought-machine/dracon/consumers/jira_c/jira"
+	"github.com/thought-machine/dracon/consumers/jira_c/utils"
 )
 
 const (

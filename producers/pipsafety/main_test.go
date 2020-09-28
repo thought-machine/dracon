@@ -2,10 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	"producers/pipsafety/types"
+	"github.com/thought-machine/dracon/producers/pipsafety/types"
 	"testing"
 
-	v1 "api/proto/v1"
+	v1 "github.com/thought-machine/dracon/api/proto/v1"
 
 	"github.com/stretchr/testify/assert"
 )

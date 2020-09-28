@@ -1,8 +1,8 @@
 package main
 
 import (
-	v1 "api/proto/v1"
-	types "types/npmaudit-issue"
+	v1 "github.com/thought-machine/dracon/api/proto/v1"
+	types "github.com/thought-machine/dracon/producers/npm_audit/types/npmaudit-issue"
 
 	"encoding/json"
 	"testing"
