@@ -33,5 +33,5 @@ docker_image(
         ":typescript_tslint",
     ],
     base_image = "//build/docker:dracon-base-go",
-    image = "dracon-producer-gosec",
+    image = "dracon-producer-tslint",
 )
