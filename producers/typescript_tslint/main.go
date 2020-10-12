@@ -21,7 +21,7 @@ func main() {
 	}
 	issues := parseIssues(results)
 	if err := producers.WriteDraconOut(
-		"gosec",
+		"tslint",
 		issues,
 	); err != nil {
 		log.Fatal(err)
