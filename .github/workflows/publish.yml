@@ -1,0 +1,25 @@
+name: Publish
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*'
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install python dependencies
+        run: sudo apt-get update && sudo apt-get install -y python3-setuptools python3-pip
+
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Please build
+        run: ./pleasew build //...
+
+      - name: Create pre-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./pleasew run //scripts:pre-release
