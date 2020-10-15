@@ -1,32 +1,29 @@
-#!/bin/bash -e
+#!/bin/bash
+set -eo pipefail
 
-version="$1"
-
-if [ -z "${version}" ]; then
-  echo "missing version"
-  exit 1
+if [ -n "${DOCKERHUB_USERNAME}" ]; then
+  echo "${DOCKERHUB_PASSWORD}" | docker login --username "${DOCKERHUB_USERNAME}" --password-stdin
 fi
 
-# Build all images
-plz query alltargets //... --include docker-build | sed 's/$/_load/g' | plz -p -v 2 --colour run sequential
+version=$(git describe --always)
 
-# Push image tags
-plz query alltargets //... --include docker-build | sed 's/$/_push/g' | plz -p -v 2 --colour run sequential
+docker_rules=$(./pleasew query alltargets --include docker-build //...)
 
-# Get all image tags
-plz query alltargets //... --include docker-build | sed 's/$/_fqn/g' | plz -p -v 2 --colour build
-all_tag_files=$(find . -type f -name "*_fqn" -not -name '.target_*' | grep -v metadata)
-all_tags=""
-for tag_file in ${all_tag_files}; do
-  tag=$(cat ${tag_file})
-  all_tags+=" ${tag}"
+fqns_to_push=()
+
+export DOCKER_BUILDKIT=1
+for rule in ${docker_rules}; do
+  ./pleasew run "${rule}_load"
+  fqn=$(cat $(./pleasew build "${rule}_fqn" | tail -n1 | tr -s " "))
+  repo="$(echo "${fqn}" | cut -f1 -d\:)"
+  fqn_version="${repo}:${version}"
+  echo ""
+  echo "-> tagging as ${fqn_version}"
+  docker tag "${fqn}" "${fqn_version}"
+  fqns_to_push+=("${fqn_version}")
 done
 
-# Retag as version and push
-for tag in ${all_tags}; do
-  repository=$(echo "${tag}" | cut -f1 -d":")
-  new_tag="${repository}:${version}"
-  docker tag "${tag}" "${new_tag}"
-  echo "tagged ${new_tag}"
-  docker push "${new_tag}"
+for fqn_to_push in "${fqns_to_push[@]}"; do
+  echo "-> pushing as ${fqn_to_push}"
+  docker push "${fqn_to_push}"
 done
