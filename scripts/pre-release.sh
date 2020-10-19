@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
+git fetch --tags --force
 version=$(git describe --always)
 
 github_api_version="application/vnd.github.v3+json"
