@@ -19,10 +19,5 @@ This lets us use `git desribe` to give us a descriptive version from any commit 
 
 ## Creating a Release
 
-1. Tag the commit you would like to release from `master` and push the tags. This will trigger a GitHub workflow that creates a pre-release and pushes Docker images:
-   ```
-   git fetch --tags
-   git tag --annotate <version> --message "<version>"
-   git push origin --tags
-   ```
+1. Run `./pleasew run //scripts:tag-release` and follow the instructions. This will trigger a GitHub workflow that creates a pre-release with all the artifacts.
 2. Once satisfied, promote the new pre-release to a release.
