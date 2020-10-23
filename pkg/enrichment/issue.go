@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"strings"
 
 	v1 "github.com/thought-machine/dracon/api/proto/v1"
 
@@ -18,10 +19,12 @@ import (
 // GetHash returns the hash of an issue
 func GetHash(i *v1.Issue) string {
 	h := md5.New()
+	sourceNoRef := strings.Split(i.GetSource(), "?ref=")
+
 	io.WriteString(h, i.GetTarget())
 	io.WriteString(h, i.GetType())
 	io.WriteString(h, i.GetTitle())
-	io.WriteString(h, i.GetSource())
+	io.WriteString(h, sourceNoRef[0])
 	io.WriteString(h, i.GetSeverity().String())
 	io.WriteString(h, fmt.Sprintf("%f", i.GetCvss()))
 	io.WriteString(h, i.GetConfidence().String())
