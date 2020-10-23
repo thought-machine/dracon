@@ -6,7 +6,7 @@ go_library(
     ],
     visibility = [
         "//cmd/enricher",
-        "//pkg/enrichment",
+        "//pkg/enrichment/...",
     ],
     deps = [
         "//pkg/enrichment/db/migrations",
