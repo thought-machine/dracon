@@ -28,7 +28,6 @@ func main() {
 	}
 }
 
-
 func parseIssues(out types.SemgrepResults) []*v1.Issue {
 	issues := []*v1.Issue{}
 
@@ -38,9 +37,9 @@ func parseIssues(out types.SemgrepResults) []*v1.Issue {
 
 		// Map the semgrep severity levels to dracon severity levels
 		severityMap := map[string]v1.Severity{
-			"INFO":v1.Severity_SEVERITY_INFO,
-			"WARNING":v1.Severity_SEVERITY_MEDIUM,
-			"ERROR":v1.Severity_SEVERITY_HIGH, 
+			"INFO":    v1.Severity_SEVERITY_INFO,
+			"WARNING": v1.Severity_SEVERITY_MEDIUM,
+			"ERROR":   v1.Severity_SEVERITY_HIGH,
 		}
 
 		sev := severityMap[r.Extra.Severity]
