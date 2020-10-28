@@ -5,8 +5,8 @@ import (
 	types "github.com/thought-machine/dracon/producers/semgrep/types/semgrep-issue"
 
 	"encoding/json"
-    "testing"
-
+	"testing"
+	
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,17 +16,17 @@ const exampleOutput = `
 	  	{
 			"check_id": "rules.go.xss.Go using template.HTML", 
 			"path": "/src/go/xss/template-html.go",
-        	"start": {"line": 10, "col": 11},
-        	"end": {"line": 10, "col": 32},
-        	"extra": {
-          		"message": "Use of this type presents a security risk: the encapsulated content should come from a trusted source, \nas it will be included verbatim in the template output.\nhttps://blogtitle.github.io/go-safe-html/\n", 
-           		"metavars": {},
-           		"metadata": {}, 
-           		"severity": "WARNING", 
-           		"lines": "\t\t\treturn template.HTML(revStr)"
+			start": {"line": 10, "col": 11},
+			"end": {"line": 10, "col": 32},
+			"extra": {
+				"message": "Use of this type presents a security risk: the encapsulated content should come from a trusted source, \nas it will be included verbatim in the template output.\nhttps://blogtitle.github.io/go-safe-html/\n", 
+				"metavars": {},
+				"metadata": {}, 
+				"severity": "WARNING", 
+				"lines": "\t\t\treturn template.HTML(revStr)"
 			}
-	  	},
-	  	{
+		},
+		{
 			"check_id": "rules.python.grpc.GRPC Insecure Port",
 			"path": "/src/python/grpc/grpc_insecure_port.py",
 			"start": {"line": 19, "col": 5},
@@ -55,10 +55,9 @@ const exampleOutput = `
 
 func TestParseIssues(t *testing.T) {
 	semgrepResults := types.SemgrepResults{}
-    err := json.Unmarshal([]byte(exampleOutput), &semgrepResults)
-
-    assert.Nil(t, err)
-    
+	err := json.Unmarshal([]byte(exampleOutput), &semgrepResults)
+	
+	assert.Nil(t, err)
 	issues := parseIssues(semgrepResults)
 
 	expectedIssue := &v1.Issue{
