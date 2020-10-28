@@ -16,7 +16,7 @@ const exampleOutput = `
 	  	{
 			"check_id": "rules.go.xss.Go using template.HTML", 
 			"path": "/src/go/xss/template-html.go",
-			start": {"line": 10, "col": 11},
+			"start": {"line": 10, "col": 11},
 			"end": {"line": 10, "col": 32},
 			"extra": {
 				"message": "Use of this type presents a security risk: the encapsulated content should come from a trusted source, \nas it will be included verbatim in the template output.\nhttps://blogtitle.github.io/go-safe-html/\n", 
