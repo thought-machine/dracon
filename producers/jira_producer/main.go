@@ -28,6 +28,14 @@ var rootCmd = &cobra.Command{
 	Short: "sync",
 	Long:  "tool to sync jira issues against a database",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		AuthUser = viper.GetString("user")
+		AuthToken = viper.GetString("token")
+		JiraURL = viper.GetString("jira")
+		JQL = viper.GetString("query")
+		ConfigPath = viper.GetString("config")
+		ConnectionString = viper.GetString("dbcon")
+		DryRun = viper.GetBool("dryRun")
+
 		var enrichDB db.EnrichDatabase
 		// Parse config.yaml
 		file, err := os.Open(ConfigPath)
@@ -77,12 +85,13 @@ func init() {
 
 	viper.BindPFlag("token", rootCmd.Flags().Lookup("token"))
 	viper.BindPFlag("user", rootCmd.Flags().Lookup("user"))
-	viper.BindPFlag("j", rootCmd.Flags().Lookup("j"))
-	viper.BindPFlag("q", rootCmd.Flags().Lookup("q"))
-	viper.BindPFlag("c", rootCmd.Flags().Lookup("c"))
+
+	viper.BindPFlag("jira", rootCmd.Flags().Lookup("jira"))
+	viper.BindPFlag("query", rootCmd.Flags().Lookup("query"))
+	viper.BindPFlag("config", rootCmd.Flags().Lookup("config"))
 	viper.BindPFlag("dryRun", rootCmd.Flags().Lookup("dryRun"))
 	viper.BindPFlag("dbcon", rootCmd.Flags().Lookup("dbcon"))
-	viper.SetEnvPrefix("enricher")
+	viper.SetEnvPrefix("DRACON_SYNC")
 	viper.AutomaticEnv()
 }
 
