@@ -8,7 +8,7 @@ import (
 	"github.com/thought-machine/dracon/consumers"
 
 	v1 "github.com/thought-machine/dracon/api/proto/v1"
-	"github.com/thought-machine/dracon/consumers/jira_c/document"
+	"github.com/thought-machine/dracon/common/jira/document"
 )
 
 // ProcessMessages processess all the v1.LaunchToolResponses (or v1.EnrichedToolResponses if consumers.Raw is false) and returns:
