@@ -9,11 +9,14 @@ import (
 	"path/filepath"
 	"strings"
 
+	"context"
+
 	"github.com/golang-migrate/migrate"
 	"github.com/golang-migrate/migrate/database/postgres"
 	bindata "github.com/golang-migrate/migrate/source/go_bindata"
 	"github.com/lib/pq"
 	"github.com/rakyll/statik/fs"
+	v1 "github.com/thought-machine/dracon/api/proto/v1"
 
 	// Statik bindata for migrations
 	_ "github.com/thought-machine/dracon/pkg/enrichment/db/migrations"
@@ -22,6 +25,14 @@ import (
 )
 
 // DB represents the db methods that are used for the enricher
+type EnrichDatabase interface {
+	GetIssueByHash(string) (*v1.EnrichedIssue, error)
+	CreateIssue(context.Context, *v1.EnrichedIssue) error
+	UpdateIssue(context.Context, *v1.EnrichedIssue) error
+	DeleteIssueByHash(string) error
+}
+
+// Database implements DB
 type DB struct {
 	*sqlx.DB
 }
