@@ -7,8 +7,8 @@ import (
 
 	"github.com/thought-machine/dracon/consumers"
 
-	"github.com/thought-machine/dracon/consumers/jira_c/config"
-	"github.com/thought-machine/dracon/consumers/jira_c/jira"
+	"github.com/thought-machine/dracon/common/jira/config"
+	"github.com/thought-machine/dracon/common/jira/jira"
 	"github.com/thought-machine/dracon/consumers/jira_c/utils"
 )
 
