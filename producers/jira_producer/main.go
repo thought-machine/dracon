@@ -12,7 +12,6 @@ import (
 	"github.com/thought-machine/dracon/producers/jira_producer/sync"
 )
 
-// TODO: make all these optionally env vars
 var (
 	AuthUser         string
 	AuthToken        string
@@ -77,7 +76,6 @@ func init() {
 	rootCmd.Flags().StringVar(&AuthUser, "user", "", "jira username")
 	rootCmd.Flags().StringVar(&JiraURL, "jira", "", "the url of your jira instance")
 	rootCmd.Flags().StringVar(&ConnectionString, "dbcon", "", "the enrichment db connection string")
-	// TODO: the above need env vars
 
 	rootCmd.Flags().StringVar(&JQL, "query", "", "the query to search for")
 	rootCmd.Flags().StringVar(&ConfigPath, "config", "", "the path to the config file")
@@ -95,7 +93,6 @@ func init() {
 	viper.AutomaticEnv()
 }
 
-// flags don't work with please, todo: try viper
 func main() {
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatal(err)
