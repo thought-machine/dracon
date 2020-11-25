@@ -448,3 +448,74 @@ go_get(
     get = "github.com/jmoiron/sqlx/...",
     revision = "v1.2.0",
 )
+
+
+go_get(
+     name = "mockgen",
+     binary = True,
+     get = [],
+     install = ["github.com/golang/mock/mockgen"],
+     licences = ["apache-2.0"],
+     deps = [":mock"],
+)
+
+go_get(
+     name = "mock",
+     get = "github.com/golang/mock/...",
+     licences = ["apache-2.0"],
+     revision = "v1.4.4",
+     deps = [
+         ":x_tools",
+    ],
+)
+go_get(
+     name = "x_tools",
+     get = "golang.org/x/tools",
+     install = [
+         "cmd/...",
+         "imports",
+         "go/packages",
+     ],
+     licences = ["bsd-3-clause"],
+     revision = "5bcca83a78812bd91ce8cb29be4fc4521cdc8f6f",
+     deps = [
+         ":x_crypto",
+         ":x_errors",
+         ":x_mod",
+         ":x_net",
+         ":x_sync",
+     ],
+)
+go_get(
+     name = "x_crypto",
+     get = "golang.org/x/crypto/...",
+     licences = ["bsd-3-clause"],
+     revision = "123391ffb6de907695e1066dc40c1ff09322aeb6",  
+     strip = ["acme/autocert"],
+     deps = [":x_sys"],
+)
+go_get(
+     name = "x_errors",
+     get = "golang.org/x/xerrors/...",
+     licences = ["bsd-3-clause"],
+     revision = "a5947ffaace3e882f334c1750858b4a6a7e52422",
+     deps = [":x_sys"],
+)
+go_get(
+      name = "x_mod",
+      get = "golang.org/x/mod",
+      install = [
+          "semver",
+      ],
+      licences = ["bsd-3-clause"],
+    revision = "e5e73c1b9c72835114eb6daab038373d39515006",
+)
+go_get(
+      name = "x_sync",
+      get = "golang.org/x/sync/...",
+      licences = ["bsd-3-clause"],
+      revision = "fd80eb99c8f653c847d294a001bdf2a3a6f768f5",
+      deps = [
+          ":x_net",
+    ],
+)
