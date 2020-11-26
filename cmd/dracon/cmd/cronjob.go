@@ -16,9 +16,11 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
+	"log"
+	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/thought-machine/dracon/pkg/kubernetes"
 	"github.com/thought-machine/dracon/pkg/template"
 )
 
@@ -52,8 +54,7 @@ var cronjobCmd = &cobra.Command{
 			return err
 		}
 
-
-		for a, doc := range resDocs["CronJob"] {
+		for _, doc := range resDocs["CronJob"] {
 			err = kubernetes.Apply(string(doc), &kubernetes.KubectlOpts{
 				Namespace: kubernetesNamespace,
 				Context:   kubernetesContext,
