@@ -1,3 +1,5 @@
+subinclude("@third_party/subrepos/pleasings//docker")
+
 go_binary(
     name = "sync_tickets",
     srcs = [
@@ -12,4 +14,14 @@ go_binary(
         "//third_party/go:go-jira",
         "//common/jira/config"
     ],
+)
+
+
+docker_image(
+    name = "dracon-producer-jira",
+    srcs = [
+        ":sync_ticket",
+    ],
+    base_image = "//build/docker:dracon-base-go",
+    image = "dracon-producer-jira",
 )
