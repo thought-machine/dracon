@@ -6,7 +6,7 @@ import (
 
 	"github.com/andygrunwald/go-jira"
 
-	"github.com/thought-machine/dracon/consumers/jira_c/config"
+	"github.com/thought-machine/dracon/common/jira/config"
 )
 
 type client struct {
@@ -78,4 +78,30 @@ func (client client) CreateIssue(draconResult map[string]string) error {
 	}
 	log.Printf("Created Jira Issue ID %s. jira_key=%s", ri.ID, string(ri.Key))
 	return nil
+}
+
+// SearchByJQL searches jira instance by JQL and returns results with history
+func (client client) SearchByJQL(jql string) ([]jira.Issue, error) {
+	var results []jira.Issue
+	startAt := 0
+	maxresults := 100
+	expand := "names,schema,operations,editmeta,changelog,renderedFields"
+	issues, response, err := client.JiraClient.Issue.Search(jql, &jira.SearchOptions{Expand: expand, StartAt: startAt, MaxResults: maxresults}) //maxresults is capped to 100 by attlasian
+	if err != nil {
+		log.Print(response)
+		return nil, err
+	}
+	results = append(results, issues...)
+	startAt = len(results)
+	log.Print("The query returned ", response.Total, " results")
+	for len(results) < response.Total {
+		issues, response, err = client.JiraClient.Issue.Search(jql, &jira.SearchOptions{Expand: expand, StartAt: startAt, MaxResults: maxresults}) //maxresults is capped to 100 by attlasian
+		if err != nil {
+			log.Print(response)
+			return nil, err
+		}
+		results = append(results, issues...)
+		startAt = len(results)
+	}
+	return results, nil
 }

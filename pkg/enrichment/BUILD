@@ -3,7 +3,7 @@ go_library(
     srcs = [
         "issue.go",
     ],
-    visibility = ["//cmd/enricher"],
+    visibility = ["PUBLIC"],
     deps = [
         "//pkg/enrichment/db",
         "//api/proto:v1",

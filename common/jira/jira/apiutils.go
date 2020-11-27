@@ -9,7 +9,7 @@ import (
 	"github.com/andygrunwald/go-jira"
 	"github.com/trivago/tgo/tcontainer"
 
-	"github.com/thought-machine/dracon/consumers/jira_c/config"
+	"github.com/thought-machine/dracon/common/jira/config"
 )
 
 type defaultJiraFields struct {

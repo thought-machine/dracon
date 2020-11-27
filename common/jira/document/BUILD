@@ -9,6 +9,6 @@ go_library(
         "//api/proto:v1",
     ],
     visibility = [
-        "//consumers/jira_c/utils:utils"
+        "PUBLIC",
     ],
 )

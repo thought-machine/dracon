@@ -102,3 +102,36 @@ func confidenceToText(confidence v1.Confidence) string {
 		return "N/A"
 	}
 }
+
+func TextToSeverity(severity string) v1.Severity {
+
+	// The Severity field is normally mapped into the jira 'Impact' field, so the assumption
+	// is that Severity = Impact; which in practice is generally true with small exceptions
+	switch severity {
+	case "Minor / Localized":
+		return v1.Severity_SEVERITY_LOW
+	case "Moderate / Limited":
+		return v1.Severity_SEVERITY_MEDIUM
+	case "Significant / Large":
+		return v1.Severity_SEVERITY_HIGH
+	case "Extensive / Widespread":
+		return v1.Severity_SEVERITY_CRITICAL
+	default:
+		return v1.Severity_SEVERITY_INFO
+	}
+}
+func TextToConfidence(confidence string) v1.Confidence {
+	switch confidence {
+
+	case "Low":
+		return v1.Confidence_CONFIDENCE_LOW
+	case "Medium":
+		return v1.Confidence_CONFIDENCE_MEDIUM
+	case "High":
+		return v1.Confidence_CONFIDENCE_HIGH
+	case "Critical":
+		return v1.Confidence_CONFIDENCE_CRITICAL
+	default:
+		return v1.Confidence_CONFIDENCE_INFO
+	}
+}

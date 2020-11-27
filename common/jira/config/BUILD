@@ -8,7 +8,7 @@ go_library(
         "//third_party/go:yaml.v2",
     ],
     visibility = [
-        "//consumers/jira_c/..."
+        "PUBLIC"
     ],
 )
 

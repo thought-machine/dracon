@@ -7,10 +7,10 @@ go_library(
     deps = [
         "//third_party/go:go-jira",
         "//third_party/go:tgo",
-        "//consumers/jira_c/config:config",
+        "//common/jira/config:config",
     ],
     visibility = [
-        "//consumers/jira_c:jira_c",
+        "PUBLIC"
     ],
 )
 
