@@ -5,6 +5,7 @@ go_library(
         "run.go",
         "setup.go",
         "version.go",
+        "cronjob.go",
     ],
     visibility = ["PUBLIC"],
     deps = [
