@@ -56,11 +56,17 @@ func toEnrichedIssue(i *issue) (*v1.EnrichedIssue, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	updatedAt, err := ptypes.TimestampProto(i.UpdatedAt)
+	if err != nil {
+		return nil, err
+	}
 	return &v1.EnrichedIssue{
 		Hash:          i.Hash,
 		FirstSeen:     firstSeen,
 		Count:         i.Occurrences,
 		FalsePositive: i.FalsePositive,
+		UpdatedAt:     updatedAt,
 		RawIssue: &v1.Issue{
 			Target:      i.Target,
 			Type:        i.Type,
@@ -171,4 +177,12 @@ WHERE "hash"=:hash;`,
 		return err
 	}
 	return tx.Commit()
+}
+
+// DeleteIssueByHash deletes an issue given its hash
+func (db *DB) DeleteIssueByHash(hash string) error {
+	if _, err := db.NamedExec(`DELETE FROM issues WHERE "hash"=:hash`, map[string]interface{}{"hash": hash}); err != nil {
+		return err
+	}
+	return nil
 }
