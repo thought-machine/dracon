@@ -20,7 +20,7 @@ go_binary(
 docker_image(
     name = "dracon-producer-jira",
     srcs = [
-        ":sync_ticket",
+        ":sync_tickets",
     ],
     base_image = "//build/docker:dracon-base-go",
     image = "dracon-producer-jira",
