@@ -5,15 +5,23 @@ import (
 	types "github.com/thought-machine/dracon/producers/npm_audit/types/npmaudit-issue"
 
 	"fmt"
+	"flag"
 	"log"
 	"github.com/thought-machine/dracon/producers"
 	"strings"
 )
 
+var (
+	PackagePath string
+)
+
 func main() {
+	flag.StringVar(&PackagePath, "package-path", "", "Path to the package.json file corresponding to this audit report; will be prepended to vulnerable dependency names in issue reports if specified")
+
 	if err := producers.ParseFlags(); err != nil {
 		log.Fatal(err)
 	}
+
 	var results types.NpmAuditOut
 	if err := producers.ParseInFileJSON(&results); err != nil {
 		log.Fatal(err)
@@ -35,8 +43,13 @@ func parseOut(results *types.NpmAuditOut) []*v1.Issue {
 	return issues
 }
 func parseResult(r *types.NpmAuditAdvisories) *v1.Issue {
+	targetName := r.ModuleName
+	if PackagePath != "" {
+		targetName = PackagePath + ":" + r.ModuleName
+	}
+
 	return &v1.Issue{
-		Target:   r.ModuleName,
+		Target:   targetName,
 		Type:     "Vulnerable Dependency",
 		Title:    r.Title,
 		Severity: v1.Severity(v1.Severity_value[fmt.Sprintf("SEVERITY_%s", strings.ToUpper(r.Severity))]),
