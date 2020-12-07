@@ -79,3 +79,30 @@ func WriteResults(
 	log.Printf("wrote %d issues from to %s", len(issues), outFile)
 	return nil
 }
+
+// AppendResults appends the given issues to the existing output file
+func AppendResults(issues []*v1.Issue, outFile string) error {
+	outBytes, err := ioutil.ReadFile(outFile)
+	if err != nil {
+		return fmt.Errorf("could not read file '%s': %w", outFile, err)
+	}
+
+	out := v1.LaunchToolResponse{}
+	if err := proto.Unmarshal(outBytes, &out); err != nil {
+		return fmt.Errorf("could not unmarshal contents of file '%s': %s", outFile, err)
+	}
+
+	out.Issues = append(out.Issues, issues...)
+
+	outBytes, err = proto.Marshal(&out)
+	if err != nil {
+		return err
+	}
+
+	if err := ioutil.WriteFile(outFile, outBytes, 0644); err != nil {
+		return fmt.Errorf("could not write to file '%s': %w", outFile, err)
+	}
+
+	log.Printf("appended %d issues (now %d) to %s", len(issues), len(out.Issues), outFile)
+	return nil
+}
