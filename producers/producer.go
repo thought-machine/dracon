@@ -22,6 +22,7 @@ import (
 var (
 	InResults string
 	OutFile   string
+	Append    bool
 )
 
 const (
@@ -36,6 +37,7 @@ const (
 func init() {
 	flag.StringVar(&InResults, "in", "", "")
 	flag.StringVar(&OutFile, "out", "", "")
+	flag.BoolVar(&Append, "append", false, "Append to output file instead of overwriting it")
 }
 
 // ParseFlags will parse the input flags for the producer and perform simple validation
@@ -87,7 +89,13 @@ func WriteDraconOut(
 		scanStartTime = time.Now().UTC().Format(time.RFC3339)
 	}
 	scanUUUID := os.Getenv(EnvDraconScanID)
-	return putil.WriteResults(toolName, cleanIssues, OutFile, scanUUUID, scanStartTime)
+
+	stat, err := os.Stat(OutFile)
+	if Append && err == nil && stat.Size() > 0 {
+		return putil.AppendResults(cleanIssues, OutFile)
+	} else {
+		return putil.WriteResults(toolName, cleanIssues, OutFile, scanUUUID, scanStartTime)
+	}
 }
 
 func getSource() string {
