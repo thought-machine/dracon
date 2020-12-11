@@ -1,9 +1,7 @@
-
 go_library(
-    name = "npmaudit-issue",
+    name = "types",
     srcs = [
-        "npmaudit-issue.go",
+        "errors.go",
     ],
-    visibility = ["//producers/npm_audit/..."]
-
+    visibility = ["//producers/npm_audit/..."],
 )

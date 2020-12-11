@@ -52,12 +52,13 @@ func ParseFlags() error {
 	return nil
 }
 
-// ParseInFileJSON provides a generic method to parse a tool's JSON results into a given struct
-func ParseInFileJSON(structure interface{}) error {
-	inFile, err := os.Open(InResults)
-	if err != nil {
-		return err
-	}
+// ReadInFile opens the file given by InResults for reading.
+func ReadInFile() (*os.File, error) {
+	return os.Open(InResults)
+}
+
+// ParseJSON provides a generic method to parse a tool's JSON results into a given struct
+func ParseJSON(inFile io.Reader, structure interface{}) error {
 	dec := json.NewDecoder(inFile)
 	for {
 		if err := dec.Decode(structure); err == io.EOF {

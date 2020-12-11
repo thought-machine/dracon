@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 	"testing"
 	"time"
 
@@ -17,19 +18,11 @@ type testJ struct {
 	Foo string
 }
 
-func TestParseInFileJSON(t *testing.T) {
-	file, err := ioutil.TempFile("/tmp", "dracon-in")
-	assert.Nil(t, err)
-
+func TestParseJSON(t *testing.T) {
 	testJSON := `{"Foo":"bar"}`
-	defer os.Remove(file.Name())
-	bytes, err := file.WriteString(testJSON)
-	assert.Nil(t, err)
-	assert.Equal(t, bytes, 13)
-	InResults = file.Name()
 
 	var inJSON testJ
-	assert.Nil(t, ParseInFileJSON(&inJSON))
+	assert.Nil(t, ParseJSON(strings.NewReader(testJSON), &inJSON))
 	assert.Equal(t, inJSON.Foo, "bar")
 }
 

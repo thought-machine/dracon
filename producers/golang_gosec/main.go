@@ -14,8 +14,13 @@ func main() {
 		log.Fatal(err)
 	}
 
+	inFile, err := producers.ReadInFile()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	var results GoSecOut
-	if err := producers.ParseInFileJSON(&results); err != nil {
+	if err := producers.ParseJSON(inFile, &results); err != nil {
 		log.Fatal(err)
 	}
 
