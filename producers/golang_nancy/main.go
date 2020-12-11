@@ -14,8 +14,14 @@ func main() {
 	if err := producers.ParseFlags(); err != nil {
 		log.Fatal(err)
 	}
+
+	inFile, err := producers.ReadInFile()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	var results types.NancyOut
-	if err := producers.ParseInFileJSON(&results); err != nil {
+	if err := producers.ParseJSON(inFile, &results); err != nil {
 		log.Fatal(err)
 	}
 

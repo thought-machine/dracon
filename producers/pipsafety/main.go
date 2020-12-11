@@ -29,8 +29,17 @@ func main() {
 	if err := producers.ParseFlags(); err != nil {
 		log.Fatal(err)
 	}
+
+	inFile, err := producers.ReadInFile()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	issues := []types.SafetyIssue{}
-	producers.ParseInFileJSON(&issues)
+	if err := producers.ParseJSON(inFile, &issues); err != nil {
+		log.Fatal(err)
+	}
+
 	if err := producers.WriteDraconOut(
 		"pipsafety",
 		parseIssues(issues),

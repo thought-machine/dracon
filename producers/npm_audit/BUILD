@@ -8,21 +8,7 @@ go_binary(
     deps = [
         "//api/proto:v1",
         "//producers",
-        "//producers/npm_audit/types:npmaudit-issue"
-    ],
-)
-
-go_test(
-    name = "npm_audit_test",
-    srcs = [
-        "main_test.go",
-        "main.go"
-    ],
-    deps = [
-        "//api/proto:v1",
-        "//producers",
-        "//third_party/go:stretchr_testify",
-        "//producers/npm_audit/types:npmaudit-issue",
+        "//producers/npm_audit/types/npm_full_audit:npm_full_audit",
     ],
 )
 
