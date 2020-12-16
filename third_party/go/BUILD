@@ -468,6 +468,14 @@ go_get(
          ":x_tools",
     ],
 )
+
+go_get(
+    name = "jarcoal_httpmock",
+    get = "github.com/jarcoal/httpmock/...",
+    licences = ["MIT"],
+    revision = "053a927d8c61b9001ebeaba0b87e329f12cfb913",
+)
+
 go_get(
      name = "x_tools",
      get = "golang.org/x/tools",

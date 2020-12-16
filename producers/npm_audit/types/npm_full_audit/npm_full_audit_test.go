@@ -4,7 +4,6 @@ import (
 	v1 "github.com/thought-machine/dracon/api/proto/v1"
 	atypes "github.com/thought-machine/dracon/producers/npm_audit/types"
 
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -13,7 +12,7 @@ import (
 var invalidJSON = `Not a valid JSON object`
 
 func TestParseInvalidJSON(t *testing.T) {
-	report, err := NewReport(strings.NewReader(invalidJSON), "test")
+	report, err := NewReport([]byte(invalidJSON))
 	assert.Nil(t, report)
 
 	_, ok := err.(*atypes.ParsingError)
@@ -26,7 +25,7 @@ var invalidAuditReport = `{
 `
 
 func TestParseInvalidReport(t *testing.T) {
-	report, err := NewReport(strings.NewReader(invalidAuditReport), "test")
+	report, err := NewReport([]byte(invalidAuditReport))
 	assert.Nil(t, report)
 
 	_, ok := err.(*atypes.FormatError)
@@ -106,7 +105,8 @@ var fullAuditReport = `{
 `
 
 func TestParseValidReport(t *testing.T) {
-	report, err := NewReport(strings.NewReader(fullAuditReport), "test")
+	report, err := NewReport([]byte(fullAuditReport))
+	report.SetPackagePath("test")
 	assert.NoError(t, err)
 
 	issues := report.AsIssues()

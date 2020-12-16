@@ -3,10 +3,10 @@
 package producers
 
 import (
+	"bytes"
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -52,22 +52,26 @@ func ParseFlags() error {
 	return nil
 }
 
-// ReadInFile opens the file given by InResults for reading.
-func ReadInFile() (*os.File, error) {
-	return os.Open(InResults)
+// ReadInFile returns the contents of the file given by InResults.
+func ReadInFile() ([]byte, error) {
+	file, err := os.Open(InResults)
+	if err != nil {
+		return nil, err
+	}
+
+	buffer := new(bytes.Buffer)
+	buffer.ReadFrom(file)
+	return buffer.Bytes(), nil
 }
 
-// ParseJSON provides a generic method to parse a tool's JSON results into a given struct
-func ParseJSON(inFile io.Reader, structure interface{}) error {
-	dec := json.NewDecoder(inFile)
-	for {
-		if err := dec.Decode(structure); err == io.EOF {
-			break
-		} else if err != nil {
-			return err
-		}
+// ParseJSON provides a generic method to parse JSON input (e.g. the results
+// provided by a tool) into a given struct.
+func ParseJSON(in []byte, structure interface{}) error {
+	if err := json.Unmarshal(in, &structure); err != nil {
+		return err
+	} else {
+		return nil
 	}
-	return nil
 }
 
 // WriteDraconOut provides a generic method to write the resulting protobuf to the output file

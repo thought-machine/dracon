@@ -10,10 +10,9 @@ package npm_full_audit
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"strings"
 
-	v1 "github.com/thought-machine/dracon/api/proto/v1"
+	"github.com/thought-machine/dracon/api/proto/v1"
 	"github.com/thought-machine/dracon/producers"
 	atypes "github.com/thought-machine/dracon/producers/npm_audit/types"
 )
@@ -40,8 +39,7 @@ type Advisory struct {
 }
 
 // NewReport constructs a Report from an npm Full Audit report.
-func NewReport(report io.Reader, packagePath string) (*Report, error) {
-
+func NewReport(report []byte) (atypes.Report, error) {
 	var r *Report
 	if err := producers.ParseJSON(report, &r); err != nil {
 		switch err.(type) {
@@ -67,9 +65,11 @@ func NewReport(report io.Reader, packagePath string) (*Report, error) {
 		}
 	}
 
-	r.PackagePath = packagePath
-
 	return r, nil
+}
+
+func (r *Report) SetPackagePath(packagePath string) {
+	r.PackagePath = packagePath
 }
 
 func (r *Report) AsIssues() []*v1.Issue {
