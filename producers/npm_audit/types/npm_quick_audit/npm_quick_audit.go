@@ -21,29 +21,36 @@ import (
 // Report represents an npm Quick Audit report. The key for Vulnerabilities
 // represents a package name.
 type Report struct {
-	PackagePath		string					 `json:"-"`
-	Version			int						 `json:"auditReportVersion"`
+	PackagePath     string                   `json:"-"`
+	Version         int                      `json:"auditReportVersion"`
 	Vulnerabilities map[string]Vulnerability `json:"vulnerabilities"`
 }
 
+// Vulnerability represents the set of vulnerabilities present in a particular
+// package.
 type Vulnerability struct {
-	Package  string		`json:"name"`
-	Severity string		`json:"severity"`
-	Via		 []Advisory `json:"via"`
-	Effects  []string	`json:"effects"`
-	Range	 string		`json:"range"`
-	Fix		 Fix		`json:"fixAvailable"`
+	Package  string     `json:"name"`
+	Severity string     `json:"severity"`
+	Via      []Advisory `json:"via"`
+	Effects  []string   `json:"effects"`
+	Range    string     `json:"range"`
+	Fix      Fix        `json:"fixAvailable"`
 }
 
+// Advisory represents a single vulnerability in a particular package. This
+// vulnerability may arise either in this package itself (non-transitive), or
+// because this package depends on a vulnerable package described elsewhere in
+// the report (transitive). For transitive advisories, only the Transitive,
+// Package and Dependency fields have values assigned.
 type Advisory struct {
 	Transitive bool   `json:"-"`
-	ID		   int	  `json:"source"`
+	ID         int    `json:"source"`
 	Package    string `json:"name"`
 	Dependency string `json:"dependency"`
-	Title	   string `json:"title"`
-	URL		   string `json:"url"`
+	Title      string `json:"title"`
+	URL        string `json:"url"`
 	Severity   string `json:"severity"`
-	Range	   string `json:"range"`
+	Range      string `json:"range"`
 }
 
 func (a *Advisory) UnmarshalJSON(data []byte) error {
@@ -77,11 +84,12 @@ func (a *Advisory) UnmarshalJSON(data []byte) error {
 	}
 }
 
+// Fix represents a proposed fix for a particular advisory.
 type Fix struct {
 	Available bool
 	Package   string `json:"name"`
 	Version   string `json:"version"`
-	IsMajor   bool	 `json:"isSemVerMajor"`
+	IsMajor   bool   `json:"isSemVerMajor"`
 }
 
 func (f *Fix) UnmarshalJSON(data []byte) error {
@@ -118,9 +126,9 @@ func NewReport(report []byte) (atypes.Report, error) {
 		case *json.InvalidUTF8Error, *json.SyntaxError, *json.UnmarshalFieldError,
 			*json.UnmarshalTypeError, *json.UnsupportedTypeError, *json.UnsupportedValueError:
 			return nil, &atypes.ParsingError{
-				Type:		   "npm_quick_audit",
+				Type:          "npm_quick_audit",
 				PrintableType: "npm Quick Audit report",
-				Err:		   err,
+				Err:           err,
 			}
 		default:
 			return nil, err
@@ -129,7 +137,7 @@ func NewReport(report []byte) (atypes.Report, error) {
 
 	if r.Version != 2 {
 		return nil, &atypes.FormatError{
-			Type:		   "npm_quick_audit",
+			Type:          "npm_quick_audit",
 			PrintableType: "npm Quick Audit report",
 		}
 	}
@@ -168,10 +176,10 @@ func (r *Report) AsIssues() []*v1.Issue {
 			targetName += a.Package
 
 			issues = append(issues, &v1.Issue{
-				Target:		 targetName,
-				Type:		 "Vulnerable Dependency",
-				Title:		 a.Title,
-				Severity:	 v1.Severity(v1.Severity_value[fmt.Sprintf("SEVERITY_%s", strings.ToUpper(a.Severity))]),
+				Target:      targetName,
+				Type:        "Vulnerable Dependency",
+				Title:       a.Title,
+				Severity:    v1.Severity(v1.Severity_value[fmt.Sprintf("SEVERITY_%s", strings.ToUpper(a.Severity))]),
 				Confidence:  v1.Confidence_CONFIDENCE_HIGH,
 				Description: description,
 			})
