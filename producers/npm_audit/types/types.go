@@ -11,6 +11,9 @@ type Report interface {
 	// belongs.
 	SetPackagePath(string)
 
+	// Type returns a short textual description of this report type.
+	Type() string
+
 	// AsIssues transforms this Report into a slice of Dracon Issues that can be
 	// processed by the Dracon enricher.
 	AsIssues() []*v1.Issue

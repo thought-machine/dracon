@@ -18,6 +18,8 @@ import (
 	atypes "github.com/thought-machine/dracon/producers/npm_audit/types"
 )
 
+const PrintableType = "npm Quick Audit report"
+
 // Report represents an npm Quick Audit report. The key for Vulnerabilities
 // represents a package name.
 type Report struct {
@@ -127,7 +129,7 @@ func NewReport(report []byte) (atypes.Report, error) {
 			*json.UnmarshalTypeError, *json.UnsupportedTypeError, *json.UnsupportedValueError:
 			return nil, &atypes.ParsingError{
 				Type:          "npm_quick_audit",
-				PrintableType: "npm Quick Audit report",
+				PrintableType: PrintableType,
 				Err:           err,
 			}
 		default:
@@ -138,7 +140,7 @@ func NewReport(report []byte) (atypes.Report, error) {
 	if r.Version != 2 {
 		return nil, &atypes.FormatError{
 			Type:          "npm_quick_audit",
-			PrintableType: "npm Quick Audit report",
+			PrintableType: PrintableType,
 		}
 	}
 
@@ -147,6 +149,10 @@ func NewReport(report []byte) (atypes.Report, error) {
 
 func (r *Report) SetPackagePath(packagePath string) {
 	r.PackagePath = packagePath
+}
+
+func (r *Report) Type() string {
+	return PrintableType;
 }
 
 func (r *Report) AsIssues() []*v1.Issue {

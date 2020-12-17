@@ -17,6 +17,8 @@ import (
 	atypes "github.com/thought-machine/dracon/producers/npm_audit/types"
 )
 
+const PrintableType = "npm Full Audit report"
+
 // Report represents an npm Full Audit report. The key for Advisories represents
 // an npm advisory ID (i.e. https://npmjs.com/advisories/{int}).
 type Report struct {
@@ -47,7 +49,7 @@ func NewReport(report []byte) (atypes.Report, error) {
 			*json.UnmarshalTypeError, *json.UnsupportedTypeError, *json.UnsupportedValueError:
 			return nil, &atypes.ParsingError{
 				Type:          "npm_full_audit",
-				PrintableType: "npm Full Audit report",
+				PrintableType: PrintableType,
 				Err:           err,
 			}
 		default:
@@ -61,7 +63,7 @@ func NewReport(report []byte) (atypes.Report, error) {
 	if r.Advisories == nil {
 		return nil, &atypes.FormatError{
 			Type:          "npm_full_audit",
-			PrintableType: "npm Full Audit report",
+			PrintableType: PrintableType,
 		}
 	}
 
@@ -70,6 +72,10 @@ func NewReport(report []byte) (atypes.Report, error) {
 
 func (r *Report) SetPackagePath(packagePath string) {
 	r.PackagePath = packagePath
+}
+
+func (r *Report) Type() string {
+	return PrintableType
 }
 
 func (r *Report) AsIssues() []*v1.Issue {

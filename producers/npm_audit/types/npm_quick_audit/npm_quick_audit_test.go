@@ -105,7 +105,7 @@ var quickAuditReportJSON = `{
 
 var quickAuditReport = &Report{
 	PackagePath: "test",
-    Version: 2,
+	Version: 2,
 	Vulnerabilities: map[string]Vulnerability{
 		"fbjs": Vulnerability{
 			Package: "fbjs",

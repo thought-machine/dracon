@@ -44,6 +44,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	log.Printf("Parsed input file as %s\n", report.Type())
+
 	report.SetPackagePath(PackagePath)
 
 	if err := producers.WriteDraconOut(
