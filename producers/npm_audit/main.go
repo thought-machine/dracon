@@ -16,12 +16,24 @@ var (
 )
 
 func inFileToReport(inFile []byte) (atypes.Report, error) {
-	if report, err := npm_quick_audit.NewReport(inFile); err == nil {
-		return report, nil
+	reportConstructors := []func([]byte) (atypes.Report, error){
+		npm_quick_audit.NewReport,
+		npm_full_audit.NewReport,
 	}
 
-	if report, err := npm_full_audit.NewReport(inFile); err == nil {
-		return report, nil
+	for _, constructor := range reportConstructors {
+		report, err := constructor(inFile)
+
+		switch err.(type) {
+		case nil:
+			return report, nil
+		case *atypes.ParsingError, *atypes.FormatError:
+			// Ignore parsing and incorrect format errors from constructors -
+			// we'll just attempt again with the next one
+		default:
+			// Any other errors returned by a constructor are likely fatal
+			return nil, err
+		}
 	}
 
 	return nil, errors.New("input file is not a supported npm audit report format")
