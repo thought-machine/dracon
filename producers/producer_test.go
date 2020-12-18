@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"strings"
 	"testing"
 	"time"
 
@@ -22,7 +21,7 @@ func TestParseJSON(t *testing.T) {
 	testJSON := `{"Foo":"bar"}`
 
 	var inJSON testJ
-	assert.Nil(t, ParseJSON(strings.NewReader(testJSON), &inJSON))
+	assert.Nil(t, ParseJSON([]byte(testJSON), &inJSON))
 	assert.Equal(t, inJSON.Foo, "bar")
 }
 

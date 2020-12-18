@@ -10,13 +10,14 @@ package npm_full_audit
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"strings"
 
-	v1 "github.com/thought-machine/dracon/api/proto/v1"
+	"github.com/thought-machine/dracon/api/proto/v1"
 	"github.com/thought-machine/dracon/producers"
 	atypes "github.com/thought-machine/dracon/producers/npm_audit/types"
 )
+
+const PrintableType = "npm Full Audit report"
 
 // Report represents an npm Full Audit report. The key for Advisories represents
 // an npm advisory ID (i.e. https://npmjs.com/advisories/{int}).
@@ -40,8 +41,7 @@ type Advisory struct {
 }
 
 // NewReport constructs a Report from an npm Full Audit report.
-func NewReport(report io.Reader, packagePath string) (*Report, error) {
-
+func NewReport(report []byte) (atypes.Report, error) {
 	var r *Report
 	if err := producers.ParseJSON(report, &r); err != nil {
 		switch err.(type) {
@@ -49,7 +49,7 @@ func NewReport(report io.Reader, packagePath string) (*Report, error) {
 			*json.UnmarshalTypeError, *json.UnsupportedTypeError, *json.UnsupportedValueError:
 			return nil, &atypes.ParsingError{
 				Type:          "npm_full_audit",
-				PrintableType: "npm Full Audit report",
+				PrintableType: PrintableType,
 				Err:           err,
 			}
 		default:
@@ -63,13 +63,19 @@ func NewReport(report io.Reader, packagePath string) (*Report, error) {
 	if r.Advisories == nil {
 		return nil, &atypes.FormatError{
 			Type:          "npm_full_audit",
-			PrintableType: "npm Full Audit report",
+			PrintableType: PrintableType,
 		}
 	}
 
-	r.PackagePath = packagePath
-
 	return r, nil
+}
+
+func (r *Report) SetPackagePath(packagePath string) {
+	r.PackagePath = packagePath
+}
+
+func (r *Report) Type() string {
+	return PrintableType
 }
 
 func (r *Report) AsIssues() []*v1.Issue {

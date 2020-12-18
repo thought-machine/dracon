@@ -1,4 +1,3 @@
-// Package types provides common types for audit report formats.
 package types
 
 import (

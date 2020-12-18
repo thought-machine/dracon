@@ -468,6 +468,38 @@ go_get(
          ":x_tools",
     ],
 )
+
+go_get(
+    name = "h2non_parth",
+    get = "github.com/h2non/parth",
+    licences = ["MIT"],
+    revision = "v2.0.1",
+)
+
+go_get(
+    name = "h2non_gentleman",
+    get = "gopkg.in/h2non/gentleman.v1/...",
+    licences = ["MIT"],
+    repo = "github.com/h2non/gentleman",
+    revision = "v1.0.4",
+    deps = [
+        ":x_net",
+    ],
+)
+
+go_get(
+    name = "h2non_gock",
+    get = "gopkg.in/h2non/gock.v1",
+    licences = ["MIT"],
+    repo = "github.com/h2non/gock",
+    revision = "v1.0.16",
+    deps = [
+        ":h2non_gentleman",
+        ":h2non_parth",
+        ":x_net",
+    ],
+)
+
 go_get(
      name = "x_tools",
      get = "golang.org/x/tools",
