@@ -1,19 +1,11 @@
 package npm_quick_audit
 
 import (
-	"net/http"
-	"os"
 	"testing"
 
-	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
+	"gopkg.in/h2non/gock.v1"
 )
-
-var httpmockFiles = map[string]string{
-	"https://npmjs.com/advisories/666":  "producers/npm_audit/types/npm_quick_audit/npm_advisory_not_json",
-	"https://npmjs.com/advisories/999":  "producers/npm_audit/types/npm_quick_audit/npm_advisory_no_advisorydata",
-	"https://npmjs.com/advisories/1556": "producers/npm_audit/types/npm_quick_audit/npm_advisory_1556",
-}
 
 var advisoryAST = &AdvisoryData{
 	CVEs:               []string{"CVE-2020-15168"},
@@ -25,58 +17,64 @@ var advisoryAST = &AdvisoryData{
 	VulnerableVersions: "< 2.6.1 || >= 3.0.0-beta.1 < 3.0.0-beta.9",
 }
 
-func TestMain(m *testing.M) {
-	httpmock.ActivateNonDefault(HTTPClient)
-
-	os.Exit(m.Run())
-}
-
-func setup(t *testing.T) {
-	for url, file := range httpmockFiles {
-		httpmock.RegisterResponder("GET", url,
-			func(req *http.Request) (*http.Response, error) {
-				resp := httpmock.NewBytesResponse(200, httpmock.File(file).Bytes())
-				resp.Header.Add("Content-Type", "application/json")
-				return resp, nil
-			},
-		)
-	}
-
-	httpmock.RegisterResponder("GET", "https://npmjs.com/advisories/404",
-		httpmock.NewStringResponder(404, ""))
-
-	httpmock.RegisterNoResponder(httpmock.NewNotFoundResponder(t.Fatal))
-}
-
 func TestNewAdvisoryDataNotFound(t *testing.T) {
-	setup(t)
-	httpmock.ZeroCallCounters()
+	defer gock.Off()
+	gock.New("https://npmjs.com").
+		Get("/advisories/404").
+		MatchHeader("X-Spiferack", "1").
+		Reply(404)
 
 	advisory, err := NewAdvisoryData("https://npmjs.com/advisories/404")
 	assert.Nil(t, advisory)
 	assert.Error(t, err)
 
-	assert.Equal(t, 1, httpmock.GetTotalCallCount())
+	assert.True(t, gock.IsDone())
 }
 
 func TestNewAdvisoryDataNotJSON(t *testing.T) {
-	setup(t)
-	httpmock.ZeroCallCounters()
+	defer gock.Off()
+	gock.New("https://npmjs.com").
+		Get("/advisories/666").
+		MatchHeader("X-Spiferack", "1").
+		Reply(200).
+		AddHeader("Content-Type", "application/json").
+		File("producers/npm_audit/types/npm_quick_audit/npm_advisory_not_json")
 
 	advisory, err := NewAdvisoryData("https://npmjs.com/advisories/666")
 	assert.Nil(t, advisory)
 	assert.Errorf(t, err, "npm Registry did not respond with JSON content")
 
-	assert.Equal(t, 1, httpmock.GetTotalCallCount())
+	assert.True(t, gock.IsDone())
+}
+
+func TestNewAdvisoryDataNoAdvisoryData(t *testing.T) {
+	defer gock.Off()
+	gock.New("https://npmjs.com").
+		Get("/advisories/999").
+		MatchHeader("X-Spiferack", "1").
+		Reply(200).
+		AddHeader("Content-Type", "application/json").
+		File("producers/npm_audit/types/npm_quick_audit/npm_advisory_no_advisorydata")
+
+	advisory, err := NewAdvisoryData("https://npmjs.com/advisories/999")
+	assert.Nil(t, advisory)
+	assert.Errorf(t, err, "npm Registry response did not contain an advisoryData key")
+
+	assert.True(t, gock.IsDone())
 }
 
 func TestNewAdvisoryDataValid(t *testing.T) {
-	setup(t)
-	httpmock.ZeroCallCounters()
+	defer gock.Off()
+	gock.New("https://npmjs.com").
+		Get("/advisories/1556").
+		MatchHeader("X-Spiferack", "1").
+		Reply(200).
+		AddHeader("Content-Type", "application/json").
+		File("producers/npm_audit/types/npm_quick_audit/npm_advisory_1556")
 
 	advisory, err := NewAdvisoryData("https://npmjs.com/advisories/1556")
 	assert.NoError(t, err)
 	assert.True(t, assert.ObjectsAreEqual(advisoryAST, advisory))
 
-	assert.Equal(t, 1, httpmock.GetTotalCallCount())
+	assert.True(t, gock.IsDone())
 }

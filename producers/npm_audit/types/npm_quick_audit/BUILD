@@ -25,7 +25,7 @@ go_test(
         ":npm_quick_audit",
         "//api/proto:v1",
         "//producers",
-        "//third_party/go:jarcoal_httpmock",
+        "//third_party/go:h2non_gock",
         "//third_party/go:stretchr_testify",
     ],
 )

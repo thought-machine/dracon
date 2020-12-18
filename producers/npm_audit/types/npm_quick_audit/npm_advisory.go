@@ -5,7 +5,6 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
-	"time"
 )
 
 // AdvisoryData represents a subset of the data returned in an advisoryData
@@ -21,15 +20,6 @@ type AdvisoryData struct {
 	VulnerableVersions string   `json:"vulnerable_versions"`
 }
 
-// HTTPClient is the HTTP client used to fetch npm Registry advisories.
-var HTTPClient = &http.Client{
-	Transport: &http.Transport{
-		MaxIdleConns:       10,
-		IdleConnTimeout:    60 * time.Second,
-		DisableCompression: true,
-	},
-}
-
 // NewAdvisoryData constructs an AdvisoryData from the npm Registry advisory at
 // the given URL.
 func NewAdvisoryData(url string) (*AdvisoryData, error) {
@@ -43,7 +33,7 @@ func NewAdvisoryData(url string) (*AdvisoryData, error) {
 	// https://npm.community/t/can-i-query-npm-for-all-advisory-information/2096/5
 	req.Header.Add("X-Spiferack", "1")
 
-	resp, err := HTTPClient.Do(req)
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
 	}

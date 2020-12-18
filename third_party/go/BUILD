@@ -470,10 +470,34 @@ go_get(
 )
 
 go_get(
-    name = "jarcoal_httpmock",
-    get = "github.com/jarcoal/httpmock/...",
+    name = "h2non_parth",
+    get = "github.com/h2non/parth",
     licences = ["MIT"],
-    revision = "053a927d8c61b9001ebeaba0b87e329f12cfb913",
+    revision = "v2.0.1",
+)
+
+go_get(
+    name = "h2non_gentleman",
+    get = "gopkg.in/h2non/gentleman.v1/...",
+    licences = ["MIT"],
+    repo = "github.com/h2non/gentleman",
+    revision = "v1.0.4",
+    deps = [
+        ":x_net",
+    ],
+)
+
+go_get(
+    name = "h2non_gock",
+    get = "gopkg.in/h2non/gock.v1",
+    licences = ["MIT"],
+    repo = "github.com/h2non/gock",
+    revision = "v1.0.16",
+    deps = [
+        ":h2non_gentleman",
+        ":h2non_parth",
+        ":x_net",
+    ],
 )
 
 go_get(

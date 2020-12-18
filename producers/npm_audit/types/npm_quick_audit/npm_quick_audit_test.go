@@ -6,8 +6,8 @@ import (
 
 	"testing"
 
-	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
+	"gopkg.in/h2non/gock.v1"
 )
 
 var invalidJSON = `Not a valid JSON object`
@@ -188,11 +188,16 @@ var quickAuditIssues = []*v1.Issue{
 }
 
 func TestAsIssuesValid(t *testing.T) {
-	setup(t)
-	httpmock.ZeroCallCounters()
+	defer gock.Off()
+	gock.New("https://npmjs.com").
+		Get("/advisories/1556").
+		MatchHeader("X-Spiferack", "1").
+		Reply(200).
+		AddHeader("Content-Type", "application/json").
+		File("producers/npm_audit/types/npm_quick_audit/npm_advisory_1556")
 
 	issues := quickAuditReport.AsIssues()
 	assert.True(t, assert.ObjectsAreEqual(quickAuditIssues, issues))
 
-	assert.Equal(t, 1, httpmock.GetTotalCallCount())
+	assert.True(t, gock.IsDone())
 }
