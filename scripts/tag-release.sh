@@ -4,7 +4,7 @@ set -euo pipefail
 git fetch origin master --tags &> /dev/null
 commit_sha=$(git rev-parse origin/master)
 
-highest_tag=$(git tag | sort | tail -n1)
+highest_tag="$(git tag -l --sort=-v:refname | grep ^v | sed 1q)"
 
 major=$(echo "${highest_tag}" | cut -f1 -d. | tr -dc '0-9')
 minor=$(echo "${highest_tag}" | cut -f2 -d. | tr -dc '0-9')
