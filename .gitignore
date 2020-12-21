@@ -2,6 +2,7 @@
 /vendor/
 __pycache__
 *.pyc
+**/node_modules/
 
 # Please output directory
 plz-out
