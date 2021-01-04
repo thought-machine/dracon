@@ -50,9 +50,13 @@ func TestMakeCustomField(t *testing.T) {
 	res3 := makeCustomField("float", []string{"4.22"})
 	exp3 := 4.22
 
+	res4 := makeCustomField("simple-value",[]string{"test-value"})
+	exp4 := "test-value"
+
 	assert.EqualValues(t, res1, exp1)
 	assert.EqualValues(t, res2, exp2)
 	assert.Equal(t, res3, exp3)
+	assert.Equal(t, res4, exp4)
 }
 
 func TestMakeDescription(t *testing.T) {

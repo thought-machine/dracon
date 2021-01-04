@@ -14,21 +14,30 @@ defaultValues:
     # - id: 'customfield_10050'
     #   fieldType: single-value
     #   values: ['Foo']
+    #  translates to jira api as "customfield_10050":{"value":"foo"}
 
     ## This example will fill in the customfield_10050, a multi-value field, with the value 'Foo' and 'Bar'
     # - id: 'customfield_10050'
     #   fieldType: multi-value
     #   values: ['Foo', 'Bar']
 
-    ## This example will fill in the customfield_10050, a float value field, with the number 55.3  
+    ## This example will fill in the customfield_10050, a float value field, with the number 55.3
     # - id: 'customfield_10050'
     #   fieldType: float
     #   values: ['55.3']   # Note, this is still specified as a string input
 
-## More explanation on fieldTypes:
+    ## This example will fill in the customfield_10050, a "simple" value field, with the number 55.3
+    # - id: 'customfield_10050'
+    #   fieldType: simple-value
+    #   values: ['Foo']
+    # this translates to jira api as "customfield_10050": "foo"
+
+    ## More explanation on fieldTypes:
 ## single-value: can only be populated by one value  (e.g. Project Key)
 ## multi-value: can be populated by multiple values  (e.g. Components)
 ## float: can be populated by only one numeric value (e.g. CVSS)
+## simple-value: will translate to the special jira use case of "customfield_id":"value"
+## simple-value is provided as a workaround when single-value does not work with your jira setup
 
 ## Uncomment the fields you want included in the Issue's Description
 addToDescription:
