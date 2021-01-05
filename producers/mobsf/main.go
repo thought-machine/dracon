@@ -1,9 +1,10 @@
-// Package main implements a Dracon wrapper for MobSF, a mobile security
+// Package main implements a Dracon producer for MobSF, a mobile security
 // framework (https://github.com/MobSF/Mobile-Security-Framework-MobSF). The
-// wrapper handles the initialisation of MobSF, the identification of individual
-// MobSF-compatible mobile app projects within the target code base, the
-// compression and uploading of these projects to MobSF, and the retrieval of
-// scan reports for processing by the Dracon MobSF producer.
+// producer acts as a wrapper around MobSF, handling the initialisation of the
+// MobSF web server, the identification of individual MobSF-compatible mobile
+// app projects within the target code base, the compression and uploading of
+// these projects to MobSF, the retrieval of Android and iOS scan reports, and
+// the conversion of scan reports into a Dracon Issues protobuf.
 package main
 
 import (
@@ -19,7 +20,6 @@ import (
 	"math/rand"
 	"mime/multipart"
 	"net/http"
-	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -27,7 +27,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/thought-machine/dracon/api/proto/v1"
 	dtemplate "github.com/thought-machine/dracon/pkg/template"
+	"github.com/thought-machine/dracon/producers"
+	mreport "github.com/thought-machine/dracon/producers/mobsf/report"
+	"github.com/thought-machine/dracon/producers/mobsf/report/android"
+	"github.com/thought-machine/dracon/producers/mobsf/report/ios"
 )
 
 const (
@@ -37,48 +42,10 @@ const (
 
 var MobSFAPIKey = generateAPIKey()
 
-// CLI represents the command line options supported by this tool.
-type CLI struct {
-	InPath  string
-	OutPath string
-}
-
-// MobSFFile represents a file stored in MobSF. This is typically a project code
-// base that has been uploaded to MobSF via the REST API or web interface.
-type MobSFFile struct {
-	FileName string `json:"file_name"`
-	Hash     string `json:"hash"`
-	ScanType string `json:"scan_type"`
-}
-
-// AsScanQuery returns a string representation of the MobSFFile that identifies
-// the corresponding server-side file as part of a request to MobSF's scan
-// endpoint.
-func (m *MobSFFile) AsScanQuery() string {
-	v := url.Values{}
-
-	v.Add("file_name", m.FileName)
-	v.Add("hash", m.Hash)
-	v.Add("scan_type", m.ScanType)
-
-	return v.Encode()
-}
-
-// AsReportQuery returns a string representation of the MobSFFile that
-// identifies the corresponding server-side file as part of a request to any of
-// MobSF's report generation endpoints.
-func (m *MobSFFile) AsReportQuery() string {
-	v := url.Values{}
-
-	v.Add("hash", m.Hash)
-
-	return v.Encode()
-}
-
 // parseCLIOptions returns a CLI struct representing the command line options
 // that were passed to this tool.
 func parseCLIOptions() *CLI {
-	cli := new(CLI)
+	cli := NewCLI()
 
 	flag.StringVar(
 		&cli.InPath,
@@ -90,11 +57,20 @@ func parseCLIOptions() *CLI {
 	flag.StringVar(
 		&cli.OutPath,
 		"out",
-		dtemplate.TemplateVars.ProducerToolOutPath,
-		"Path to directory to which MobSF scan result reports should be written",
+		dtemplate.TemplateVars.ProducerOutPath,
+		"Path to which Dracon Issues protobuf should be written",
+	)
+
+	flag.Var(
+		&cli.CodeAnalysisExclusions,
+		"exclude",
+		"Comma-delimited list of static analysis rule IDs to ignore",
 	)
 
 	flag.Parse()
+
+	// So producers.WriteDraconOut knows where to write to:
+	producers.OutFile = cli.OutPath
 
 	return cli
 }
@@ -144,12 +120,12 @@ func isAPIResponsive() bool {
 // findProjects searches a directory tree for Android and iOS projects, and
 // returns a list of directories that represent the root directories for the
 // discovered projects.
-func findProjects(path string) ([]string, error) {
+func findProjects(path string) ([]*Project, error) {
 	if dir, err := os.Stat(path); err != nil || !dir.IsDir() {
 		return nil, fmt.Errorf("%s is not a directory", path)
 	}
 
-	projectDirs := []string{}
+	projects := make([]*Project, 0)
 	err := filepath.Walk(path, func(f string, fi os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -159,23 +135,28 @@ func findProjects(path string) ([]string, error) {
 			return nil
 		}
 
-		isProjectDir := false
+		var projectType *ProjectType
 
 		if isAndroidEclipseProject(f) {
-			log.Printf("Found Android Eclipse project at %s\n", f)
-			isProjectDir = true
+			projectType = new(ProjectType)
+			*projectType = AndroidEclipse
 		} else if isAndroidStudioProject(f) {
-			log.Printf("Found Android Studio project at %s\n", f)
-			isProjectDir = true
+			projectType = new(ProjectType)
+			*projectType = AndroidStudio
 		} else if isXcodeiOSProject(f) {
-			log.Printf("Found Xcode iOS project at %s\n", f)
-			isProjectDir = true
+			projectType = new(ProjectType)
+			*projectType = XcodeIos
 		}
 
-		// If this directory is a supported project type, there's no need to
-		// walk its contents
-		if isProjectDir {
-			projectDirs = append(projectDirs, f)
+		if projectType != nil {
+			log.Printf("Found %s project at %s\n", *projectType, f)
+			projects = append(projects, &Project{
+				RootDir: f,
+				Type:    *projectType,
+			})
+
+			// If this directory is a supported project type, there's no need to
+			// walk its contents
 			return filepath.SkipDir
 		}
 
@@ -185,7 +166,7 @@ func findProjects(path string) ([]string, error) {
 		return nil, fmt.Errorf("failed to walk directory %s: %w", path, err)
 	}
 
-	return projectDirs, nil
+	return projects, nil
 }
 
 // isAndroidEclipseProject returns true if the given path is the root directory
@@ -374,31 +355,29 @@ func generateZipFile(path string, dest io.Writer) error {
 // MobSF, and returns a mapping from each project directory path to its
 // corresponding MobSFFile representing the zip file containing that project
 // code base in MobSF.
-func uploadProjects(projectDirs []string) (map[string]*MobSFFile, error) {
-	mobSFFiles := make(map[string]*MobSFFile, len(projectDirs))
-
-	for _, dir := range projectDirs {
+func uploadProjects(projects []*Project) error {
+	for _, p := range projects {
 		// Generate zip file from project code base
-		log.Printf("Generating zip file for project in %s\n", dir)
+		log.Printf("Generating zip file for project in %s\n", p.RootDir)
 		body := new(bytes.Buffer)
 		multipartWriter := multipart.NewWriter(body)
-		zipName := fmt.Sprintf("%x.zip", sha256.Sum256([]byte(dir)))
+		zipName := fmt.Sprintf("%x.zip", sha256.Sum256([]byte(p.RootDir)))
 		part, err := multipartWriter.CreateFormFile("file", zipName)
 		if err != nil {
-			return nil, fmt.Errorf("failed to open multipart writer: %w", err)
+			return fmt.Errorf("failed to open multipart writer: %w", err)
 		}
-		if err := generateZipFile(dir, part); err != nil {
-			return nil, fmt.Errorf("failed to generate zip file: %w", err)
+		if err := generateZipFile(p.RootDir, part); err != nil {
+			return fmt.Errorf("failed to generate zip file: %w", err)
 		}
 		if err := multipartWriter.Close(); err != nil {
-			return nil, fmt.Errorf("failed to close multipart writer: %w", err)
+			return fmt.Errorf("failed to close multipart writer: %w", err)
 		}
 
 		// Build upload request
 		url := fmt.Sprintf("http://%s:%d/api/v1/upload", MobSFBindHost, MobSFBindPort)
 		req, err := http.NewRequest("POST", url, body)
 		if err != nil {
-			return nil, fmt.Errorf("failed to create API request: %w", err)
+			return fmt.Errorf("failed to create API request: %w", err)
 		}
 		req.Header.Set("Content-Type", multipartWriter.FormDataContentType())
 		req.Header.Set("Authorization", MobSFAPIKey)
@@ -408,37 +387,36 @@ func uploadProjects(projectDirs []string) (map[string]*MobSFFile, error) {
 		client := &http.Client{Timeout: 5 * time.Minute}
 		resp, err := client.Do(req)
 		if err != nil {
-			return nil, fmt.Errorf("MobSF API request failed: %w", err)
+			return fmt.Errorf("MobSF API request failed: %w", err)
 		}
 		if resp.StatusCode != 200 {
-			return nil, fmt.Errorf("MobSF API request failed: %s", resp.Status)
+			return fmt.Errorf("MobSF API request failed: %s", resp.Status)
 		}
 		if !strings.HasPrefix(resp.Header.Get("Content-Type"), "application/json") {
-			return nil, fmt.Errorf("MobSF API did not respond with JSON content")
+			return fmt.Errorf("MobSF API did not respond with JSON content")
 		}
 
 		// Parse response
 		var file *MobSFFile
 		defer resp.Body.Close()
 		if err := json.NewDecoder(resp.Body).Decode(&file); err != nil {
-			return nil, fmt.Errorf("unable to parse JSON response from MobSF API: %w", err)
+			return fmt.Errorf("unable to parse JSON response from MobSF API: %w", err)
 		}
 
-		mobSFFiles[dir] = file
+		p.Upload = file
 	}
 
-	return mobSFFiles, nil
+	return nil
 }
 
-// scanProject orders MobSF to scan the given project code base, and returns a
-// string containing a JSON-encoded scan report that can be parsed by the Dracon
-// MobSF producer.
-func scanProject(file *MobSFFile) (string, error) {
+// scanProject orders MobSF to scan the given project code base, ignoring the
+// rule IDs given by exclusions, and returns a (partial) scan report.
+func scanProject(project *Project, exclusions Exclusions) (mreport.Report, error) {
 	// Build scan request
 	url := fmt.Sprintf("http://%s:%d/api/v1/scan", MobSFBindHost, MobSFBindPort)
-	req, err := http.NewRequest("POST", url, strings.NewReader(file.AsScanQuery()))
+	req, err := http.NewRequest("POST", url, strings.NewReader(project.Upload.AsScanQuery()))
 	if err != nil {
-		return "", fmt.Errorf("failed to create API scan request: %w", err)
+		return nil, fmt.Errorf("failed to create API scan request: %w", err)
 	}
 	req.Header.Set("Authorization", MobSFAPIKey)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -447,20 +425,20 @@ func scanProject(file *MobSFFile) (string, error) {
 	client := &http.Client{Timeout: 10 * time.Minute}
 	resp, err := client.Do(req)
 	if err != nil {
-		return "", fmt.Errorf("MobSF API scan request failed: %w", err)
+		return nil, fmt.Errorf("MobSF API scan request failed: %w", err)
 	}
 	if resp.StatusCode != 200 {
-		return "", fmt.Errorf("MobSF API scan request failed: %s", resp.Status)
+		return nil, fmt.Errorf("MobSF API scan request failed: %s", resp.Status)
 	}
 	if !strings.HasPrefix(resp.Header.Get("Content-Type"), "application/json") {
-		return "", fmt.Errorf("MobSF API did not respond with JSON content on scan endpoint")
+		return nil, fmt.Errorf("MobSF API did not respond with JSON content on scan endpoint")
 	}
 
 	// Build JSON report request
 	url = fmt.Sprintf("http://%s:%d/api/v1/report_json", MobSFBindHost, MobSFBindPort)
-	req, err = http.NewRequest("POST", url, strings.NewReader(file.AsReportQuery()))
+	req, err = http.NewRequest("POST", url, strings.NewReader(project.Upload.AsReportQuery()))
 	if err != nil {
-		return "", fmt.Errorf("failed to create API report request: %w", err)
+		return nil, fmt.Errorf("failed to create API report request: %w", err)
 	}
 	req.Header.Set("Authorization", MobSFAPIKey)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -469,22 +447,36 @@ func scanProject(file *MobSFFile) (string, error) {
 	client = &http.Client{Timeout: 30 * time.Second}
 	resp, err = client.Do(req)
 	if err != nil {
-		return "", fmt.Errorf("MobSF API report request failed: %w", err)
+		return nil, fmt.Errorf("MobSF API report request failed: %w", err)
 	}
 	if resp.StatusCode != 200 {
-		return "", fmt.Errorf("MobSF API report request failed: %s", resp.Status)
+		return nil, fmt.Errorf("MobSF API report request failed: %s", resp.Status)
 	}
 	if !strings.HasPrefix(resp.Header.Get("Content-Type"), "application/json") {
-		return "", fmt.Errorf("MobSF API did not respond with JSON content on report endpoint")
+		return nil, fmt.Errorf("MobSF API did not respond with JSON content on report endpoint")
 	}
 
-	// Return JSON report response (the MobSF producer will parse this)
+	// Parse response body as scan report
 	reportBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return "", fmt.Errorf("failed to read MobSF API report response body: %w", err)
+		return nil, fmt.Errorf("failed to read MobSF API report response body: %w", err)
 	}
 	resp.Body.Close()
-	return string(reportBytes), nil
+	var report mreport.Report
+	switch project.Type {
+	case AndroidEclipse, AndroidStudio:
+        report, err = android.NewReport(reportBytes, exclusions.SetFor("android"))
+	case XcodeIos:
+		report, err = ios.NewReport(reportBytes, exclusions.SetFor("ios"))
+	default:
+		return nil, fmt.Errorf("no report parser for this project type")
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error while parsing report: %w", err)
+	}
+	report.SetRootDir(project.RootDir)
+
+	return report, nil
 }
 
 func main() {
@@ -512,43 +504,31 @@ func main() {
 	}
 
 	log.Printf("Searching for project directories in %s\n", cli.InPath)
-	projectDirs, err := findProjects(cli.InPath)
+	projects, err := findProjects(cli.InPath)
 	if err != nil {
 		log.Fatalf("Failed while searching for project directories: %v\n", err)
 	}
 
 	log.Println("Uploading project code bases to MobSF")
-	files, err := uploadProjects(projectDirs)
+	err = uploadProjects(projects)
 	if err != nil {
 		log.Fatalf("Failed to upload project code bases to MobSF: %v\n", err)
 	}
 
-	for dir, file := range files {
-		log.Printf("Scanning project in %s\n", dir)
+	issues := make([]*v1.Issue, 0)
+	for _, p := range projects {
+		log.Printf("Scanning project in %s\n", p.RootDir)
 
-		report, err := scanProject(file)
+		report, err := scanProject(p, cli.CodeAnalysisExclusions)
 		if err != nil {
 			log.Fatalf("Failed to scan project: %v\n", err)
 		}
 
-		reportDir, err := filepath.Rel(cli.InPath, dir)
-		if err != nil {
-			log.Fatalf("Failed to derive output directory for scan report: %v\n", err)
-		}
-		reportDir = filepath.Join(cli.OutPath, reportDir)
-		reportPath := filepath.Join(reportDir, "mobsf-scan.json")
-
-		log.Printf("Writing scan report to %s\n", reportPath)
-		if err := os.MkdirAll(reportDir, 0755); err != nil {
-			log.Fatalf("Failed to create directory %s: %v\n", reportDir, err)
-		}
-		f, err := os.Create(reportPath)
-		if err != nil {
-			log.Fatalf("Failed to open %s for writing: %v\n", reportPath, err)
-		}
-		if _, err := f.WriteString(report); err != nil {
-			log.Fatalf("Failed to write scan report to %s: %v\n", reportPath, err)
-		}
-		f.Close()
+		reportIssues := report.AsIssues()
+		log.Printf("Issues reported: %d\n", len(reportIssues))
+		issues = append(issues, reportIssues...)
 	}
+
+	log.Printf("Writing Dracon Issues protobuf to %s\n", cli.OutPath)
+	producers.WriteDraconOut("mobsf", issues)
 }

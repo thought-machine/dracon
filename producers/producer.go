@@ -34,14 +34,12 @@ const (
 	EnvDraconScanID = "DRACON_SCAN_ID"
 )
 
-func init() {
+// ParseFlags will parse the input flags for the producer and perform simple validation
+func ParseFlags() error {
 	flag.StringVar(&InResults, "in", "", "")
 	flag.StringVar(&OutFile, "out", "", "")
 	flag.BoolVar(&Append, "append", false, "Append to output file instead of overwriting it")
-}
 
-// ParseFlags will parse the input flags for the producer and perform simple validation
-func ParseFlags() error {
 	flag.Parse()
 	if len(InResults) < 0 {
 		return fmt.Errorf("in is undefined")
