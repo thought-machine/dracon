@@ -3,6 +3,7 @@ package android
 import (
 	v1 "github.com/thought-machine/dracon/api/proto/v1"
 
+	"sort"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -62,13 +63,6 @@ func TestParseValidIosReportNoExclusions(t *testing.T) {
 
 	expectedIssues := []*v1.Issue{
 		&v1.Issue{
-			Target:      "android_project/test/MainApplication.java:58",
-			Type:        "android_ip_disclosure",
-			Title:       "CWE-200 Information Exposure",
-			Cvss:        4.3,
-			Description: "IP Address disclosure",
-		},
-		&v1.Issue{
 			Target:      "android_project/test/MainApplication.java:26",
 			Type:        "android_insecure_random",
 			Title:       "CWE-330 Use of Insufficiently Random Values",
@@ -76,8 +70,18 @@ func TestParseValidIosReportNoExclusions(t *testing.T) {
 			Cvss:        7.5,
 			Description: "The App uses an insecure Random Number Generator.",
 		},
+		&v1.Issue{
+			Target:      "android_project/test/MainApplication.java:58",
+			Type:        "android_ip_disclosure",
+			Title:       "CWE-200 Information Exposure",
+			Cvss:        4.3,
+			Description: "IP Address disclosure",
+		},
 	}
 
+	sort.Slice(issues, func(i, j int) bool {
+		return issues[i].Target < issues[j].Target
+	})
 	assert.Equal(t, issues, expectedIssues)
 }
 
