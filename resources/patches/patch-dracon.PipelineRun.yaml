@@ -35,3 +35,16 @@
   path: /spec/resources/-
   value: {name: {{$e.Name}}, resourceRef: {name: "{{$runID}}-{{$e.Name}}"}}
 {{end}}
+
+# Set ndots to 1 for Alpine images to avoid DNS resolution failures see:
+#
+# https://github.com/kubernetes/kubernetes/issues/64924#issuecomment-488848061
+# https://github.com/gliderlabs/docker-alpine/issues/8#issuecomment-504222376
+# https://gitlab.alpinelinux.org/alpine/aports/-/issues/9017
+#
+# Relative domain names with more than one component (e.g. example.com) will not be subject to the search path and
+# resolve to the absolute domain name (e.g. example.com.) at the cost of breaking relative service domain names (e.g.
+# service.namespace) meant to resolve to the full cluster address (e.g. service.namespace.svc.cluster.local.).
+- op: add
+  path: /spec/podTemplate/dnsConfig/options/-
+  value: {name: ndots, value: "1"}
