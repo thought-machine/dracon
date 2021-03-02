@@ -20,6 +20,7 @@ type Document struct {
 	FirstFound     time.Time `json:"first_found"`
 	Count          string    `json:"count"`
 	FalsePositive  string    `json:"false_positive"`
+    Hash           string    `json:"hash"`
 	// The fields below are not used in this consumer. We use the text versions instead.
 	// Severity   v1.Severity   `json:"severity"`
 	// Confidence v1.Confidence `json:"confidence"`
