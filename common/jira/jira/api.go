@@ -3,9 +3,7 @@ package jira
 import (
 	"io/ioutil"
 	"log"
-
 	"github.com/andygrunwald/go-jira"
-
 	"github.com/thought-machine/dracon/common/jira/config"
 )
 
@@ -46,7 +44,6 @@ func (client client) assembleIssue(draconResult map[string]string) *jira.Issue {
 	for _, m := range client.Config.Mappings {
 		customFields[m.JiraField] = makeCustomField(m.FieldType, []string{draconResult[m.DraconField]})
 	}
-
 	return &jira.Issue{
 		Fields: &jira.IssueFields{
 			Project:         client.DefaultFields.Project,
