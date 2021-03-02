@@ -99,7 +99,6 @@ func TestProcessRawMessages(t *testing.T) {
                                          "count": "1",
                                          "false_positive": "false",
                                          "hash":""}
-
     response := []*v1.LaunchToolResponse{
         &v1.LaunchToolResponse{
             ToolName: "test",
