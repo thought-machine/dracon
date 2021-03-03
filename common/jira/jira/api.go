@@ -3,7 +3,9 @@ package jira
 import (
 	"io/ioutil"
 	"log"
+
 	"github.com/andygrunwald/go-jira"
+
 	"github.com/thought-machine/dracon/common/jira/config"
 )
 
