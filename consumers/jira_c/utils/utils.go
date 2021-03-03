@@ -1,13 +1,14 @@
 package utils
 
 import (
-
 	"encoding/json"
 	"log"
+
 	"github.com/golang/protobuf/ptypes"
-	"github.com/thought-machine/dracon/consumers"
+
 	v1 "github.com/thought-machine/dracon/api/proto/v1"
 	"github.com/thought-machine/dracon/common/jira/document"
+	"github.com/thought-machine/dracon/consumers"
 )
 
 // ProcessMessages processess all the v1.LaunchToolResponses (or v1.EnrichedToolResponses if consumers.Raw is false) and returns:
