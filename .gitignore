@@ -6,3 +6,4 @@ __pycache__
 
 # Please output directory
 plz-out
+.plz_clean*
