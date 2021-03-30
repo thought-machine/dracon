@@ -40,6 +40,11 @@
 - op: add
   path: /spec/tasks/{{$p.Index}}/resources/outputs/-
   value: {name: producer, resource: {{$p.Name}}-producer}
+{{range $pp := $pipelineParams}}
+- op: add
+  path: /spec/tasks/{{$p.Index}}/params/-
+  value: {name: {{$pp.Name}}, value: $(params.{{$pp.Name}})}
+{{end}}
 {{end}}
 
 # Enrichers

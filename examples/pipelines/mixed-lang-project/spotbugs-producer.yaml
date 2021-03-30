@@ -17,6 +17,7 @@ spec:
       "spotbugs {{.ProducerSourcePath}} -output {{.ProducerToolOutPath}} -xml:withMessages"
     ]
     volumeMounts: []
+    env: []
   # parse results
   - name: parse-spotbugs
     image: thoughtmachine/dracon-producer-spotbugs:latest
@@ -27,3 +28,4 @@ spec:
       "-out={{.ProducerOutPath}}"
     ]
     volumeMounts: []
+    env: []

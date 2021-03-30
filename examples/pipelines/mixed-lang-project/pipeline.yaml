@@ -19,10 +19,12 @@ spec:
   - name: bandit-producer
     runAfter: [fetch-source]
     taskRef: {name: mixed-lang-project-bandit-producer}
+    params: []
     resources: {inputs: [], outputs: []}
   - name: gosec-producer
     runAfter: [fetch-source]
     taskRef: {name: mixed-lang-project-gosec-producer}
+    params: []
     resources: {inputs: [], outputs: []}
   # stage 3 - enrichment
   - name: enricher

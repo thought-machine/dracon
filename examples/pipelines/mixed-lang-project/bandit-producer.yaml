@@ -17,6 +17,7 @@ spec:
       "bandit --recursive {{.ProducerSourcePath}} --format json --output {{.ProducerToolOutPath}} || true"
     ]
     volumeMounts: []
+    env: []
   # parse results
   - name: parse-bandit
     image: thoughtmachine/dracon-producer-bandit:latest
@@ -26,3 +27,4 @@ spec:
       "-out={{.ProducerOutPath}}"
     ]
     volumeMounts: []
+    env: []
