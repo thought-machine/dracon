@@ -4,9 +4,9 @@ pip_library(
     name = "grpc",
     package_name = "grpcio",
     hashes = [
-        "a287cfbf4d674eb826e9686d0fc5def34bfadaf1", # TM Mirror
+        "19d549606c2b0fa7355209436b0a32c333e81f68333b93c00a9282b4e1d1946f", # TM Mirror
         "eaa100d9fc6059b9caccdf61b73d6c48b7a7f4b13b416d0d94426e4e68780331", # Public
-        "858b9adc149550f79c74d97679a8ba5c52d7e40ec3defc570d66b597f05c1025", # GitHub Actions
+        "43bd26c3aafb57eeace6d63550c9a1b34a6a205712a5cc544bef3b8390550717", # GitHub Actions
     ],
     licences = ["Apache 2.0"],
     version = "1.27.2",
@@ -16,9 +16,9 @@ pip_library(
     name = "protobuf",
     outs = ["google/protobuf"],
     hashes = [
-        "6ad6b86dcf7d29e8868decb0269c145f003f04c9", # TM Mirror
+        "f958e27563875e4e4374cf4fce3c061f2f7742faa1139acf8def40da07e0ce4e", # TM Mirror
         "67aef484fdd95e53d4556f545b09dfa07bd5d1ae63edd79c904e245959312181", # Public
-        "c6ff9fe51713459233c6f8a96dd9d5a3814993d781aca12cbf556a1196896b22", # GitHub Actions
+        "95dfa3e09ff6a00dd9a02a250d82255d43a2a2b48144c034ee313efd15fd73da", # GitHub Actions
     ],
     licences = ["BSD 3-Clause"],
     version = "3.11.3",
@@ -29,9 +29,9 @@ pip_library(
     name = "pkg_resources",
     package_name = "setuptools",
     hashes = [
-        "96d9674fba0dd86980f1bd484b69de2dc2079f75", # TM Mirror
+        "c9230375a8c4ea835e383dea8911e6cd291a52eec59f7271bd862bfbe27f615c", # TM Mirror
         "7d32f137ecddaacb225e4654501b87121374a503d8b33ffabab02d6cd157c73d", # Public
-        "b867f0d461cb73a7d186683f8cdc773436520f88dea7251b20d794ea7f1c0727", # GitHub Actions
+        "bd3adba527cf620cda98f80c1f2ff4e0d43e03c5b8a980465dfb852e22954002", # GitHub Actions
     ],
     licences = ["MIT"],
     version = "40.4.3",
@@ -41,9 +41,9 @@ pip_library(
     name = "six",
     package_name = "six",
     hashes = [
-        "cf7af9d5871157d18d2f491202f9e0ed3854bfd4", # TM Mirror
+        "4c468c181cb3dd03c3eb368940cb008d6d45bad48ee085d3f9655a15dc6603f4", # TM Mirror
         "e21a52ba3ee5c0bb30f07d28b671bd08820ac992f5f1c78f6ec51b8d25faf9ba", # Public
-        "f33731e506b8c71ce050b2d1b5ca9f134371f59984f7fe552644a2055c6844bb", # GitHub Actions
+        "a1f4385f169be6c75c37e2f656fecbc5a014dda92357cf8509a4a651d35ae141", # GitHub Actions
     ],
     licences = ["MIT"],
     version = "1.14.0",
@@ -54,9 +54,9 @@ pip_library(
     name = "requests",
     version = "2.23.0",
     hashes = [
-        "a864f264eb58c13e03408ad4becbe896ce9f510f", # TM Mirror
+        "a749c5c5d6f10ab3ac2a0e46b5459b829a93b0ef08dec412236d5abde75d94f7", # TM Mirror
         "9db0caaab267a16c47717326883fdc7ac92af9007c057e6dd5ff5ee4961124af", # Public
-        "a627c90c486037f41eea41e329fbc7b72593faaa2d32fa591f9704b98a794f6b", # GitHub Actions
+        "13308be8e327c460966a1b6f89ddf3ceccc70fe60923888ab6a35542cae495fe", # GitHub Actions
     ],
     deps = [
         ":urllib3",
@@ -69,9 +69,9 @@ pip_library(
 pip_library(
     name = "urllib3",
     hashes = [
-        "a116a02e43b5ffe5d316c9e9ef2ffa946143030b", # TM Mirror
+        "dfadcc16d8b81f332c6c4e4d54fa85baec2a94d5a3aab593e705b0f7d30c4494", # TM Mirror
         "170b110226e286c02224e1b685d8aca4d81635d789df0db7167ebd03af008925", # Public
-        "a80b3c6f8b0f2d2ddb7cb2e1aa6d5984afe68b61b2f88d51c43ed913508cf081", # GitHub Actions
+        "d9bb0ea061189e901e9919934c23723749a329d5aa5bb53397ed1af038e1e9c9", # GitHub Actions
     ],
     version = "1.25.8",
 )
@@ -79,9 +79,9 @@ pip_library(
 pip_library(
     name = "certifi",
     hashes = [
-        "cf6e1706ad1119c9e474033c2302aa0f0af42865", # TM Mirror
+        "98e5784d3d46c6b61d9ecc2a2692ecf989eb0b5e72899ab52ad1143eed6dc532", # TM Mirror
         "b982a8eb40d4be0a5aab7b8b81169a953d43e4b2b95685f47f24effd8fbb417d", # Public
-        "12a0dfb553b6e365587537ff182cf8f159c3568dd54f05d9b86b01fa34adf2ad", # GitHub Actions
+        "4be7beacd1d95e5dc42606dae7147c5d9b8804f0b54d4683cbf02cb2a3f8ff43", # GitHub Actions
     ],
     version = "2019.11.28",
 )
@@ -89,9 +89,9 @@ pip_library(
 pip_library(
     name = "chardet",
     hashes = [
-        "d6644e25f4f93987dc58b527f57832491d88eae1", # TM Mirror
+        "ac4bab4ffa21a25e617a083da655f4f3515616fcbc0623cecd30169d8ac17d51", # TM Mirror
         "d57c002a95bb1384e38740daba0bce14e31234dd7e18182978b7a7a3936d737f", # Public
-        "a642d84f029f2a5274d7931dd7a28635a6f6b6bf9507cd0060659b92c695ea23", # GitHub Actions
+        "be1489489a31e19f2665de886fd89f37cf4325b7740c9e5131afa69b054ab128", # GitHub Actions
     ],
     version = "3.0.4",
 )
@@ -99,9 +99,9 @@ pip_library(
 pip_library(
     name = "idna",
     hashes = [
-        "ef35db113f6d552c3cf08cc8d5501e9871f1107c", # TM Mirror
+        "6777f28e7113d6e780e0bcdcd837cc97b2cd5bfedaf3b25b202e64ad1819d69d", # TM Mirror
         "f42d88cf9a14ea6b819e5f27906d98a165a9fb9608a9e4fff9328e93b5a7ce58", # Public
-        "a77f5960880c307d197dab8a0630b54edbd30a1ff30085ae70481112370a18b5", # GitHub Actions
+        "44ca85ef74af1d787ccbb9d94031748b2a3839a60e38b5f700d042bfcc0de283", # GitHub Actions
     ],
     version = "2.9",
 )
