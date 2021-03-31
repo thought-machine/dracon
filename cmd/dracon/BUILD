@@ -12,4 +12,5 @@ go_binary(
         "//cmd/dracon/cmd",
         "//third_party/go:spf13_cobra",
     ],
+    visibility = ["//scripts/..."],
 )

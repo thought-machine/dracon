@@ -20,3 +20,19 @@ remote_file(
     extract = True,
     visibility = ["//scripts/..."],
 )
+
+KUSTOMIZE_VERSION = "v3.8.7"
+
+remote_file(
+    name = "kustomize",
+    binary = True,
+    extract = True,
+    hashes = [
+        "4a3372d7bfdffe2eaf729e77f88bc94ce37dc84de55616bfe90aac089bf6fd02",  # linux-amd64
+    ],
+    url = f"https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F{KUSTOMIZE_VERSION}/kustomize_{KUSTOMIZE_VERSION}_{CONFIG.OS}_{CONFIG.ARCH}.tar.gz",
+    visibility = [
+        "//scripts/development/k8s/...",
+        "//examples/...",
+    ],
+)

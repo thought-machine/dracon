@@ -9,7 +9,7 @@ spec:
   steps:
   # run elasticsearch consumer
   - name: run-elasticsearch-consumer
-    image: thoughtmachine/dracon-consumer-elasticsearch:latest
+    image: index.docker.io/thoughtmachine/dracon-consumer-elasticsearch:latest
     imagePullPolicy: Never
     env: [
       {name: ELASTICSEARCH_URL, value: http://elasticsearch.dracon.svc:9200}

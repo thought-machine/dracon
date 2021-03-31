@@ -11,7 +11,7 @@ spec:
   steps:
   # run spotbugs
   - name: run-spotbugs
-    image: thoughtmachine/dracon-tool-spotbugs:latest
+    image: index.docker.io/thoughtmachine/dracon-tool-spotbugs:latest
     command: ["sh"]
     args: ["-c",
       "spotbugs {{.ProducerSourcePath}} -output {{.ProducerToolOutPath}} -xml:withMessages"
@@ -20,7 +20,7 @@ spec:
     env: []
   # parse results
   - name: parse-spotbugs
-    image: thoughtmachine/dracon-producer-spotbugs:latest
+    image: index.docker.io/thoughtmachine/dracon-producer-java_spotbugs:latest
     imagePullPolicy: Never
     command: ["/parse"]
     args: [
