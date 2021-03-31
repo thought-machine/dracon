@@ -44,6 +44,8 @@ To run that example pipeline you can execute:
 $ dracon run --context kind-dracon --namespace=dracon run --pipeline examples/pipelines/golang-project
 ```
 
+_Note: make sure you have installed dracon via [Dracon - Installing](https://github.com/thought-machine/dracon#installing)_
+
 ### Inspecting a Pipeline
 
 To see the progress of a Pipeline, you can execute:
