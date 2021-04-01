@@ -41,6 +41,12 @@ $kubectl apply -f "${TEKTONCD_PIPELINE_INSTALL}" > /dev/null
 util::waitForRollout "${TEKTONCD_PIPELINE_INSTALL}"
 util::rsuccess "Installed tektoncd/pipeline"
 
+# tektoncd/dashboard
+util::infor "Installing tektoncd/dashboard"
+$kubectl apply -f "${TEKTONCD_DASHBOARD_INSTALL}" > /dev/null
+util::waitForRollout "${TEKTONCD_DASHBOARD_INSTALL}"
+util::rsuccess "Installed tektoncd/dashboard"
+
 
 # Finish
 if [ "$(kubectl config current-context)" != "${kubernetes_context}" ]; then

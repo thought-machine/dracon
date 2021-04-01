@@ -14,6 +14,7 @@ KUBERNETES_INGRESSNGINX_CONFIG="$(out_location //scripts/development/kind/ingres
 JETSTACK_CERTMANAGER_INSTALL="$(out_location //third_party/k8s:jetstack_certmanager)"
 
 TEKTONCD_PIPELINE_INSTALL="$(out_location //third_party/k8s:tektoncd_pipeline)"
+TEKTONCD_DASHBOARD_INSTALL="$(out_location //scripts/development/k8s/tektoncd-dashboard)"
 
 source $SRCS
     """,
@@ -25,6 +26,7 @@ source $SRCS
         "//third_party/k8s:jetstack_certmanager",
         "//scripts/development/kind/ingress:ingress-nginx",
         "//third_party/k8s:tektoncd_pipeline",
+        "//scripts/development/k8s/tektoncd-dashboard",
         ":_configuration",
     ],
     shell = "/bin/bash",
