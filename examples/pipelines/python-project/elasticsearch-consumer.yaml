@@ -12,7 +12,7 @@ spec:
     image: thoughtmachine/dracon-consumer-elasticsearch:latest
     imagePullPolicy: Never
     env: [
-      {name: ELASTICSEARCH_URL, value: http://elasticsearch:9200}
+      {name: ELASTICSEARCH_URL, value: http://elasticsearch.dracon.svc:9200}
     ]
     command: ["/consume"]
     args: [

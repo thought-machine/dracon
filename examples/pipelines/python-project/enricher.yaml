@@ -18,5 +18,5 @@ spec:
     - name: ENRICHER_WRITE_PATH
       value: "{{.EnricherOutPath}}"
     - name: ENRICHER_DB_CONNECTION
-      value: "postgresql://dracon:dracon@dracon-enrichment-db?sslmode=disable"
+      value: "postgresql://dracon:dracon@dracon-enrichment-db.dracon.svc?sslmode=disable"
     command: ["/enricher"]

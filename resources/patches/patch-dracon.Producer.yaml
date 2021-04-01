@@ -35,10 +35,14 @@
     args:
     - "-c"
     - "mkdir -p {{.ProducerSourcePath}} && tar -C {{.ProducerSourcePath}} -xzf /workspace/source/source.tgz && chown -R 1000:1000 /workspace/output/producer /dracon"
+    env: []
     volumeMounts: [{mountPath: /dracon, name: dracon-ws}]
 
 {{range .PipelineParams}}
 - op: add
   path: /spec/steps/*/env/-
   value: {name: {{.Name}}, value: $(inputs.params.{{.Name}})}
+- op: add
+  path: /spec/inputs/params/-
+  value: {name: {{.Name}}, type: "string"}
 {{end}}

@@ -1,0 +1,38 @@
+name: E2E
+on: [push]
+jobs:
+  build:
+    name: E2E
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install python dependencies
+        run: sudo apt-get update && sudo apt-get install -y python3-setuptools python3-pip
+
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Create KinD cluster
+        run: ./pleasew run //scripts/development/kind:setup
+
+      - name: Deploy Dracon supporting resources
+        run: |
+          ./pleasew deploy //scripts/development/k8s:namespace
+          ./pleasew deploy //scripts/development/k8s/enricher-db --wait
+          ./pleasew deploy //scripts/development/k8s/minio-storage --wait
+          ./pleasew deploy //scripts/development/k8s/elasticsearch-kibana --wait
+
+      - name: Setup and Run Example pipelines
+        run: |
+          ./pleasew dracon setup --namespace dracon --pipeline examples/pipelines/golang-project
+          ./pleasew dracon run --namespace dracon --pipeline examples/pipelines/golang-project
+
+          ./pleasew dracon setup --namespace dracon --pipeline examples/pipelines/mixed-lang-project
+          ./pleasew dracon run --namespace dracon --pipeline examples/pipelines/mixed-lang-project
+
+          ./pleasew dracon setup --namespace dracon --pipeline examples/pipelines/python-project
+          ./pleasew dracon run --namespace dracon --pipeline examples/pipelines/python-project
+
+          ./pleasew run //test/e2e:wait_for_pipelineruns
+
+      - name: Delete KinD cluster
+        run: ./pleasew run //scripts/development/kind:delete

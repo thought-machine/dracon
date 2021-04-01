@@ -17,6 +17,7 @@ spec:
       "gosec -fmt=json -out={{.ProducerToolOutPath}} {{.ProducerSourcePath}}/... || true"
     ]
     volumeMounts: []
+    env: []
   # parse results
   - name: parse-gosec
     image: thoughtmachine/dracon-producer-gosec:latest
@@ -26,3 +27,4 @@ spec:
       "-out={{.ProducerOutPath}}"
     ]
     volumeMounts: []
+    env: []

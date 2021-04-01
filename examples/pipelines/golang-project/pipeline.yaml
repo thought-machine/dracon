@@ -19,6 +19,7 @@ spec:
   - name: gosec-producer
     runAfter: [fetch-source]
     taskRef: {name: golang-project-gosec-producer}
+    params: []
     resources: {inputs: [], outputs: []}
   # stage 3 - enrichment
   - name: enricher
