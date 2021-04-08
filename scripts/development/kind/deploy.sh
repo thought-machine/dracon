@@ -20,35 +20,7 @@ fi
 
 kind_cluster_name="${kubernetes_context//kind-/}"
 
-container_repositories=($(./pleasew query deps \
-  --include container-repository \
-  "${target}" \
-  | sort -u \
-  | awk '{print $1}'
-))
-
-
-container_image_rules=($(printf '%s\n' "${container_repositories[@]}" | sed 's/_repository$//g'))
-container_fqn_rules=($(printf '%s\n' "${container_repositories[@]}" | sed 's/_repository$/_fqn/g'))
-
-if [ ${#container_image_rules[@]} -ne 0 ]; then
-  util::infor "building image(s)"
-  ./pleasew build ${container_image_rules[@]} ${container_fqn_rules[@]} > /dev/null
-  util::rsuccess "built image(s)"
-fi
-
-for container_image_rule in "${container_image_rules[@]}"; do
-  container_fqn_rule="${container_image_rule}_fqn"
-  container_fqn_path=$(./pleasew query output "${container_fqn_rule}")
-  container_fqn=$(<"${container_fqn_path}")
-  container_image_tar_path=$(./pleasew query output "${container_image_rule}")
-
-  util::infor "loading image ${container_image_rule} into ${kubernetes_context}"
-  "$KIND_BIN" load image-archive \
-    "${container_image_tar_path}" \
-    --name "${kind_cluster_name}" > /dev/null
-  util::rsuccess "loaded image ${container_image_rule} into ${kubernetes_context}"
-done
+util::load_development_images_into_kind "${kind_cluster_name}" "${target}"
 
 util::infor "configuring CA"
 

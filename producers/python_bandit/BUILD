@@ -1,4 +1,4 @@
-subinclude("@third_party/subrepos/pleasings//docker")
+subinclude("//third_party/defs:docker")
 
 go_binary(
     name = "python_bandit",
@@ -25,4 +25,5 @@ docker_image(
     ],
     base_image = "//build/docker:dracon-base-go",
     image = "dracon-producer-bandit",
+    visibility = ["//examples/..."],
 )

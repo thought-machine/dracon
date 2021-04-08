@@ -1,4 +1,4 @@
-subinclude("@third_party/subrepos/pleasings//docker")
+subinclude("//third_party/defs:docker")
 
 go_binary(
     name = "java_spotbugs",
@@ -31,4 +31,5 @@ docker_image(
     ],
     base_image = "//build/docker:dracon-base-go",
     image = "dracon-producer-java_spotbugs",
+    visibility = ["//examples/..."],
 )

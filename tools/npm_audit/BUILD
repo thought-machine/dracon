@@ -1,4 +1,4 @@
-subinclude("@third_party/subrepos/pleasings//docker")
+subinclude("//third_party/defs:docker")
 
 filegroup(
     name = "npm_audit",

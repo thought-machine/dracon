@@ -20,7 +20,7 @@ spec:
     env: []
   # parse results
   - name: parse-gosec
-    image: thoughtmachine/dracon-producer-gosec:latest
+    image: index.docker.io/thoughtmachine/dracon-producer-gosec:latest
     command: ["/parse"]
     args: [
       "-in={{.ProducerToolOutPath}}",

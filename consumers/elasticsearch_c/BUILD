@@ -1,4 +1,4 @@
-subinclude("@third_party/subrepos/pleasings//docker")
+subinclude("//third_party/defs:docker")
 
 go_binary(
     name = "elasticsearch_c",
@@ -37,4 +37,5 @@ docker_image(
     ],
     base_image = "//build/docker:dracon-base-go",
     image = "dracon-consumer-elasticsearch",
+    visibility = ["//examples/..."],
 )

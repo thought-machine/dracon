@@ -53,7 +53,7 @@ sh_cmd(
     name = "deploy",
     srcs = ["deploy.sh"],
     cmd = """
-source "$(out_location //scripts/util)"
+source "$(out_location :_util)"
 source "$(out_location //third_party/sh:shflags)"
 
 ROOT_CERTIFICATES="$(out_location :_root_certificates)"
@@ -65,7 +65,7 @@ YQ_BIN="$(out_location //third_party/tools:yq)"
 source $SRCS
     """,
     data = [
-        "//scripts/util",
+        ":_util",
         "//third_party/tools:kind",
         "//third_party/sh:shflags",
         ":_root_certificates",
@@ -74,6 +74,39 @@ source $SRCS
     ],
     shell = "/bin/bash",
 )
+
+sh_cmd(
+    name = "dracon",
+    srcs = ["dracon.sh"],
+    cmd = """
+source "$(out_location :_util)"
+
+DRACON_BIN=$(out_exe //cmd/dracon)
+KIND_BIN=$(out_exe //third_party/tools:kind)
+source $SRCS
+    """,
+    data = [
+        "//cmd/dracon",
+        "//third_party/tools:kind",
+        ":_util",
+    ],
+    shell = "/bin/bash",
+)
+
+sh_cmd(
+    name = "_util",
+    srcs = ["util.sh"],
+    cmd = """
+source "$(out_location //scripts/util)"
+
+source $SRCS
+    """,
+    data = [
+        "//scripts/util",
+    ],
+    shell = "/bin/bash",
+)
+
 
 filegroup(
     name = "_configuration",

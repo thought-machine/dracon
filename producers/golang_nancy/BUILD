@@ -1,4 +1,4 @@
-subinclude("@third_party/subrepos/pleasings//docker")
+subinclude("//third_party/defs:docker")
 
 # this producer covers nancy https://github.com/sonatype-nexus-community/nancy
 

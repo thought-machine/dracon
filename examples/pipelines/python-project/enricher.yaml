@@ -10,7 +10,7 @@ spec:
   steps:
   # run enricher
   - name: run-enricher
-    image: thoughtmachine/dracon-enricher:latest
+    image: index.docker.io/thoughtmachine/dracon-enricher:latest
     imagePullPolicy: Never
     env:
     - name: ENRICHER_READ_PATH

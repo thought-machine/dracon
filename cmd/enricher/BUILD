@@ -1,4 +1,4 @@
-subinclude("@third_party/subrepos/pleasings//docker")
+subinclude("//third_party/defs:docker")
 
 go_binary(
     name = "enricher",
@@ -22,4 +22,5 @@ docker_image(
     srcs = [":enricher"],
     base_image = "//build/docker:dracon-base-go",
     image = "dracon-enricher",
+    visibility = ["//examples/..."],
 )

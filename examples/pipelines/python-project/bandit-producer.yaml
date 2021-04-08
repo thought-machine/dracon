@@ -11,7 +11,7 @@ spec:
   steps:
   # run bandit
   - name: run-bandit
-    image: thoughtmachine/dracon-tool-bandit:latest
+    image: index.docker.io/thoughtmachine/dracon-tool-bandit:latest
     command: ["sh"]
     args: ["-c",
       "bandit --recursive {{.ProducerSourcePath}} --format json --output {{.ProducerToolOutPath}} || true"
@@ -20,7 +20,7 @@ spec:
     env: []
   # parse results
   - name: parse-bandit
-    image: thoughtmachine/dracon-producer-bandit:latest
+    image: index.docker.io/thoughtmachine/dracon-producer-bandit:latest
     command: ["/parse"]
     args: [
       "-in={{.ProducerToolOutPath}}",
