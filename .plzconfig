@@ -28,6 +28,9 @@ pythondep = //third_party/python:protobuf
 godep = //third_party/go:protobuf
 protocgoplugin = //third_party/go:protoc-gen-go
 
+[featureflags]
+PleaseGoInstall = true
+
 [alias "deploy"]
 cmd = run //scripts/development/kind:deploy --
 positionallabels = true

@@ -13,7 +13,7 @@ import (
 	// elasticsearchv6 "github.com/elastic/go-elasticsearch/v6"
 	v1 "github.com/thought-machine/dracon/api/proto/v1"
 
-	elasticsearchv7 "github.com/elastic/go-elasticsearch"
+	elasticsearchv7 "github.com/elastic/go-elasticsearch/v7"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/thought-machine/dracon/consumers"
 )

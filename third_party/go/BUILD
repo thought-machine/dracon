@@ -1,99 +1,100 @@
 package(default_visibility = ["PUBLIC"])
 
-# TODO(hjenkins): Support multiple versions of ES
-# go_get(
-#     name = "elastic_go-elasticsearch_v5",
-#     revision = "v5.6.1",
-#     get = "github.com/elastic/go-elasticsearch",
-# )
+# TODO(hjenkins): support ES 5 in ES consumer
+go_module(
+    name = "elastic_go-elasticsearch_v5",
+    version = "v5.6.1",
+    module = "github.com/elastic/go-elasticsearch/v5",
+)
 
-# TODO(hjenkins): Support multiple versions of ES
-# go_get(
-#     name = "elastic_go-elasticsearch_v6",
-#     get = "github.com/elastic/go-elasticsearch",
-#     install = [
-#         "",
-#         "esapi",
-#         "estransport",
-#         "internal/version",
-#     ],
-#     revision = "v6.8.2",
-# )
+# TODO(hjenkins): support ES 6 in ES consumer
+go_module(
+    name = "elastic_go-elasticsearch_v6",
+    module = "github.com/elastic/go-elasticsearch/v6",
+    install = [
+        ".",
+        "esapi",
+        "estransport",
+        "internal/version",
+    ],
+    version = "v6.8.2",
+)
 
-go_get(
+go_module(
     name = "go-jira",
-    get = "github.com/andygrunwald/go-jira",
     licences = ["MIT"],
-    revision = "v1.12.0",
+    module = "github.com/andygrunwald/go-jira",
+    version = "v1.12.0",
     deps = [
-        ":pkg_errors",
         ":go-querystring",
         ":jwt-go",
+        ":pkg_errors",
         ":structs",
         ":tgo",
     ],
 )
 
-go_get(
+go_module(
     name = "go-querystring",
-    get = "github.com/google/go-querystring/query",
+    install = ["query"],
     licences = [
         "BSD-3-Clause",
     ],
-    revision = "v1.0.0",
+    module = "github.com/google/go-querystring",
+    version = "v1.0.0",
 )
 
-go_get(
+go_module(
     name = "jwt-go",
-    get = "github.com/dgrijalva/jwt-go",
     licences = ["mit"],
-    revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e",
+    module = "github.com/dgrijalva/jwt-go",
+    version = "v3.2.0+incompatible",
 )
 
-go_get(
+go_module(
     name = "structs",
-    get = "github.com/fatih/structs",
     licences = ["mit"],
-    revision = "f5faa72e73092639913f5833b75e1ac1d6bc7a63",
+    module = "github.com/fatih/structs",
+    version = "v1.1.0",
 )
 
-go_get(
+go_module(
     name = "tgo",
-    get = "github.com/trivago/tgo",
     install = [
         "tcontainer",
         "treflect",
     ],
     licences = ["BSD 3-Clause"],
-    revision = "v1.0.7",
+    module = "github.com/trivago/tgo",
+    version = "v1.0.7",
 )
 
-go_get(
+go_module(
     name = "elastic_go-elasticsearch_v7",
-    get = "github.com/elastic/go-elasticsearch",
     install = [
-        "",
+        ".",
         "esapi",
         "estransport",
         "internal/version",
     ],
-    revision = "v7.6.0",
+    module = "github.com/elastic/go-elasticsearch/v7",
+    version = "v7.6.0",
 )
 
-go_get(
+go_module(
     name = "gogo_protobuf",
-    get = "github.com/gogo/protobuf",
     install = [
         "gogoproto",
         "proto",
         "sortkeys",
     ],
-    revision = "v1.2.1",
+    module = "github.com/gogo/protobuf",
+    version = "v1.2.1",
 )
 
-go_get(
+go_module(
     name = "protobuf",
-    get = "github.com/golang/protobuf",
+    download = ":protobuf_download",
     install = [
         "proto",
         "ptypes",
@@ -102,51 +103,61 @@ go_get(
         "ptypes/timestamp",
         "jsonpb",
     ],
-    revision = "v1.3.2",
+    module = "github.com/golang/protobuf",
+    strip = [
+        "proto/proto3_proto",
+        "conformance",
+    ],
 )
 
-go_get(
+go_mod_download(
+    name = "protobuf_download",
+    module = "github.com/golang/protobuf",
+    version = "v1.3.2",
+)
+
+go_module(
     name = "protoc-gen-go",
     binary = True,
-    get = [],
-    install = ["github.com/golang/protobuf/protoc-gen-go"],
-    licences = ["bsd-3-clause"],
+    download = ":protobuf_download",
+    install = ["protoc-gen-go"],
+    module = "github.com/golang/protobuf",
     deps = [":protobuf"],
 )
 
-go_get(
+go_module(
     name = "google_uuid",
-    get = "github.com/google/uuid",
-    revision = "v1.1.1",
+    module = "github.com/google/uuid",
+    version = "v1.1.1",
 )
 
-go_get(
+go_module(
     name = "mitchellh_go-homedir",
-    get = "github.com/mitchellh/go-homedir",
-    revision = "v1.1.0",
+    module = "github.com/mitchellh/go-homedir",
+    version = "v1.1.0",
 )
 
-go_get(
+go_module(
     name = "speps_go-hashids",
-    get = "github.com/speps/go-hashids",
-    revision = "v2.0.0",
+    module = "github.com/speps/go-hashids",
+    version = "v2.0.0",
 )
 
-go_get(
+go_module(
     name = "spf13_cobra",
-    get = "github.com/spf13/cobra",
     licences = ["apache-2.0"],
-    revision = "v0.0.5",
+    module = "github.com/spf13/cobra",
+    version = "v0.0.5",
     deps = [
         ":spf13_pflag",
     ],
 )
 
-go_get(
+go_module(
     name = "spf13_viper",
-    get = "github.com/spf13/viper",
     licences = ["mit"],
-    revision = "v1.4.0",
+    module = "github.com/spf13/viper",
+    version = "v1.7.1",
     deps = [
         ":fsnotify",
         ":hashicorp_hcl",
@@ -158,181 +169,204 @@ go_get(
         ":spf13_jwalterweatherman",
         ":spf13_pflag",
         ":yaml.v2",
+        ":subosit_gotenv",
+        ":ini_v1",
     ],
 )
 
-go_get(
+go_module(
+    name = "subosit_gotenv",
+    module = "github.com/subosito/gotenv",
+    version = "v1.2.0",
+    licences = ["MIT"],
+)
+
+go_module(
+    name = "ini_v1",
+    module = "gopkg.in/ini.v1",
+    version = "v1.62.0",
+    licences = ["Apache-2.0"],
+)
+
+go_module(
     name = "stretchr_testify",
-    get = "github.com/stretchr/testify",
     install = [
-        "",
         "assert",
-        "mock"
+        "mock",
+        "require"
     ],
-    revision = "v1.2.2",
-    strip = [
-        "vendor",
-    ],
+    module = "github.com/stretchr/testify",
+    version = "v1.7.0",
     deps = [
         ":davecgh_go-spew",
         ":pmezard_go-difflib",
         ":stretchr_objx",
+        ":yaml_v3",
     ],
 )
 
-go_get(
+go_module(
+    name = "yaml_v3",
+    licences = ["Apache-2.0"],
+    module = "gopkg.in/yaml.v3",
+    version = "496545a6307b2a7d7a710fd516e5e16e8ab62dbc",
+)
+
+go_module(
     name = "davecgh_go-spew",
-    get = "github.com/davecgh/go-spew",
     install = [
         "spew",
     ],
-    revision = "v1.1.1",
+    module = "github.com/davecgh/go-spew",
+    version = "v1.1.1",
 )
 
-go_get(
+go_module(
     name = "pmezard_go-difflib",
-    get = "github.com/pmezard/go-difflib",
     install = [
         "difflib",
     ],
-    revision = "v1.0.0",
+    module = "github.com/pmezard/go-difflib",
+    version = "v1.0.0",
 )
 
-go_get(
+go_module(
     name = "stretchr_objx",
-    get = "github.com/stretchr/objx",
-    revision = "v0.1.1",
+    module = "github.com/stretchr/objx",
+    version = "v0.1.1",
 )
 
-go_get(
+go_module(
     name = "fsnotify",
-    get = "github.com/fsnotify/fsnotify",
-    revision = "v1.4.7",
+    module = "github.com/fsnotify/fsnotify",
+    version = "v1.4.7",
     deps = [
         ":x_sys",
     ],
 )
 
-go_get(
+go_module(
     name = "x_sys",
-    get = "golang.org/x/sys",
     install = [
         "unix",
         "cpu",
     ],
-    revision = "95b1ffbd15a57cc5abb3f04402b9e8ec0016a52c",
+    module = "golang.org/x/sys",
+    version = "95b1ffbd15a57cc5abb3f04402b9e8ec0016a52c",
 )
 
-go_get(
+go_module(
     name = "hashicorp_hcl",
-    get = "github.com/hashicorp/hcl/...",
-    revision = "v1.0.0",
+    install = [".", "...",],
+    module = "github.com/hashicorp/hcl",
+    version = "v1.0.0",
 )
 
-go_get(
+go_module(
     name = "magiconair_properties",
-    get = "github.com/magiconair/properties",
-    revision = "v1.8.0",
+    module = "github.com/magiconair/properties",
+    version = "v1.8.0",
 )
 
-go_get(
+go_module(
     name = "mitchellh_mapstructure",
-    get = "github.com/mitchellh/mapstructure",
-    revision = "v1.1.2",
+    module = "github.com/mitchellh/mapstructure",
+    version = "v1.1.2",
 )
 
-go_get(
+go_module(
     name = "pelletier_go-toml",
-    get = "github.com/pelletier/go-toml",
-    revision = "v1.2.0",
+    module = "github.com/pelletier/go-toml",
+    version = "v1.2.0",
 )
 
-go_get(
+go_module(
     name = "spf13_cast",
-    get = "github.com/spf13/cast",
-    revision = "v1.3.0",
+    module = "github.com/spf13/cast",
+    version = "v1.3.0",
 )
 
-go_get(
+go_module(
     name = "spf13_jwalterweatherman",
-    get = "github.com/spf13/jwalterweatherman",
-    revision = "v1.0.0",
+    module = "github.com/spf13/jwalterweatherman",
+    version = "v1.0.0",
 )
 
-go_get(
+go_module(
     name = "yaml.v2",
-    get = "gopkg.in/yaml.v2",
-    revision = "v2.2.2",
+    module = "gopkg.in/yaml.v2",
+    version = "v2.2.2",
 )
 
-go_get(
+go_module(
     name = "spf13_afero",
-    get = "github.com/spf13/afero",
     install = [
-        "",
+        ".",
         "mem",
     ],
-    revision = "v1.1.2",
+    module = "github.com/spf13/afero",
+    version = "v1.1.2",
     deps = [
         ":x_text",
     ],
 )
 
-go_get(
+go_module(
     name = "x_text",
-    get = "golang.org/x/text",
     install = [
+        "encoding",
+        "encoding/...",
         "transform",
         "unicode/...",
         "secure/bidirule",
     ],
-    revision = "v0.3.0",
+    module = "golang.org/x/text",
+    version = "v0.3.0",
 )
 
-go_get(
+go_module(
     name = "spf13_pflag",
-    get = "github.com/spf13/pflag",
-    revision = "v1.0.3",
+    module = "github.com/spf13/pflag",
+    version = "v1.0.3",
 )
 
-go_get(
+go_module(
     name = "pkg_errors",
-    get = "github.com/pkg/errors",
-    revision = "v0.8.1",
+    module = "github.com/pkg/errors",
+    version = "v0.8.1",
 )
 
-go_get(
+go_module(
     name = "evanphx_json-patch",
-    get = "github.com/evanphx/json-patch",
-    revision = "v4.5.0",
+    module = "github.com/evanphx/json-patch",
+    version = "v4.5.0",
     deps = [
         ":pkg_errors",
     ],
 )
 
-go_get(
+go_module(
     name = "ghodss_yaml",
-    get = "github.com/ghodss/yaml",
-    revision = "v1.0.0",
+    module = "github.com/ghodss/yaml",
+    version = "v1.0.0",
     deps = [
         ":yaml.v2",
     ],
 )
 
-go_get(
+go_module(
     name = "rakyll_statik",
-    get = "github.com/rakyll/statik",
     install = [
         "fs",
     ],
-    revision = "v0.1.6",
+    module = "github.com/rakyll/statik",
+    version = "v0.1.6",
 )
 
 KUBERNETES_VERSION = "1.13.12"
 
-go_get(
+go_module(
     name = "apimachinery",
-    get = "k8s.io/apimachinery",
     install = [
         "pkg/apis/meta/v1",
         "pkg/runtime/schema",
@@ -356,13 +390,13 @@ go_get(
         "pkg/selection",
         "third_party/forked/golang/reflect",
     ],
-    repo = "github.com/kubernetes/apimachinery",
-    revision = "kubernetes-%s" % KUBERNETES_VERSION,
+    module = "k8s.io/apimachinery",
     strip = [
         "pkg/util/proxy",
         "pkg/util/jsonmergepatch",
         "pkg/runtime/serializer/recognizer/testing",
     ],
+    version = "kubernetes-%s" % KUBERNETES_VERSION,
     deps = [
         ":gogo_protobuf",
         ":google_gofuzz",
@@ -372,127 +406,140 @@ go_get(
     ],
 )
 
-go_get(
+go_module(
     name = "google_gofuzz",
-    get = "github.com/google/gofuzz",
-    revision = "v1.0.0",
+    module = "github.com/google/gofuzz",
+    version = "v1.0.0",
 )
 
-go_get(
+go_module(
     name = "inf.v0",
-    get = "gopkg.in/inf.v0",
-    revision = "v0.9.1",
+    module = "gopkg.in/inf.v0",
+    version = "v0.9.1",
 )
 
-go_get(
+go_module(
     name = "x_net",
-    get = "golang.org/x/net/...",
-    revision = "13f9640d40b9cc418fb53703dfbd177679788ceb",
+    install = ["..."],
+    module = "golang.org/x/net",
     strip = [
         "http2/h2demo",
         "http2/h2i",
     ],
+    version = "13f9640d40b9cc418fb53703dfbd177679788ceb",
     deps = [
         ":x_sys",
         ":x_text",
     ],
 )
 
-go_get(
+go_module(
     name = "klog",
-    get = "k8s.io/klog",
-    revision = "v1.0.0",
+    module = "k8s.io/klog",
+    version = "v1.0.0",
 )
 
-go_get(
+go_module(
     name = "golang-migrate_migrate",
-    get = "github.com/golang-migrate/migrate",
     install = [
-        "",
+        ".",
         "database/postgres",
         "source/go_bindata",
         "database",
         "internal/...",
         "source",
     ],
-    revision = "v4.7.0",
+    module = "github.com/golang-migrate/migrate/v4",
+    version = "v4.7.0",
     deps = [
         ":hashicorp_go-multierror",
         ":lib_pq",
     ],
 )
 
-go_get(
+go_module(
     name = "hashicorp_go-multierror",
-    get = "github.com/hashicorp/go-multierror",
-    revision = "v1.0.0",
+    module = "github.com/hashicorp/go-multierror",
+    version = "v1.0.0",
     deps = [
         ":hashicorp_errwrap",
     ],
 )
 
-go_get(
+go_module(
     name = "hashicorp_errwrap",
-    get = "github.com/hashicorp/errwrap",
-    revision = "v1.0.0",
+    module = "github.com/hashicorp/errwrap",
+    version = "v1.0.0",
 )
 
-go_get(
+go_module(
     name = "lib_pq",
-    get = "github.com/lib/pq/...",
-    revision = "v1.0.0",
+    install = [
+        ".",
+        "oid",
+    ],
+    module = "github.com/lib/pq",
+    version = "v1.0.0",
 )
 
-go_get(
+go_module(
     name = "jmoiron_sqlx",
-    get = "github.com/jmoiron/sqlx/...",
-    revision = "v1.2.0",
+    install = [".", "..."],
+    module = "github.com/jmoiron/sqlx",
+    version = "v1.2.0",
 )
 
-
-go_get(
-     name = "mockgen",
-     binary = True,
-     get = [],
-     install = ["github.com/golang/mock/mockgen"],
-     licences = ["apache-2.0"],
-     deps = [":mock"],
+go_mod_download(
+    name = "mockgen_download",
+    module = "github.com/golang/mock",
+    version = "v1.4.4",
 )
 
-go_get(
-     name = "mock",
-     get = "github.com/golang/mock/...",
-     licences = ["apache-2.0"],
-     revision = "v1.4.4",
-     deps = [
-         ":x_tools",
+go_module(
+    name = "mockgen",
+    binary = True,
+    download = ":mockgen_download",
+    install = ["mockgen"],
+    licences = ["apache-2.0"],
+    module = "github.com/golang/mock",
+    deps = [":x_tools"],
+)
+
+go_module(
+    name = "mock",
+    download = ":mockgen_download",
+    install = ["..."],
+    licences = ["apache-2.0"],
+    module = "github.com/golang/mock",
+    deps = [
+        ":x_tools",
     ],
 )
 
-go_get(
+go_module(
     name = "h2non_parth",
-    get = "github.com/h2non/parth",
     licences = ["MIT"],
-    revision = "v2.0.1",
+    module = "github.com/h2non/parth",
+    version = "v0.0.0-20190131123155-b4df798d6542",
 )
 
-go_get(
+go_module(
     name = "h2non_gentleman",
-    get = "gopkg.in/h2non/gentleman.v1/...",
+    install = ["..."],
     licences = ["MIT"],
-    repo = "github.com/h2non/gentleman",
-    revision = "v1.0.4",
+    module = "gopkg.in/h2non/gentleman.v1",
+    strip = ["_examples"],
+    version = "v1.0.4",
     deps = [
         ":x_net",
     ],
 )
 
-go_get(
+go_module(
     name = "h2non_gock",
-    get = "gopkg.in/h2non/gock.v1",
     licences = ["MIT"],
-    repo = "github.com/h2non/gock",
-    revision = "v1.0.16",
+    module = "gopkg.in/h2non/gock.v1",
+    version = "v1.0.16",
     deps = [
         ":h2non_gentleman",
         ":h2non_parth",
@@ -500,54 +547,65 @@ go_get(
     ],
 )
 
-go_get(
-     name = "x_tools",
-     get = "golang.org/x/tools",
-     install = [
-         "cmd/...",
-         "imports",
-         "go/packages",
-     ],
-     licences = ["bsd-3-clause"],
-     revision = "5bcca83a78812bd91ce8cb29be4fc4521cdc8f6f",
-     deps = [
-         ":x_crypto",
-         ":x_errors",
-         ":x_mod",
-         ":x_net",
-         ":x_sync",
-     ],
+go_module(
+    name = "x_tools",
+    install = [
+        "cover",
+        "present",
+        "go/packages",
+        "go/internal/packagesdriver",
+        "internal/gocommand",
+        "internal/packagesinternal",
+        "go/gcexportdata",
+        "go/internal/gcimporter",
+    ],
+    licences = ["bsd-3-clause"],
+    module = "golang.org/x/tools",
+    version = "5bcca83a78812bd91ce8cb29be4fc4521cdc8f6f",
+    deps = [
+        ":x_errors",
+        ":x_mod",
+    ],
 )
-go_get(
-     name = "x_crypto",
-     get = "golang.org/x/crypto/...",
-     licences = ["bsd-3-clause"],
-     revision = "123391ffb6de907695e1066dc40c1ff09322aeb6",  
-     strip = ["acme/autocert"],
-     deps = [":x_sys"],
+
+go_module(
+    name = "x_crypto",
+    install = ["..."],
+    licences = ["bsd-3-clause"],
+    module = "golang.org/x/crypto",
+    strip = ["acme/autocert"],
+    version = "123391ffb6de907695e1066dc40c1ff09322aeb6",
+    deps = [":x_sys"],
 )
-go_get(
-     name = "x_errors",
-     get = "golang.org/x/xerrors/...",
-     licences = ["bsd-3-clause"],
-     revision = "a5947ffaace3e882f334c1750858b4a6a7e52422",
-     deps = [":x_sys"],
+
+go_module(
+    name = "x_errors",
+    install = [".", "..."],
+    licences = ["bsd-3-clause"],
+    module = "golang.org/x/xerrors",
+    version = "a5947ffaace3e882f334c1750858b4a6a7e52422",
+    deps = [":x_sys"],
 )
-go_get(
-      name = "x_mod",
-      get = "golang.org/x/mod",
-      install = [
-          "semver",
-      ],
-      licences = ["bsd-3-clause"],
-    revision = "e5e73c1b9c72835114eb6daab038373d39515006",
+
+go_module(
+    name = "x_mod",
+    install = [
+        "semver",
+        "module",
+    ],
+    licences = ["bsd-3-clause"],
+    module = "golang.org/x/mod",
+    version = "v0.4.2",
+    deps = [":x_errors"],
 )
-go_get(
-      name = "x_sync",
-      get = "golang.org/x/sync/...",
-      licences = ["bsd-3-clause"],
-      revision = "fd80eb99c8f653c847d294a001bdf2a3a6f768f5",
-      deps = [
-          ":x_net",
+
+go_module(
+    name = "x_sync",
+    install = ["..."],
+    licences = ["bsd-3-clause"],
+    module = "golang.org/x/sync",
+    version = "fd80eb99c8f653c847d294a001bdf2a3a6f768f5",
+    deps = [
+        ":x_net",
     ],
 )
