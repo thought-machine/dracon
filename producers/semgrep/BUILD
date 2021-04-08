@@ -8,7 +8,7 @@ go_binary(
     deps = [
         "//api/proto:v1",
         "//producers",
-        "//producers/semgrep/types:semgrep-issue"
+        "//producers/semgrep/types:semgrep-issue",
     ],
 )
 
@@ -21,8 +21,8 @@ go_test(
     deps = [
         "//api/proto:v1",
         "//producers",
-        "//third_party/go:stretchr_testify",
         "//producers/semgrep/types:semgrep-issue",
+        "//third_party/go:stretchr_testify",
     ],
 )
 

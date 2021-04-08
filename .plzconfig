@@ -39,3 +39,9 @@ flag = --context
 [alias "dracon"]
 cmd = run //scripts/development/kind:dracon --
 flag = --pipeline
+
+[alias "lint"]
+cmd = run sequential --include lint //scripts/lint/...
+
+[alias "fmt-all"]
+cmd = run sequential --include fmt //scripts/fmt/...

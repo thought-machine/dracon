@@ -21,7 +21,7 @@ func TestLoadToolResponse(t *testing.T) {
 	assert.Nil(t, err)
 	defer os.Remove(tmpFile.Name())
 	issues := []*v1.Issue{
-		&v1.Issue{
+		{
 			Target:      "/dracon/source/foobar",
 			Title:       "/dracon/source/barfoo",
 			Description: "/dracon/source/example.yaml",

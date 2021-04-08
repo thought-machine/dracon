@@ -4,16 +4,15 @@ go_library(
         "api.go",
         "apiutils.go",
     ],
+    visibility = [
+        "PUBLIC",
+    ],
     deps = [
+        "//common/jira/config",
         "//third_party/go:go-jira",
         "//third_party/go:tgo",
-        "//common/jira/config:config",
-    ],
-    visibility = [
-        "PUBLIC"
     ],
 )
-
 
 go_test(
     name = "jira_test",

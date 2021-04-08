@@ -3,15 +3,15 @@ subinclude("//build/defs:kustomize")
 kustomized_config(
     name = "dev",
     srcs = [
+        "bandit-producer.yaml",
         "elasticsearch-consumer.yaml",
         "enricher.yaml",
         "git-source.yaml",
         "gosec-producer.yaml",
-        "spotbugs-producer.yaml",
-        "bandit-producer.yaml",
         "kustomization.yaml",
-        "pipeline-run.yaml",
         "pipeline.yaml",
+        "pipeline-run.yaml",
+        "spotbugs-producer.yaml",
     ],
     images = [
         "//consumers/elasticsearch_c:dracon-consumer-elasticsearch",

@@ -19,15 +19,15 @@ TEKTONCD_DASHBOARD_INSTALL="$(out_location //scripts/development/k8s/tektoncd-da
 source $SRCS
     """,
     data = [
-        "//scripts/util",
-        "//third_party/tools:kind",
-        "//third_party/sh:shflags",
-        "//third_party/k8s:kubernetes_ingressnginx",
-        "//third_party/k8s:jetstack_certmanager",
-        "//scripts/development/kind/ingress:ingress-nginx",
-        "//third_party/k8s:tektoncd_pipeline",
-        "//scripts/development/k8s/tektoncd-dashboard",
         ":_configuration",
+        "//scripts/development/k8s/tektoncd-dashboard",
+        "//scripts/development/kind/ingress:ingress-nginx",
+        "//scripts/util",
+        "//third_party/k8s:jetstack_certmanager",
+        "//third_party/k8s:kubernetes_ingressnginx",
+        "//third_party/k8s:tektoncd_pipeline",
+        "//third_party/sh:shflags",
+        "//third_party/tools:kind",
     ],
     shell = "/bin/bash",
 )
@@ -67,12 +67,12 @@ YQ_BIN="$(out_location //third_party/tools:yq)"
 source $SRCS
     """,
     data = [
-        ":_util",
-        "//third_party/tools:kind",
-        "//third_party/sh:shflags",
         ":_root_certificates",
-        "//third_party/tools:yq",
+        ":_util",
         "//scripts/development/kind/ingress:cert-manager",
+        "//third_party/sh:shflags",
+        "//third_party/tools:kind",
+        "//third_party/tools:yq",
     ],
     shell = "/bin/bash",
 )
@@ -88,9 +88,9 @@ KIND_BIN=$(out_exe //third_party/tools:kind)
 source $SRCS
     """,
     data = [
+        ":_util",
         "//cmd/dracon",
         "//third_party/tools:kind",
-        ":_util",
     ],
     shell = "/bin/bash",
 )
@@ -108,7 +108,6 @@ source $SRCS
     ],
     shell = "/bin/bash",
 )
-
 
 filegroup(
     name = "_configuration",

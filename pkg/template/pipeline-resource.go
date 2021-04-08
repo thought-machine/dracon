@@ -30,21 +30,21 @@ func GeneratePipelineResourceDocs() (ResourceDocs, error) {
 			Spec: pipelineResourceSpec{
 				Type: "storage",
 				Params: []pipelineResourceSpecParam{
-					pipelineResourceSpecParam{
+					{
 						Name:  "location",
 						Value: fmt.Sprintf("s3://dracon/%s-%d-%s", TemplateVars.RunID, t.Index, t.Name),
 					},
-					pipelineResourceSpecParam{
+					{
 						Name:  "type",
 						Value: "gcs",
 					},
-					pipelineResourceSpecParam{
+					{
 						Name:  "dir",
 						Value: "y",
 					},
 				},
 				Secrets: []pipelineResourceSpecSecret{
-					pipelineResourceSpecSecret{
+					{
 						FieldName:  "BOTO_CONFIG",
 						SecretName: "dracon-storage",
 						SecretKey:  "boto_config",

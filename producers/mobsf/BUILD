@@ -10,11 +10,11 @@ go_binary(
     out = "entrypoint",
     deps = [
         "//api/proto:v1",
-        "//pkg/template:template",
-        "//producers:producers",
-        "//producers/mobsf/report:report",
-        "//producers/mobsf/report/android:android",
-        "//producers/mobsf/report/ios:ios",
+        "//pkg/template",
+        "//producers",
+        "//producers/mobsf/report",
+        "//producers/mobsf/report/android",
+        "//producers/mobsf/report/ios",
     ],
 )
 

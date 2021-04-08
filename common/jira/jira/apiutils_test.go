@@ -19,13 +19,13 @@ func TestSetDefaultFields(t *testing.T) {
 			Name: "Vulnerability",
 		},
 		Components: []*jira.Component{
-			&jira.Component{Name: "c1"},
-			&jira.Component{Name: "c2"},
-			&jira.Component{Name: "c3"},
+			{Name: "c1"},
+			{Name: "c2"},
+			{Name: "c3"},
 		},
 		AffectsVersions: []*jira.AffectsVersion{
-			&jira.AffectsVersion{Name: "V1"},
-			&jira.AffectsVersion{Name: "V2"},
+			{Name: "V1"},
+			{Name: "V2"},
 		},
 		Labels: []string(nil),
 		CustomFields: tcontainer.MarshalMap{
@@ -50,7 +50,7 @@ func TestMakeCustomField(t *testing.T) {
 	res3 := makeCustomField("float", []string{"4.22"})
 	exp3 := 4.22
 
-	res4 := makeCustomField("simple-value",[]string{"test-value"})
+	res4 := makeCustomField("simple-value", []string{"test-value"})
 	exp4 := "test-value"
 
 	assert.EqualValues(t, res1, exp1)

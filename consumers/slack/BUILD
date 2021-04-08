@@ -1,19 +1,17 @@
 subinclude("//third_party/defs:docker")
 
-
 go_binary(
     name = "slack",
     srcs = [
         "main.go",
     ],
     deps = [
-        "//consumers",
-        "//consumers/slack/utils:utils",
         "//api/proto:v1",
+        "//consumers",
+        "//consumers/slack/utils",
         "//third_party/go:protobuf",
     ],
 )
-
 
 docker_image(
     name = "image",

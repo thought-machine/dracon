@@ -13,11 +13,11 @@ remote_file(
 remote_file(
     name = "yq",
     binary = True,
+    extract = True,
     hashes = [
-        "0e105edbb0ebc7c4115c610168f1d6b0ff3ceb38043dac92e18fa0698130d69f", # linux_amd64
+        "0e105edbb0ebc7c4115c610168f1d6b0ff3ceb38043dac92e18fa0698130d69f",  # linux_amd64
     ],
     url = f"https://github.com/mikefarah/yq/releases/download/v4.6.3/yq_{CONFIG.OS}_{CONFIG.ARCH}.tar.gz",
-    extract = True,
     visibility = ["//scripts/..."],
 )
 
@@ -32,7 +32,7 @@ remote_file(
     ],
     url = f"https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F{KUSTOMIZE_VERSION}/kustomize_{KUSTOMIZE_VERSION}_{CONFIG.OS}_{CONFIG.ARCH}.tar.gz",
     visibility = [
-        "//scripts/development/k8s/...",
         "//examples/...",
+        "//scripts/development/k8s/...",
     ],
 )

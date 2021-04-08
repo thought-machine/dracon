@@ -3,5 +3,5 @@ filegroup(
     srcs = [
         "elasticsearch.yaml",
         "kibana.yaml",
-    ]
+    ],
 )

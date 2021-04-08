@@ -105,65 +105,65 @@ var quickAuditReportJSON = `{
 
 var quickAuditReport = &Report{
 	PackagePath: "test",
-	Version: 2,
+	Version:     2,
 	Vulnerabilities: map[string]Vulnerability{
-		"fbjs": Vulnerability{
-			Package: "fbjs",
+		"fbjs": {
+			Package:  "fbjs",
 			Severity: "low",
 			Via: []Advisory{
-				Advisory{
+				{
 					Transitive: true,
-					Package: "isomorphic-fetch",
+					Package:    "isomorphic-fetch",
 					Dependency: "isomorphic-fetch",
 				},
 			},
 			Effects: []string{},
-			Range: "0.7.0 - 1.0.0",
+			Range:   "0.7.0 - 1.0.0",
 			Fix: Fix{
 				Available: true,
-				Package: "react",
-				Version: "17.0.1",
-				IsMajor: true,
+				Package:   "react",
+				Version:   "17.0.1",
+				IsMajor:   true,
 			},
 		},
-		"isomorphic-fetch": Vulnerability{
-			Package: "isomorphic-fetch",
+		"isomorphic-fetch": {
+			Package:  "isomorphic-fetch",
 			Severity: "low",
 			Via: []Advisory{
-				Advisory{
+				{
 					Transitive: true,
-					Package: "node-fetch",
+					Package:    "node-fetch",
 					Dependency: "node-fetch",
 				},
 			},
 			Effects: []string{"fbjs"},
-			Range: "2.0.0 - 2.2.1",
+			Range:   "2.0.0 - 2.2.1",
 			Fix: Fix{
 				Available: true,
 			},
 		},
-		"node-fetch": Vulnerability{
-			Package: "node-fetch",
+		"node-fetch": {
+			Package:  "node-fetch",
 			Severity: "low",
 			Via: []Advisory{
-				Advisory{
+				{
 					Transitive: false,
-					ID: 1556,
-					Package: "node-fetch",
+					ID:         1556,
+					Package:    "node-fetch",
 					Dependency: "node-fetch",
-					Title: "Denial of Service",
-					URL: "https://npmjs.com/advisories/1556",
-					Severity: "low",
-					Range: "< 2.6.1 || >= 3.0.0-beta.1 < 3.0.0-beta.9",
+					Title:      "Denial of Service",
+					URL:        "https://npmjs.com/advisories/1556",
+					Severity:   "low",
+					Range:      "< 2.6.1 || >= 3.0.0-beta.1 < 3.0.0-beta.9",
 				},
 			},
 			Effects: []string{"isomorphic-fetch"},
-			Range: "<=2.6.0 || 3.0.0-beta.1 - 3.0.0-beta.8",
+			Range:   "<=2.6.0 || 3.0.0-beta.1 - 3.0.0-beta.8",
 			Fix: Fix{
 				Available: true,
-				Package: "react",
-				Version: "17.0.1",
-				IsMajor: true,
+				Package:   "react",
+				Version:   "17.0.1",
+				IsMajor:   true,
 			},
 		},
 	},
@@ -177,7 +177,7 @@ func TestNewReportValid(t *testing.T) {
 }
 
 var quickAuditIssues = []*v1.Issue{
-	&v1.Issue{
+	{
 		Target:      "test:node-fetch",
 		Type:        "Vulnerable Dependency",
 		Title:       "Denial of Service",

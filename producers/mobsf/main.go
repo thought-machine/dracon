@@ -94,7 +94,7 @@ func startMobSF() (int, error) {
 		"--daemon", bindArg, "--workers=1", "--threads=10", "--timeout=1800",
 		"MobSF.wsgi:application",
 	)
-	mobSF.Env = append(os.Environ(), "MOBSF_API_KEY=" + MobSFAPIKey)
+	mobSF.Env = append(os.Environ(), "MOBSF_API_KEY="+MobSFAPIKey)
 	mobSF.Dir = "/root/Mobile-Security-Framework-MobSF"
 
 	if err := mobSF.Run(); err != nil {
@@ -283,7 +283,7 @@ func isXcodeiOSProject(path string) bool {
 
 		if _, fc := filepath.Split(f); fc == "Info.plist" && fi.Mode().IsRegular() {
 			hasinfoPlist = true
-			return io.EOF  // Target file found - stop walking
+			return io.EOF // Target file found - stop walking
 		}
 
 		return nil
@@ -465,7 +465,7 @@ func scanProject(project *Project, exclusions Exclusions) (mreport.Report, error
 	var report mreport.Report
 	switch project.Type {
 	case AndroidEclipse, AndroidStudio:
-        report, err = android.NewReport(reportBytes, exclusions.SetFor("android"))
+		report, err = android.NewReport(reportBytes, exclusions.SetFor("android"))
 	case XcodeIos:
 		report, err = ios.NewReport(reportBytes, exclusions.SetFor("ios"))
 	default:

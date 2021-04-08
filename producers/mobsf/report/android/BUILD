@@ -3,11 +3,11 @@ go_library(
     srcs = [
         "android.go",
     ],
+    visibility = ["//producers/mobsf/..."],
     deps = [
         "//api/proto:v1",
-        "//producers/mobsf/report:report",
+        "//producers/mobsf/report",
     ],
-    visibility = ["//producers/mobsf/..."]
 )
 
 go_test(
@@ -18,7 +18,7 @@ go_test(
     deps = [
         ":android",
         "//api/proto:v1",
-        "//producers:producers",
+        "//producers",
         "//third_party/go:stretchr_testify",
     ],
 )

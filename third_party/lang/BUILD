@@ -7,3 +7,14 @@ go_toolchain(
     ],
     version = "1.16.3",
 )
+
+go_module(
+    name = "golint",
+    binary = True,
+    install = ["golint"],
+    module = "golang.org/x/lint",
+    version = "83fdc39ff7b56453e3793356bcff3070b9b96445",
+    deps = [
+        "//third_party/go:x_tools",
+    ],
+)

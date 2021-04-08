@@ -7,8 +7,8 @@ go_binary(
     ],
     static = True,
     deps = [
-        "//consumers",
         "//api/proto:v1",
+        "//consumers",
         "//third_party/go:elastic_go-elasticsearch_v7",
         "//third_party/go:protobuf",
     ],
@@ -17,15 +17,14 @@ go_binary(
 go_test(
     name = "elasticsearch_c_test",
     srcs = [
+        "main.go",
         "main_test.go",
-        "main.go"
-
     ],
     deps = [
-        "//consumers",
         "//api/proto:v1",
-        "//third_party/go:gogo_protobuf",
+        "//consumers",
         "//third_party/go:elastic_go-elasticsearch_v7",
+        "//third_party/go:gogo_protobuf",
         "//third_party/go:stretchr_testify",
     ],
 )

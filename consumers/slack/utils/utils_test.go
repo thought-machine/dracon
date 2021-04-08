@@ -30,10 +30,10 @@ func TestCountEnrichedMessages(t *testing.T) {
 		}}
 	expectedMessage := 2
 	response := []*v1.EnrichedLaunchToolResponse{
-		&v1.EnrichedLaunchToolResponse{
+		{
 			OriginalResults: &v1.LaunchToolResponse{
 				ToolName: "test",
-				Issues:   []*v1.Issue{&v1.Issue{}},
+				Issues:   []*v1.Issue{{}},
 				ScanInfo: &v1.ScanInfo{},
 			},
 			Issues: []*v1.EnrichedIssue{eIssue, eIssue},
@@ -54,7 +54,7 @@ func TestCountRawMessages(t *testing.T) {
 		Type:        "test type",
 	}
 	expectedMessage := 3
-	response := []*v1.LaunchToolResponse{&v1.LaunchToolResponse{Issues: []*v1.Issue{eIssue, eIssue, eIssue}, ScanInfo: &v1.ScanInfo{}}}
+	response := []*v1.LaunchToolResponse{{Issues: []*v1.Issue{eIssue, eIssue, eIssue}, ScanInfo: &v1.ScanInfo{}}}
 	assert.Equal(t, expectedMessage, CountRawMessages(response))
 }
 func TestProcessEnrichedMessages(t *testing.T) {
@@ -67,11 +67,11 @@ func TestProcessEnrichedMessages(t *testing.T) {
 
 	expectedMessage := `{"scan_start_time":"0001-01-01T00:00:00Z","scan_id":"babbb83-4627-41c6-8ba0-70ee866290e9","tool_name":"test","source":"//foo/bar:baz","target":"//foo1/bar1:baz2","type":"test type","title":"Unit Test Title","severity":0,"cvss":0,"confidence":0,"description":"this is a test description","first_found":"0001-01-01T00:00:00Z","count":2,"false_positive":true}`
 	response := []*v1.EnrichedLaunchToolResponse{
-		&v1.EnrichedLaunchToolResponse{
+		{
 			OriginalResults: &v1.LaunchToolResponse{
 				ToolName: "test",
 				Issues: []*v1.Issue{
-					&v1.Issue{
+					{
 						Description: "this is a test description",
 						Confidence:  v1.Confidence_CONFIDENCE_INFO,
 						Severity:    v1.Severity_SEVERITY_INFO,
@@ -88,7 +88,7 @@ func TestProcessEnrichedMessages(t *testing.T) {
 				},
 			},
 			Issues: []*v1.EnrichedIssue{
-				&v1.EnrichedIssue{
+				{
 					FirstSeen:     firstSeen,
 					UpdatedAt:     updatedAt,
 					Hash:          "cf23df2207d99a74fbe169e3eba035e633b65d94",
@@ -119,10 +119,10 @@ func TestProcessRawMessages(t *testing.T) {
 	expectedMessage := `{"scan_start_time":"0001-01-01T00:00:00Z","scan_id":"babbb83-4627-41c6-8ba0-70ee866290e9","tool_name":"test","source":"//foo/bar:baz","target":"//foo1/bar1:baz2","type":"test type","title":"Unit Test Title","severity":0,"cvss":0,"confidence":0,"description":"this is a test description","first_found":"0001-01-01T00:00:00Z","count":1,"false_positive":false}`
 
 	response := []*v1.LaunchToolResponse{
-		&v1.LaunchToolResponse{
+		{
 			ToolName: "test",
 			Issues: []*v1.Issue{
-				&v1.Issue{
+				{
 					Description: "this is a test description",
 					Confidence:  v1.Confidence_CONFIDENCE_INFO,
 					Severity:    v1.Severity_SEVERITY_INFO,

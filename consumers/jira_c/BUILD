@@ -6,16 +6,15 @@ go_binary(
         "main.go",
     ],
     deps = [
-        "//consumers",
-        "//common/jira/config:config",
-        "//consumers/jira_c/utils:utils",
-        "//common/jira/jira:jira",
         "//api/proto:v1",
+        "//common/jira/config",
+        "//common/jira/jira",
+        "//consumers",
+        "//consumers/jira_c/utils",
         "//third_party/go:protobuf",
         "//third_party/go:yaml.v2",
     ],
 )
-
 
 docker_image(
     name = "image",

@@ -15,8 +15,8 @@ go_binary(
 go_test(
     name = "pipsafety-test",
     srcs = [
-            "main.go",
-            "main_test.go"
+        "main.go",
+        "main_test.go",
     ],
     deps = [
         "//api/proto:v1",

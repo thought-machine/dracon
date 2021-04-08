@@ -3,20 +3,20 @@ package(default_visibility = ["PUBLIC"])
 # TODO(hjenkins): support ES 5 in ES consumer
 go_module(
     name = "elastic_go-elasticsearch_v5",
-    version = "v5.6.1",
     module = "github.com/elastic/go-elasticsearch/v5",
+    version = "v5.6.1",
 )
 
 # TODO(hjenkins): support ES 6 in ES consumer
 go_module(
     name = "elastic_go-elasticsearch_v6",
-    module = "github.com/elastic/go-elasticsearch/v6",
     install = [
         ".",
         "esapi",
         "estransport",
         "internal/version",
     ],
+    module = "github.com/elastic/go-elasticsearch/v6",
     version = "v6.8.2",
 )
 
@@ -161,6 +161,7 @@ go_module(
     deps = [
         ":fsnotify",
         ":hashicorp_hcl",
+        ":ini_v1",
         ":magiconair_properties",
         ":mitchellh_mapstructure",
         ":pelletier_go-toml",
@@ -168,24 +169,23 @@ go_module(
         ":spf13_cast",
         ":spf13_jwalterweatherman",
         ":spf13_pflag",
-        ":yaml.v2",
         ":subosit_gotenv",
-        ":ini_v1",
+        ":yaml.v2",
     ],
 )
 
 go_module(
     name = "subosit_gotenv",
+    licences = ["MIT"],
     module = "github.com/subosito/gotenv",
     version = "v1.2.0",
-    licences = ["MIT"],
 )
 
 go_module(
     name = "ini_v1",
+    licences = ["Apache-2.0"],
     module = "gopkg.in/ini.v1",
     version = "v1.62.0",
-    licences = ["Apache-2.0"],
 )
 
 go_module(
@@ -193,7 +193,7 @@ go_module(
     install = [
         "assert",
         "mock",
-        "require"
+        "require",
     ],
     module = "github.com/stretchr/testify",
     version = "v1.7.0",
@@ -257,7 +257,10 @@ go_module(
 
 go_module(
     name = "hashicorp_hcl",
-    install = [".", "...",],
+    install = [
+        ".",
+        "...",
+    ],
     module = "github.com/hashicorp/hcl",
     version = "v1.0.0",
 )
@@ -484,7 +487,10 @@ go_module(
 
 go_module(
     name = "jmoiron_sqlx",
-    install = [".", "..."],
+    install = [
+        ".",
+        "...",
+    ],
     module = "github.com/jmoiron/sqlx",
     version = "v1.2.0",
 )
@@ -558,6 +564,7 @@ go_module(
         "internal/packagesinternal",
         "go/gcexportdata",
         "go/internal/gcimporter",
+        "go/ast/astutil",
     ],
     licences = ["bsd-3-clause"],
     module = "golang.org/x/tools",
@@ -580,7 +587,10 @@ go_module(
 
 go_module(
     name = "x_errors",
-    install = [".", "..."],
+    install = [
+        ".",
+        "...",
+    ],
     licences = ["bsd-3-clause"],
     module = "golang.org/x/xerrors",
     version = "a5947ffaace3e882f334c1750858b4a6a7e52422",

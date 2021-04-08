@@ -1,11 +1,11 @@
 go_library(
     name = "cmd",
     srcs = [
+        "cronjob.go",
         "root.go",
         "run.go",
         "setup.go",
         "version.go",
-        "cronjob.go",
     ],
     visibility = ["PUBLIC"],
     deps = [

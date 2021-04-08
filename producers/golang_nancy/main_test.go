@@ -1,8 +1,8 @@
 package main
 
 import (
-	v1 "github.com/thought-machine/dracon/api/proto/v1"
 	"fmt"
+	v1 "github.com/thought-machine/dracon/api/proto/v1"
 	types "github.com/thought-machine/dracon/producers/golang_nancy/types/nancy-issue"
 
 	"encoding/json"

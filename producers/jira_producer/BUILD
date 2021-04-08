@@ -6,16 +6,15 @@ go_binary(
         "main.go",
     ],
     deps = [
-                "//producers/jira_producer/sync",
-        "//third_party/go:spf13_viper",
-        "//third_party/go:spf13_cobra",
-        "//common/jira/jira:jira",
+        "//common/jira/config",
+        "//common/jira/jira",
         "//pkg/enrichment/db",
+        "//producers/jira_producer/sync",
         "//third_party/go:go-jira",
-        "//common/jira/config"
+        "//third_party/go:spf13_cobra",
+        "//third_party/go:spf13_viper",
     ],
 )
-
 
 docker_image(
     name = "dracon-producer-jira",

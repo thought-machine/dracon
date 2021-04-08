@@ -25,12 +25,12 @@ const exampleOutput = `[
 `
 
 func TestUnmarshalJSON(t *testing.T) {
-	expectedOutput := []SafetyIssue{SafetyIssue{
+	expectedOutput := []SafetyIssue{{
 		Name:              "aegea",
 		CurrentVersion:    "2.2.6",
 		Description:       "Aegea 2.2.7 avoids CVE-2018-1000805.",
 		VersionConstraint: "<2.2.7",
-	}, SafetyIssue{
+	}, {
 		Name:              "aegea",
 		CurrentVersion:    "2.2.6",
 		Description:       "Aegea 2.2.7 avoids CVE-2018-1000805.",

@@ -8,8 +8,8 @@ kustomized_config(
         "git-source.yaml",
         "gosec-producer.yaml",
         "kustomization.yaml",
-        "pipeline-run.yaml",
         "pipeline.yaml",
+        "pipeline-run.yaml",
     ],
     images = [
         "//consumers/elasticsearch_c:dracon-consumer-elasticsearch",

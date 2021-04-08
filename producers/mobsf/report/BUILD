@@ -3,8 +3,8 @@ go_library(
     srcs = [
         "report.go",
     ],
+    visibility = ["//producers/mobsf/..."],
     deps = [
         "//api/proto:v1",
     ],
-    visibility = ["//producers/mobsf/..."],
 )

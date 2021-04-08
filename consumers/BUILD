@@ -33,9 +33,9 @@ python_test(
         "consumer_test.py",
     ],
     deps = [
-        "//third_party/python:protobuf",
-        "//api/proto:v1",
         ":consumers_base_python",
+        "//api/proto:v1",
+        "//third_party/python:protobuf",
     ],
 )
 
