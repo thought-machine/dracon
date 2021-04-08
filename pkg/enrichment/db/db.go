@@ -11,9 +11,9 @@ import (
 
 	"context"
 
-	"github.com/golang-migrate/migrate"
-	"github.com/golang-migrate/migrate/database/postgres"
-	bindata "github.com/golang-migrate/migrate/source/go_bindata"
+	migrate "github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
+	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
 	"github.com/lib/pq"
 	"github.com/rakyll/statik/fs"
 	v1 "github.com/thought-machine/dracon/api/proto/v1"
