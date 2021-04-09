@@ -78,10 +78,10 @@ func (r *Report) AsIssues() []*v1.Issue {
 			issue := &v1.Issue{
 				// MobSF doesn't report the precise source of the issue so we
 				// can't be more specific about its location than this:
-				Target:      r.RootDir,
-				Type:        "Insecure App Transport Security policy",
-				Title:       finding.Issue,
-				Confidence:  v1.Confidence_CONFIDENCE_MEDIUM,
+				Target:     r.RootDir,
+				Type:       "Insecure App Transport Security policy",
+				Title:      finding.Issue,
+				Confidence: v1.Confidence_CONFIDENCE_MEDIUM,
 				Description: fmt.Sprintf(
 					"An insecure App Transport Security policy is defined in a plist file in the iOS app project directory %s.\n\nDetails:\n\n%s\n%s",
 					r.RootDir,

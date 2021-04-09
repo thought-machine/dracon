@@ -4,11 +4,11 @@ go_library(
         "config.go",
         "types.go",
     ],
+    visibility = [
+        "PUBLIC",
+    ],
     deps = [
         "//third_party/go:yaml.v2",
-    ],
-    visibility = [
-        "PUBLIC"
     ],
 )
 

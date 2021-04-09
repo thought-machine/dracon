@@ -1,4 +1,3 @@
-
 go_library(
     name = "types",
     srcs = [
@@ -7,6 +6,5 @@ go_library(
     visibility = [
         "//consumers/slack/...",
     ],
-    deps = ["//api/proto:v1",]
-        
+    deps = ["//api/proto:v1"],
 )

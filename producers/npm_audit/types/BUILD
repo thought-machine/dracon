@@ -4,8 +4,8 @@ go_library(
         "errors.go",
         "types.go",
     ],
+    visibility = ["//producers/npm_audit/..."],
     deps = [
         "//api/proto:v1",
     ],
-    visibility = ["//producers/npm_audit/..."],
 )

@@ -103,13 +103,13 @@ func newTemplateVars() *templateVars {
 		EnricherOutPath:     `/workspace/output/enricher`,
 		ConsumerSourcePath:  `/workspace/`,
 		PipelineParams: []PipelineParam{
-			PipelineParam{
+			{
 				"DRACON_SCAN_ID",
 				"Dracon: Unique Scan ID",
 				"string",
 				fmt.Sprintf("dracon-%s", id),
 			},
-			PipelineParam{
+			{
 				"DRACON_SCAN_TIME",
 				"Dracon: Scan start time",
 				"string",

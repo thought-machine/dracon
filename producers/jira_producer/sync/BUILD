@@ -1,4 +1,3 @@
-
 go_library(
     name = "sync",
     srcs = [
@@ -7,12 +6,12 @@ go_library(
     visibility = ["//producers/..."],
     deps = [
         "//api/proto:v1",
+        "//common/jira/config",
         "//common/jira/document",
         "//pkg/enrichment",
+        "//pkg/enrichment/db",
         "//third_party/go:go-jira",
         "//third_party/go:mitchellh_mapstructure",
-        "//common/jira/config",
-        "//pkg/enrichment/db",
         "//third_party/go:tgo",
     ],
 )
@@ -20,19 +19,19 @@ go_library(
 go_test(
     name = "sync_test",
     srcs = [
-        "sync_test.go", "sync.go",
+        "sync.go",
+        "sync_test.go",
     ],
     deps = [
         "//third_party/go:go-jira",
         "//third_party/go:stretchr_testify",
-          "//api/proto:v1",
+        "//api/proto:v1",
         "//common/jira/document",
         "//pkg/enrichment",
         # "//pkg/enrichment/db",
-        "//third_party/go:go-jira",
         "//third_party/go:mitchellh_mapstructure",
         "//common/jira/config",
         "//third_party/go:tgo",
-        "//pkg/enrichment/db:db_mock"
+        "//pkg/enrichment/db:db_mock",
     ],
 )

@@ -4,9 +4,9 @@ python_binary(
     name = "stdout_json",
     main = "stdout_json.py",
     deps = [
+        "//api/proto:v1",
         "//consumers:consumers_base_python",
         "//third_party/python:protobuf",
-        "//api/proto:v1",
     ],
 )
 
@@ -16,10 +16,10 @@ python_test(
         "stdout_json_test.py",
     ],
     deps = [
-        "//third_party/python:protobuf",
+        ":stdout_json",
         "//api/proto:v1",
         "//consumers:consumers_base_python",
-        ":stdout_json",
+        "//third_party/python:protobuf",
     ],
 )
 

@@ -77,7 +77,7 @@ func makeCustomField(fieldType string, values []string) interface{} {
 			log.Fatalf("Error parsing float field-type: %v", err)
 		}
 	case "simple-value":
-	    return values[0]
+		return values[0]
 	default:
 		log.Printf("Warning: Field type %s is not supported. Edit your config.yaml file, as this field will not be displayed correctly.", fieldType)
 		return nil

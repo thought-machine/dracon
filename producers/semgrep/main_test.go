@@ -6,7 +6,7 @@ import (
 
 	"encoding/json"
 	"testing"
-	
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -56,7 +56,7 @@ const exampleOutput = `
 func TestParseIssues(t *testing.T) {
 	semgrepResults := types.SemgrepResults{}
 	err := json.Unmarshal([]byte(exampleOutput), &semgrepResults)
-	
+
 	assert.Nil(t, err)
 	issues := parseIssues(semgrepResults)
 

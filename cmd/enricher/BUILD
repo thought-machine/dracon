@@ -7,13 +7,13 @@ go_binary(
     ],
     static = True,
     deps = [
+        "//api/proto:v1",
         "//pkg/enrichment",
         "//pkg/enrichment/db",
-        "//api/proto:v1",
         "//pkg/putil",
+        "//third_party/go:protobuf",
         "//third_party/go:spf13_cobra",
         "//third_party/go:spf13_viper",
-        "//third_party/go:protobuf",
     ],
 )
 

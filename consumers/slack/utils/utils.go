@@ -2,10 +2,10 @@ package utils
 
 import (
 	"bytes"
-	"github.com/thought-machine/dracon/consumers/slack/types"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/thought-machine/dracon/consumers/slack/types"
 	"net/http"
 	"time"
 

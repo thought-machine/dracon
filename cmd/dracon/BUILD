@@ -8,9 +8,9 @@ go_binary(
     },
     stamp = True,
     static = True,
+    visibility = ["//scripts/..."],
     deps = [
         "//cmd/dracon/cmd",
         "//third_party/go:spf13_cobra",
     ],
-    visibility = ["//scripts/..."],
 )

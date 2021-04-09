@@ -41,7 +41,7 @@ func TestWriteDraconOut(t *testing.T) {
 	err = WriteDraconOut(
 		"dracon-test",
 		[]*v1.Issue{
-			&v1.Issue{
+			{
 				Target:      "/dracon/source/foobar",
 				Title:       "/dracon/source/barfoo",
 				Description: "/dracon/source/example.yaml",
@@ -80,7 +80,7 @@ func TestWriteDraconOutAppend(t *testing.T) {
 		err = WriteDraconOut(
 			"dracon-test",
 			[]*v1.Issue{
-				&v1.Issue{
+				{
 					Target:      fmt.Sprintf("target%d", i),
 					Title:       fmt.Sprintf("title%d", i),
 					Description: fmt.Sprintf("desc%d", i),

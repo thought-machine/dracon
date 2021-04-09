@@ -63,7 +63,7 @@ func (a *Advisory) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &packageName); err == nil {
 		*a = Advisory{
 			Transitive: true,
-			Package:	packageName,
+			Package:    packageName,
 			Dependency: packageName,
 		}
 
@@ -152,7 +152,7 @@ func (r *Report) SetPackagePath(packagePath string) {
 }
 
 func (r *Report) Type() string {
-	return PrintableType;
+	return PrintableType
 }
 
 func (r *Report) AsIssues() []*v1.Issue {

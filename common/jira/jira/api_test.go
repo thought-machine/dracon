@@ -64,13 +64,13 @@ var (
 				"{code}\n",
 			Summary: "bar1:baz2 Unit Test Title",
 			Components: []*jira.Component{
-				&jira.Component{Name: "c1"},
-				&jira.Component{Name: "c2"},
-				&jira.Component{Name: "c3"},
+				{Name: "c1"},
+				{Name: "c2"},
+				{Name: "c3"},
 			},
 			AffectsVersions: []*jira.AffectsVersion{
-				&jira.AffectsVersion{Name: "V1"},
-				&jira.AffectsVersion{Name: "V2"},
+				{Name: "V1"},
+				{Name: "V2"},
 			},
 			Labels: []string(nil),
 			Unknowns: tcontainer.MarshalMap{

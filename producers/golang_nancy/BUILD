@@ -10,21 +10,21 @@ go_binary(
     deps = [
         "//api/proto:v1",
         "//producers",
-        "//producers/golang_nancy/types:nancy-issue"
+        "//producers/golang_nancy/types:nancy-issue",
     ],
 )
 
 go_test(
     name = "nancy_test",
     srcs = [
+        "main.go",
         "main_test.go",
-        "main.go"
     ],
     deps = [
         "//api/proto:v1",
         "//producers",
-        "//third_party/go:stretchr_testify",
         "//producers/golang_nancy/types:nancy-issue",
+        "//third_party/go:stretchr_testify",
     ],
 )
 

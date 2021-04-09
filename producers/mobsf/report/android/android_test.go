@@ -62,7 +62,7 @@ func TestParseValidIosReportNoExclusions(t *testing.T) {
 	assert.Len(t, issues, 2)
 
 	expectedIssues := []*v1.Issue{
-		&v1.Issue{
+		{
 			Target:      "android_project/test/MainApplication.java:26",
 			Type:        "android_insecure_random",
 			Title:       "CWE-330 Use of Insufficiently Random Values",
@@ -70,7 +70,7 @@ func TestParseValidIosReportNoExclusions(t *testing.T) {
 			Cvss:        7.5,
 			Description: "The App uses an insecure Random Number Generator.",
 		},
-		&v1.Issue{
+		{
 			Target:      "android_project/test/MainApplication.java:58",
 			Type:        "android_ip_disclosure",
 			Title:       "CWE-200 Information Exposure",
@@ -94,7 +94,7 @@ func TestParseValidIosReportExclusions(t *testing.T) {
 	assert.Len(t, issues, 1)
 
 	expectedIssues := []*v1.Issue{
-		&v1.Issue{
+		{
 			Target:      "android_project/test/MainApplication.java:26",
 			Type:        "android_insecure_random",
 			Title:       "CWE-330 Use of Insufficiently Random Values",

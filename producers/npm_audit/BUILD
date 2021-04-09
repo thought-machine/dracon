@@ -8,9 +8,9 @@ go_binary(
     deps = [
         "//api/proto:v1",
         "//producers",
-        "//producers/npm_audit/types:types",
-        "//producers/npm_audit/types/npm_full_audit:npm_full_audit",
-        "//producers/npm_audit/types/npm_quick_audit:npm_quick_audit",
+        "//producers/npm_audit/types",
+        "//producers/npm_audit/types/npm_full_audit",
+        "//producers/npm_audit/types/npm_quick_audit",
     ],
 )
 

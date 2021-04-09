@@ -1,50 +1,50 @@
 package main
 
 import (
-    "encoding/json"
-    "testing"
+	"encoding/json"
+	"testing"
 
-    v1 "github.com/thought-machine/dracon/api/proto/v1"
-    types "github.com/thought-machine/dracon/producers/elasticsearch_filebeat/types/elasticsearch-filebeat-issue"
+	v1 "github.com/thought-machine/dracon/api/proto/v1"
+	types "github.com/thought-machine/dracon/producers/elasticsearch_filebeat/types/elasticsearch-filebeat-issue"
 
-    "github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestParseIssues(t *testing.T) {
-    var results types.ElasticSearchFilebeatResult
-    json.Unmarshal([]byte(exampleOutput), &results)
+	var results types.ElasticSearchFilebeatResult
+	json.Unmarshal([]byte(exampleOutput), &results)
 
-    issues := parseIssues(&results)
+	issues := parseIssues(&results)
 
-    expectedIssues := make([]*v1.Issue, 2)
-    expectedIssues[0] = &v1.Issue{
-        Target:      "foo-01234.example.com",
-        Type:        "Antivirus Issue",
-        Title:       "Antivirus Issue on foo-01234.example.com",
-        Severity:    v1.Severity_SEVERITY_INFO,
-        Cvss:        0.0,
-        Confidence:  v1.Confidence_CONFIDENCE_MEDIUM,
-        Description: "error[013a0f06]: ESET Daemon: Error updating Antivirus modules: Server not found.",
-    }
-    expectedIssues[1] = &v1.Issue{
-        Target:      "bar-56789.example.com",
-        Type:        "Antivirus Issue",
-        Title:       "Antivirus Issue on bar-56789.example.com",
-        Severity:    v1.Severity_SEVERITY_INFO,
-        Cvss:        0.0,
-        Confidence:  v1.Confidence_CONFIDENCE_MEDIUM,
-        Description: "Tue Nov  24 06:52:07 2020 -> ERROR: Update failed.",
-    }
+	expectedIssues := make([]*v1.Issue, 2)
+	expectedIssues[0] = &v1.Issue{
+		Target:      "foo-01234.example.com",
+		Type:        "Antivirus Issue",
+		Title:       "Antivirus Issue on foo-01234.example.com",
+		Severity:    v1.Severity_SEVERITY_INFO,
+		Cvss:        0.0,
+		Confidence:  v1.Confidence_CONFIDENCE_MEDIUM,
+		Description: "error[013a0f06]: ESET Daemon: Error updating Antivirus modules: Server not found.",
+	}
+	expectedIssues[1] = &v1.Issue{
+		Target:      "bar-56789.example.com",
+		Type:        "Antivirus Issue",
+		Title:       "Antivirus Issue on bar-56789.example.com",
+		Severity:    v1.Severity_SEVERITY_INFO,
+		Cvss:        0.0,
+		Confidence:  v1.Confidence_CONFIDENCE_MEDIUM,
+		Description: "Tue Nov  24 06:52:07 2020 -> ERROR: Update failed.",
+	}
 
-    for i, issue := range issues {
-        assert.Equal(t, issue.Target, expectedIssues[i].Target)
-        assert.Equal(t, issue.Type, expectedIssues[i].Type)
-        assert.Equal(t, issue.Title, expectedIssues[i].Title)
-        assert.Equal(t, issue.Severity, expectedIssues[i].Severity)
-        assert.Equal(t, issue.Cvss, expectedIssues[i].Cvss)
-        assert.Equal(t, issue.Confidence, expectedIssues[i].Confidence)
-        assert.Equal(t, issue.Description, expectedIssues[i].Description)
-    }
+	for i, issue := range issues {
+		assert.Equal(t, issue.Target, expectedIssues[i].Target)
+		assert.Equal(t, issue.Type, expectedIssues[i].Type)
+		assert.Equal(t, issue.Title, expectedIssues[i].Title)
+		assert.Equal(t, issue.Severity, expectedIssues[i].Severity)
+		assert.Equal(t, issue.Cvss, expectedIssues[i].Cvss)
+		assert.Equal(t, issue.Confidence, expectedIssues[i].Confidence)
+		assert.Equal(t, issue.Description, expectedIssues[i].Description)
+	}
 }
 
 var exampleOutput = `{

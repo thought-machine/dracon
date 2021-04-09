@@ -1,9 +1,9 @@
 package main
 
 import (
-	v1 "github.com/thought-machine/dracon/api/proto/v1"
 	"bytes"
 	"encoding/json"
+	v1 "github.com/thought-machine/dracon/api/proto/v1"
 	"net/http"
 	"net/http/httptest"
 	"os"

@@ -4,12 +4,12 @@ go_library(
         "npm_advisory.go",
         "npm_quick_audit.go",
     ],
+    visibility = ["//producers/npm_audit/..."],
     deps = [
         "//api/proto:v1",
         "//producers",
-        "//producers/npm_audit/types:types",
+        "//producers/npm_audit/types",
     ],
-    visibility = ["//producers/npm_audit/..."]
 )
 
 go_test(

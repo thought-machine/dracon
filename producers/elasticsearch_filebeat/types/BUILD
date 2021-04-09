@@ -3,5 +3,5 @@ go_library(
     srcs = [
         "elasticsearch-filebeat-issue.go",
     ],
-    visibility = ["//producers/elasticsearch_filebeat/..."]
+    visibility = ["//producers/elasticsearch_filebeat/..."],
 )
