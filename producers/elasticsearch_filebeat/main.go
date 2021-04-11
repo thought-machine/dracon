@@ -5,7 +5,7 @@ import (
 	"log"
 
 	v1 "github.com/thought-machine/dracon/api/proto/v1"
-	types "github.com/thought-machine/dracon/producers/elasticsearch_filebeat/types/elasticsearch-filebeat-issue"
+	"github.com/thought-machine/dracon/producers/elasticsearch_filebeat/types"
 
 	"github.com/thought-machine/dracon/producers"
 )

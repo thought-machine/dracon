@@ -5,24 +5,25 @@ import (
 	"fmt"
 	"log"
 	"net/url"
-	"os"
 	"path/filepath"
 	"strings"
 
 	"context"
+	"embed"
+	"io/fs"
 
 	migrate "github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
 	"github.com/lib/pq"
-	"github.com/rakyll/statik/fs"
 	v1 "github.com/thought-machine/dracon/api/proto/v1"
-
-	// Statik bindata for migrations
-	_ "github.com/thought-machine/dracon/pkg/enrichment/db/migrations"
 
 	"github.com/jmoiron/sqlx"
 )
+
+// migrationsFS holds the SQL migration files as static assets.
+//go:embed *.sql
+var migrationsFS embed.FS
 
 // DB represents the db methods that are used for the enricher
 type EnrichDatabase interface {
@@ -66,13 +67,8 @@ func NewDB(connStr string) (*DB, error) {
 		return nil, err
 	}
 
-	statikFS, err := fs.New()
-	if err != nil {
-		return nil, err
-	}
-
 	var assetNames []string
-	fs.Walk(statikFS, "/", func(path string, info os.FileInfo, err error) error {
+	fs.WalkDir(migrationsFS, ".", func(path string, info fs.DirEntry, err error) error {
 		if !info.IsDir() {
 			assetNames = append(assetNames, info.Name())
 		}
@@ -81,7 +77,7 @@ func NewDB(connStr string) (*DB, error) {
 
 	s := bindata.Resource(assetNames,
 		func(name string) ([]byte, error) {
-			return fs.ReadFile(statikFS, filepath.Join("/", name))
+			return fs.ReadFile(migrationsFS, filepath.Join(".", name))
 		})
 
 	d, err := bindata.WithInstance(s)

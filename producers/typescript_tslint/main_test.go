@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	v1 "github.com/thought-machine/dracon/api/proto/v1"
-	types "github.com/thought-machine/dracon/producers/typescript_tslint/types/tslint-issue"
+	"github.com/thought-machine/dracon/producers/typescript_tslint/types"
 
 	"github.com/stretchr/testify/assert"
 )

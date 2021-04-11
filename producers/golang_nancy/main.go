@@ -1,13 +1,15 @@
 package main
 
 import (
-	v1 "github.com/thought-machine/dracon/api/proto/v1"
-	types "github.com/thought-machine/dracon/producers/golang_nancy/types/nancy-issue"
 	"strconv"
 
+	v1 "github.com/thought-machine/dracon/api/proto/v1"
+	"github.com/thought-machine/dracon/producers/golang_nancy/types"
+
 	"fmt"
-	"github.com/thought-machine/dracon/producers"
 	"log"
+
+	"github.com/thought-machine/dracon/producers"
 )
 
 func main() {

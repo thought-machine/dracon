@@ -357,15 +357,6 @@ go_module(
     ],
 )
 
-go_module(
-    name = "rakyll_statik",
-    install = [
-        "fs",
-    ],
-    module = "github.com/rakyll/statik",
-    version = "v0.1.6",
-)
-
 KUBERNETES_VERSION = "1.13.12"
 
 go_module(

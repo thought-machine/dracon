@@ -32,6 +32,6 @@ go_test(
         "//third_party/go:mitchellh_mapstructure",
         "//common/jira/config",
         "//third_party/go:tgo",
-        "//pkg/enrichment/db:db_mock",
+        "//pkg/enrichment/db/mock",
     ],
 )

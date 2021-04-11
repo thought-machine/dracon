@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	v1 "github.com/thought-machine/dracon/api/proto/v1"
 	"github.com/thought-machine/dracon/common/jira/config"
-	database_mock "github.com/thought-machine/dracon/pkg/enrichment/db/db_mock"
+	database_mock "github.com/thought-machine/dracon/pkg/enrichment/db/mock"
 	"github.com/trivago/tgo/tcontainer"
 	// "github.com/thought-machine/dracon/producers/jira_producer/sync"
 )
