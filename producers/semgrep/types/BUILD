@@ -1,5 +1,5 @@
 go_library(
-    name = "semgrep-issue",
+    name = "types",
     srcs = [
         "semgrep-issue.go",
     ],

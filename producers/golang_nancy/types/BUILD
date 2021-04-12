@@ -1,5 +1,5 @@
 go_library(
-    name = "nancy-issue",
+    name = "types",
     srcs = [
         "nancy-issue.go",
     ],

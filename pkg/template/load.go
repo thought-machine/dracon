@@ -2,6 +2,7 @@ package template
 
 import (
 	"bytes"
+	"embed"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -10,13 +11,15 @@ import (
 	"path/filepath"
 	"strings"
 
+	"io/fs"
+
 	jsonpatch "github.com/evanphx/json-patch"
 	"github.com/ghodss/yaml"
-	"github.com/rakyll/statik/fs"
-
-	// Statik bindata for Dracon patches
-	_ "github.com/thought-machine/dracon/pkg/template/patches"
 )
+
+// yamlPatches holds patch yaml files as static assets
+//go:embed *.yaml
+var yamlPatches embed.FS
 
 // Errors returned from this package
 var (
@@ -78,20 +81,14 @@ func loadYAMLFile(path string) (ResourceDocs, error) {
 type PatchKindYAMLDocs map[string][]jsonpatch.Patch
 
 func loadStatikPatches() (PatchKindYAMLDocs, error) {
-	statikFS, err := fs.New()
-	if err != nil {
-		return nil, fmt.Errorf("could not load statik filesystem: %w", err)
-	}
 	patches := PatchKindYAMLDocs{}
-	err = fs.Walk(statikFS, "/", func(path string, f os.FileInfo, err error) error {
+	err := fs.WalkDir(yamlPatches, ".", func(path string, f fs.DirEntry, err error) error {
 		if !f.IsDir() {
 			patchKind := getPatchKindFromPath(path)
-			r, err := statikFS.Open(path)
+			contents, err := fs.ReadFile(yamlPatches, path)
 			if err != nil {
-				return fmt.Errorf("could not open statik file: %w", err)
+				return fmt.Errorf("could not read file: %w", err)
 			}
-			defer r.Close()
-			contents, err := ioutil.ReadAll(r)
 			patch, err := loadPatchFromYAML(contents)
 			if err != nil {
 				return fmt.Errorf("could not load patch from YAML: %w", err)

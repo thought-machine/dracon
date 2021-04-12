@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
+
 	v1 "github.com/thought-machine/dracon/api/proto/v1"
-	types "github.com/thought-machine/dracon/producers/golang_nancy/types/nancy-issue"
+	"github.com/thought-machine/dracon/producers/golang_nancy/types"
 
 	"encoding/json"
 	"testing"

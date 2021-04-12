@@ -5,7 +5,7 @@ import (
 	"log"
 
 	v1 "github.com/thought-machine/dracon/api/proto/v1"
-	types "github.com/thought-machine/dracon/producers/semgrep/types/semgrep-issue"
+	"github.com/thought-machine/dracon/producers/semgrep/types"
 
 	"github.com/thought-machine/dracon/producers"
 )

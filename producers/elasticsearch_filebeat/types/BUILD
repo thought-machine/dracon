@@ -1,5 +1,5 @@
 go_library(
-    name = "elasticsearch-filebeat-issue",
+    name = "types",
     srcs = [
         "elasticsearch-filebeat-issue.go",
     ],

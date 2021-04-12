@@ -1,5 +1,5 @@
 go_library(
-    name = "tslint-issue",
+    name = "types",
     srcs = [
         "tslint-issue.go",
     ],

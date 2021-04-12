@@ -8,7 +8,7 @@ go_binary(
     deps = [
         "//api/proto:v1",
         "//producers",
-        "//producers/typescript_tslint/types:tslint-issue",
+        "//producers/typescript_tslint/types",
     ],
 )
 
@@ -21,7 +21,7 @@ go_test(
     deps = [
         "//api/proto:v1",
         "//producers",
-        "//producers/typescript_tslint/types:tslint-issue",
+        "//producers/typescript_tslint/types",
         "//third_party/go:stretchr_testify",
     ],
 )
