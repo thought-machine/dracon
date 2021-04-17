@@ -32,6 +32,13 @@ message Issue {
     Confidence confidence = 6;
     string description = 7; // human readable description of the issue
     string source = 8; // https://github.com/thought-machine/dracon.git?ref=<revision>, github.com:tektoncd/pipeline.git?ref=<revision>, local?ref=local
+
+    // metadata is additional associated metadata for this issue.
+    // This is useful for plugins to add and work with additional data. 
+    // We recommend that your plugins use a namespaced approach for keys, e.g.:
+    // thoughtmachine.io/jira/ticket-id = PROJECT-12345
+    // thoughtmachine.io/aws/arns = arn:aws:s3:::examplebucket,arn:aws:s3:::examplebucket2
+    map<string, string> metadata = 9;
 }
 
 /* Represents an issue that has been enriched with metadata from the enrichment service */
