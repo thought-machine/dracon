@@ -14,7 +14,6 @@ pip_library(
 
 pip_library(
     name = "protobuf",
-    outs = ["google/protobuf"],
     hashes = [
         "f958e27563875e4e4374cf4fce3c061f2f7742faa1139acf8def40da07e0ce4e",  # TM Mirror
         "912fa826e4b9a16947853ca163c18ad530a42a159de357769052443898cae473",  # Public
@@ -40,7 +39,7 @@ pip_library(
 pip_library(
     name = "six",
     package_name = "six",
-    outs = ["six.py"],
+    # outs = ["six.py"],
     hashes = [
         "4c468c181cb3dd03c3eb368940cb008d6d45bad48ee085d3f9655a15dc6603f4",  # TM Mirror
         "73031963564bba0bd0bbae94736110f52dc927f6f09c0627edf6f98a033ce669",  # Public

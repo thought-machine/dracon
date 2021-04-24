@@ -25,6 +25,7 @@ go_test(
         "//consumers",
         "//third_party/go:elastic_go-elasticsearch_v7",
         "//third_party/go:gogo_protobuf",
+        "//third_party/go:protobuf",
         "//third_party/go:stretchr_testify",
     ],
 )
