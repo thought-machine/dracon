@@ -20,6 +20,7 @@ go_test(
     deps = [
         "//api/proto:v1",
         "//producers",
+        "//third_party/go:protobuf",
         "//third_party/go:stretchr_testify",
     ],
 )

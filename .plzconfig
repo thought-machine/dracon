@@ -6,7 +6,7 @@
 ; Or you can uncomment the following to pin everyone to a particular version;
 ; when you change it all users will automatically get updated.
 [please]
-version = 15.17.1
+version = 16.0.0
 
 [buildconfig]
 default-docker-repo = index.docker.io/thoughtmachine
@@ -27,9 +27,6 @@ protoctool = //third_party/proto:protoc
 pythondep = //third_party/python:protobuf
 godep = //third_party/go:protobuf
 protocgoplugin = //third_party/go:protoc-gen-go
-
-[featureflags]
-PleaseGoInstall = true
 
 [alias "deploy"]
 cmd = run //scripts/development/kind:deploy --

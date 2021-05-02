@@ -1,4 +1,4 @@
-subinclude("@third_party/subrepos/pleasings//go:mock")
+subinclude("//third_party/defs:go_mock")
 
 go_mock(
     name = "mock",
