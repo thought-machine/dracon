@@ -1,5 +1,5 @@
 ---
-apiVersion: dracon/v1alpha1
+apiVersion: dracon/v1beta1
 kind: Enricher
 metadata:
   name: python-project-enricher

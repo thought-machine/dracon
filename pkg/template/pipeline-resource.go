@@ -19,7 +19,7 @@ func GeneratePipelineResourceDocs() (ResourceDocs, error) {
 	for _, t := range resources {
 		buf := bytes.Buffer{}
 		pR := pipelineResource{
-			APIVersion: "tekton.dev/v1alpha1",
+			APIVersion: "tekton.dev/v1beta1",
 			Kind:       "PipelineResource",
 			Metadata: pipelineResourceMetadata{
 				Name: fmt.Sprintf("%s-%s", TemplateVars.RunID, t.Name),
