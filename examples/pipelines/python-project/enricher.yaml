@@ -5,8 +5,9 @@ metadata:
   name: python-project-enricher
   labels: {}
 spec:
-  inputs: {resources: []}
-  outputs: {resources: []}
+  resources: {inputs: [], outputs: []}
+  # inputs: {resources: []}
+  # outputs: {resources: []}
   steps:
   # run enricher
   - name: run-enricher

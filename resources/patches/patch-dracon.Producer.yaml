@@ -11,11 +11,11 @@
   value: dracon
 
 - op: add
-  path: /spec/inputs/resources/-
+  path: /spec/resources/inputs/-
   value: {name: source, type: storage}
 
 - op: add
-  path: /spec/outputs/resources/-
+  path: /spec/resources/outputs/-
   value: {name: producer, type: storage}
 
 - op: add
@@ -43,6 +43,6 @@
   path: /spec/steps/*/env/-
   value: {name: {{.Name}}, value: $(inputs.params.{{.Name}})}
 - op: add
-  path: /spec/inputs/params/-
+  path: /spec/params/-
   value: {name: {{.Name}}, type: "string"}
 {{end}}

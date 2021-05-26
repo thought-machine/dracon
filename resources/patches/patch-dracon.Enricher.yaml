@@ -11,7 +11,7 @@
   value: dracon
 
 - op: add
-  path: /spec/outputs/resources/-
+  path: /spec/resources/outputs/-
   value: {name: enricher, type: storage}
 
 - op: add
@@ -26,6 +26,6 @@
 {{ $producers := .PipelineTaskProducers }}
 {{range $p := $producers}}
 - op: add
-  path: /spec/inputs/resources/-
+  path: /spec/resources/inputs/-
   value: {name: {{$p.Name}}-producer, type: storage}
 {{end}}

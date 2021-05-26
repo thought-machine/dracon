@@ -5,7 +5,8 @@ metadata:
   name: golang-project-elasticsearch-consumer
   labels: {}
 spec:
-  inputs: {resources: [], params: []}
+  params: []
+  resources: {inputs: [], outputs: []}
   steps:
   # run elasticsearch consumer
   - name: run-elasticsearch-consumer

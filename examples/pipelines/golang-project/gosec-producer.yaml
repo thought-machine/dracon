@@ -5,8 +5,10 @@ metadata:
   name: golang-project-gosec-producer
   labels: {}
 spec:
-  inputs: {resources: [], params: []}
-  outputs: {resources: []}
+  params: []
+  resources: {inputs: [], outputs: []}
+  # inputs: {resources: [], params: []}
+  # outputs: {resources: []}
   volumes: []
   steps:
   # run gosec
