@@ -46,6 +46,12 @@ $(exe {CONFIG.KUSTOMIZE_TOOL}) build . > $HOME/$OUTS
 
     _kube_score(name, kustomized_rule, kube_score_ignored_tests)
 
+    sh_cmd(
+        name = f"{name}_push",
+        data = [kustomized_rule],
+        cmd = f"trap cleanup 1 2 3 6; cleanup() {{ set +x; }}; set -x; kubectl apply \\\$@ -f $(out_location {kustomized_rule})",
+    )
+
     return kustomized_rule
 
 def _replace_images_cmd(name: str, images: list):

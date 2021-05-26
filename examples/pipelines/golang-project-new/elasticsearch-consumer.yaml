@@ -1,0 +1,27 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: golang-project-elasticsearch-consumer
+  labels: {}
+spec:
+  params: 
+  - name: dracon-scan-time
+    type: string
+  steps:
+  # run elasticsearch consumer
+  - name: run-elasticsearch-consumer
+    image: index.docker.io/thoughtmachine/dracon-consumer-elasticsearch:latest
+    env: 
+    - name: DRACON_SCAN_TIME
+      value: "$(params.dracon-start-time)" 
+    - name: ELASTICSEARCH_URL
+      value: http://elasticsearch.dracon.svc:9200}
+    command: ["/consume"]
+    args: [
+      "-in", "$(workspaces.source.path)/.dracon/enriched",
+      "-es-index", "dracon"
+    ]
+  workspaces:
+  - name: source
+    mountPath: /workspace/source

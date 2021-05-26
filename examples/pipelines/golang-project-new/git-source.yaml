@@ -5,18 +5,16 @@ metadata:
   name: golang-project-git-source
   labels: {}
 spec:
-  results:
-  - name: dracon-scan-time
-    description: "The scan time that dracon started at"
   resources: {inputs: [], outputs: []}
   # inputs: {resources: [{name: git-source, type: git}]}
   # outputs: {resources: [{name: source, type: storage}]}
   steps:
+  - name: env
+    image: index.docker.io/thoughtmachine/dracon-source-git:latest
+    command: ["env"]
   - name: git-source
     image: index.docker.io/thoughtmachine/dracon-source-git:latest
     command: ["/git.sh"]
-  - name: print-dracon-scan-time
-    image: bash:latest
-    script: |
-      #!/usr/bin/env bash
-      date --rfc-3339=seconds | tee $(results.dracon-scan-time.path)
+  workspaces:
+  - name: source
+    mountPath: /workspace/source

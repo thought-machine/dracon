@@ -1,0 +1,55 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: golang-project
+  labels: {}
+spec:
+  params:
+  - name: repo-url
+    type: string
+    description: The git repository URL to clone from.
+  - name: branch-name
+    type: string
+    description: The git branch to clone.
+  workspaces:
+  - name: source
+  tasks:
+  - name: fetch-source
+    taskRef: {name: git-clone}
+    workspaces:
+    - name: output
+      workspace: source
+    params:
+    - name: url
+      value: $(params.repo-url)
+    - name: revision
+      value: $(params.branch-name)
+  # stage 1 - archive source
+  - name: annotate-source
+    runAfter: [fetch-source]
+    taskRef: {name: golang-project-git-source}
+    workspaces:
+    - name: source
+      workspace: source
+  # stage 2 - run tools
+  - name: gosec-producer
+    runAfter: [annotate-source]
+    taskRef: {name: golang-project-gosec-producer}
+    workspaces:
+    - name: source
+      workspace: source
+  # stage 3 - enrichment
+  - name: enricher
+    runAfter: [gosec-producer]
+    taskRef: {name: golang-project-enricher}
+    workspaces:
+    - name: source
+      workspace: source
+  # stage 4 - consumers
+  - name: elasticsearch-consumer
+    runAfter: [enricher]
+    taskRef: {name: golang-project-elasticsearch-consumer}
+    workspaces:
+    - name: source
+      workspace: source

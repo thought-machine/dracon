@@ -1,0 +1,37 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: golang-project-gosec-producer
+  labels: {}
+spec:
+  params: []
+  resources: {inputs: [], outputs: []}
+  steps:
+  # run gosec
+  - name: run-gosec
+    image: securego/gosec
+    command: ["sh"]
+    args: ["-c",
+      "gosec -fmt=json -out=/scratch/gosec.tool_out $(workspaces.source.path)/... || true"
+    ]
+    volumeMounts: 
+    - name: producer-scratch
+      mountPath: /scratch
+  # parse results
+  - name: parse-gosec
+    image: index.docker.io/thoughtmachine/dracon-producer-gosec:latest
+    command: ["/parse"]
+    args: [
+      "-in=/scratch/gosec.tool_out",
+      "-out=$(workspaces.source.path)/.dracon/raw/gosec.pb"
+    ]
+    volumeMounts: 
+    - name: producer-scratch
+      mountPath: /scratch
+  volumes:
+  - name: producer-scratch
+    emptyDir: {}
+  workspaces:
+  - name: source
+    mountPath: /workspace/source

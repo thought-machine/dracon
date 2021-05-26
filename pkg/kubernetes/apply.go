@@ -15,7 +15,7 @@ type KubectlOpts struct {
 
 // Apply config using kubectl
 func Apply(resources string, opts *KubectlOpts) error {
-	shCmd := GetCmd(opts)
+	shCmd := GetCmd(opts, "apply")
 	cmd := exec.Command(shCmd[0], shCmd[1:]...)
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
@@ -38,8 +38,8 @@ func Apply(resources string, opts *KubectlOpts) error {
 }
 
 // GetCmd returns the kubectl command
-func GetCmd(opts *KubectlOpts) []string {
-	cmd := []string{"kubectl", "apply", "-f", "-"}
+func GetCmd(opts *KubectlOpts, arg string) []string {
+	cmd := []string{"kubectl", arg, "-f", "-"}
 
 	if opts.Context != "" {
 		cmd = append(cmd, fmt.Sprintf(`--context=%s`, opts.Context))
