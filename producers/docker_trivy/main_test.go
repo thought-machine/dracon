@@ -1,12 +1,11 @@
 package main
 
 import (
-	"fmt"
-
 	v1 "github.com/thought-machine/dracon/api/proto/v1"
 	"github.com/thought-machine/dracon/producers/docker_trivy/types"
 
 	"encoding/json"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
