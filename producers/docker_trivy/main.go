@@ -44,7 +44,6 @@ func parseOut(results []types.TrivyOut) []*v1.Issue {
 		}
 	}
 	return issues
-
 }
 
 // TrivySeverityToDracon maps Trivy Severity Strings to dracon struct
