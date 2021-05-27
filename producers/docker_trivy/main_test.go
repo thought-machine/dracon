@@ -24,8 +24,8 @@ func TestParseOut(t *testing.T) {
 	expectedIssues := make([]*v1.Issue, 1)
 	expectedIssues[0] = &v1.Issue{
 		Target:     "ubuntu (ubuntu 18.04)",
-		Type:       "Vulnerable Image Dependency",
-		Title:      "[CVE-2020-27350] apt: integer overflows and underflows while parsing .deb packages",
+		Type:       "Container image vulnerability",
+		Title:      "[ubuntu (ubuntu 18.04)][CVE-2020-27350] apt: integer overflows and underflows while parsing .deb packages",
 		Severity:   v1.Severity_SEVERITY_MEDIUM,
 		Cvss:       5.7,
 		Confidence: v1.Confidence_CONFIDENCE_MEDIUM,

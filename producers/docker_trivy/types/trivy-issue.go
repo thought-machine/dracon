@@ -28,6 +28,6 @@ type TrivyCVSS struct {
 
 // TrivyNvd wraps Trivy Nvd structure inside the CVSS struct
 type TrivyNvd struct {
-	V3Vector string `json:"V3Vector"`
-	V3Score  float64    `json:"V3Score"`
+	V3Vector string  `json:"V3Vector"`
+	V3Score  float64 `json:"V3Score"`
 }

@@ -1,6 +1,6 @@
 subinclude("//third_party/defs:docker")
 
-# this producer covers nancy https://github.com/sonatype-nexus-community/nancy
+# this producer covers trivy https://github.com/aquasecurity/trivy
 
 go_binary(
     name = "trivy",

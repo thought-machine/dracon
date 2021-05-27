@@ -49,7 +49,6 @@ func parseOut(results []types.TrivyOut) []*v1.Issue {
 
 // TrivySeverityToDracon maps Trivy Severity Strings to dracon struct
 func TrivySeverityToDracon(severity string) v1.Severity {
-
 	switch severity {
 	case "LOW":
 		return v1.Severity_SEVERITY_LOW
@@ -61,15 +60,15 @@ func TrivySeverityToDracon(severity string) v1.Severity {
 		return v1.Severity_SEVERITY_CRITICAL
 	default:
 		return v1.Severity_SEVERITY_INFO
-
 	}
 }
+
 func parseResult(r *types.TrivyVulnerability, target string) *v1.Issue {
 	cvss := r.CVSS.Nvd.V3Score
 	return &v1.Issue{
 		Target:     target,
-		Type:       "Vulnerable Image Dependency",
-		Title:      fmt.Sprintf("[%s] %s", r.CVE, r.Title),
+		Type:       "Container image vulnerability",
+		Title:      fmt.Sprintf("[%s][%s] %s", target, r.CVE, r.Title),
 		Severity:   TrivySeverityToDracon(r.Severity),
 		Confidence: v1.Confidence_CONFIDENCE_MEDIUM,
 		Cvss:       cvss,
