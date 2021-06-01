@@ -11,6 +11,9 @@ go_toolchain(
 go_module(
     name = "golint",
     binary = True,
+    hashes = [
+        "6a2982682499be8804589a0082514d650ca4019a88daeed951a215d56ff4f8b8",
+    ],
     install = ["golint"],
     module = "golang.org/x/lint",
     version = "83fdc39ff7b56453e3793356bcff3070b9b96445",
