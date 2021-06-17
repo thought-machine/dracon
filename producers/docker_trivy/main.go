@@ -1,16 +1,16 @@
 package main
 
 import (
-    v1 "github.com/thought-machine/dracon/api/proto/v1"
-    "github.com/thought-machine/dracon/producers/docker_trivy/types"
-
     "fmt"
     "log"
     "strings"
     "flag"
 
+    v1 "github.com/thought-machine/dracon/api/proto/v1"
+    "github.com/thought-machine/dracon/producers/docker_trivy/types"
     "github.com/thought-machine/dracon/producers"
 )
+
 var Combined bool
 
 func main() {
@@ -52,8 +52,8 @@ func main() {
 }
 func parseCombinedOut(results types.CombinedOut) []*v1.Issue {
     issues := []*v1.Issue{}
-    for img, output := range results{
-        log.Printf("Parsing Combined Output for %s\n",img)
+    for img, output := range results {
+        log.Printf("Parsing Combined Output for %s\n", img)
         for _, res := range output {
             target := res.Target
             for _, vuln := range res.Vulnerable {
@@ -62,8 +62,9 @@ func parseCombinedOut(results types.CombinedOut) []*v1.Issue {
         }
     }
         return issues
-    }
-    func parseSingleOut(results []types.TrivyOut) []*v1.Issue {
+}
+
+func parseSingleOut(results []types.TrivyOut) []*v1.Issue {
         issues := []*v1.Issue{}
         for _, res := range results {
             target := res.Target
@@ -75,8 +76,8 @@ func parseCombinedOut(results types.CombinedOut) []*v1.Issue {
         return issues
     }
 
-    // TrivySeverityToDracon maps Trivy Severity Strings to dracon struct
-    func TrivySeverityToDracon(severity string) v1.Severity {
+// TrivySeverityToDracon maps Trivy Severity Strings to dracon struct
+func TrivySeverityToDracon(severity string) v1.Severity {
         switch severity {
         case "LOW":
             return v1.Severity_SEVERITY_LOW
@@ -91,16 +92,15 @@ func parseCombinedOut(results types.CombinedOut) []*v1.Issue {
         }
     }
 
-    func parseResult(r *types.TrivyVulnerability, target string) *v1.Issue {
-        cvss := r.CVSS.Nvd.V3Score
+func parseResult(r *types.TrivyVulnerability, target string) *v1.Issue {
         return &v1.Issue{
-            Target:     target,
-            Type:       "Container image vulnerability",
-            Title:      fmt.Sprintf("[%s][%s] %s", target, r.CVE, r.Title),
-            Severity:   TrivySeverityToDracon(r.Severity),
-            Confidence: v1.Confidence_CONFIDENCE_MEDIUM,
-            Cvss:       cvss,
+            Target:      target,
+            Type:        "Container image vulnerability",
+            Title:       fmt.Sprintf("[%s][%s] %s", target, r.CVE, r.Title),
+            Severity:    TrivySeverityToDracon(r.Severity),
+            Confidence:  v1.Confidence_CONFIDENCE_MEDIUM,
+            Cvss:        r.CVSS.Nvd.V3Score,
             Description: fmt.Sprintf("CVSS Score: %v\nCvssVector: %s\nCve: %s\nCwe: %s\nReference: %s\nOriginal Description:%s\n",
             r.CVSS.Nvd.V3Score, r.CVSS.Nvd.V3Vector, r.CVE, strings.Join(r.CweIDs[:], ","), r.PrimaryURL, r.Description),
         }
-    }
+}

@@ -1,6 +1,6 @@
 package types
 
-// usability addition: Trivy will likely run on a set of images instead of one image, in this case it makes sense to combine it's multiple outs to one
+// CombinedOut represents the output of multiple Trivy runs (useful when using the Trivy Dracon tool to scan multiple images); the key is the name of the image file that was scanned
 type CombinedOut map[string][]TrivyOut
 
 // TrivyOut represents the output of a trivy run that we care about
