@@ -1,5 +1,8 @@
 package types
 
+// usability addition: Trivy will likely run on a set of images instead of one image, in this case it makes sense to combine it's multiple outs to one
+type CombinedOut map[string][]TrivyOut
+
 // TrivyOut represents the output of a trivy run that we care about
 type TrivyOut struct {
 	Vulnerable []TrivyVulnerability `json:"Vulnerabilities"`
