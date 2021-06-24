@@ -1,6 +1,7 @@
 package jira
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"path/filepath"
@@ -102,6 +103,14 @@ func makeDescription(draconResult map[string]string, extras []string) string {
 }
 
 // makeSummary creates the Summary/Title of an issue
-func makeSummary(draconResult map[string]string) string {
-	return filepath.Base(draconResult["target"]) + " " + draconResult["title"]
+func makeSummary(draconResult map[string]string) (string, string) {
+	summary := filepath.Base(draconResult["target"]) + " " + draconResult["title"]
+
+	if len(summary) > 255 { // jira summary field supports up to 255 chars
+		tobytes := bytes.Runes([]byte(summary))
+		summary = string(tobytes[:254])
+		extra := string(tobytes[255:])
+		return summary, extra
+	}
+	return summary, ""
 }

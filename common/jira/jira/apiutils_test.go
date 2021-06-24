@@ -73,8 +73,37 @@ func TestMakeDescription(t *testing.T) {
 }
 
 func TestMakeSummary(t *testing.T) {
-	res := makeSummary(sampleResult)
+	res, extra := makeSummary(sampleResult)
 	exp := "bar1:baz2 Unit Test Title"
-
 	assert.Equal(t, res, exp)
+	assert.Equal(t, extra, "")
+
+	longTitle := make([]rune, 300)
+	truncatedSummary := make([]rune, 254)
+	expectedExtra := make([]rune, 49)
+	char := []rune{'\u0061'} // 'a'
+	for i := range longTitle {
+		longTitle[i] = char[0]
+	}
+
+	// truncatedSummary = []rune{'b','a','r',' '}
+	for i := 4; i < len(truncatedSummary); i++ {
+		truncatedSummary[i] = char[0]
+	}
+	truncatedSummary[0] = 'b'
+	truncatedSummary[1] = 'a'
+	truncatedSummary[2] = 'r'
+	truncatedSummary[3] = ' '
+
+	for i := range expectedExtra {
+		expectedExtra[i] = char[0]
+	}
+	sampleResult["target"] = "/foo/bar"
+	sampleResult["title"] = string(longTitle)
+
+	res, extra = makeSummary(sampleResult)
+	assert.Equal(t, string(truncatedSummary), res)
+
+	assert.Equal(t, string(expectedExtra), extra)
+
 }
