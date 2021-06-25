@@ -1,6 +1,7 @@
 package jira
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 
@@ -46,12 +47,17 @@ func (client client) assembleIssue(draconResult map[string]string) *jira.Issue {
 	for _, m := range client.Config.Mappings {
 		customFields[m.JiraField] = makeCustomField(m.FieldType, []string{draconResult[m.DraconField]})
 	}
+	summary, extra := makeSummary(draconResult)
+	description := makeDescription(draconResult, client.Config.DescriptionExtras)
+	if extra != "" {
+		description = fmt.Sprintf(".... %s\n%s", extra, description)
+	}
 	return &jira.Issue{
 		Fields: &jira.IssueFields{
 			Project:         client.DefaultFields.Project,
 			Type:            client.DefaultFields.IssueType,
-			Description:     makeDescription(draconResult, client.Config.DescriptionExtras),
-			Summary:         makeSummary(draconResult),
+			Description:     description,
+			Summary:         summary,
 			Components:      client.DefaultFields.Components,
 			AffectsVersions: client.DefaultFields.AffectsVersions,
 			Labels:          client.DefaultFields.Labels,
