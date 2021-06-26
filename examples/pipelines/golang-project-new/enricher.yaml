@@ -1,8 +1,8 @@
 ---
-apiVersion: dracon/v1beta1
-kind: Enricher
+apiVersion: tekton.dev/v1beta1
+kind: Task
 metadata:
-  name: python-project-enricher
+  name: golang-project-enricher
   labels: {}
 spec:
   resources: {inputs: [], outputs: []}
@@ -12,12 +12,14 @@ spec:
   # run enricher
   - name: run-enricher
     image: index.docker.io/thoughtmachine/dracon-enricher:latest
-    imagePullPolicy: Never
     env:
     - name: ENRICHER_READ_PATH
-      value: /workspace
+      value: $(workspaces.source.path)/.dracon/raw
     - name: ENRICHER_WRITE_PATH
-      value: "{{.EnricherOutPath}}"
+      value: $(workspaces.source.path)/.dracon/enriched
     - name: ENRICHER_DB_CONNECTION
       value: "postgresql://dracon:dracon@dracon-enrichment-db.dracon.svc?sslmode=disable"
     command: ["/enricher"]
+  workspaces:
+  - name: source
+    mountPath: /workspace/source

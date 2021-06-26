@@ -25,7 +25,7 @@ secrets:
 - name: gitssh-github-tektoncd-pipeline
 ---
 # git+ssh config: pipeline resource
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: PipelineResource
 metadata:
   name: "{{.RunID}}-gitssh-github-tektoncd-pipeline"
@@ -39,7 +39,7 @@ spec:
     value: git@github.com:tektoncd/pipeline.git
 ---
 # pipelinerun
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
   name: "demo-{{.RunID}}"

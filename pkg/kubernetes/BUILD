@@ -2,6 +2,7 @@ go_library(
     name = "kubernetes",
     srcs = [
         "apply.go",
+        "run.go",
     ],
     visibility = ["PUBLIC"],
     deps = [

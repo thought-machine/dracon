@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        kubernetes: ["1.16", "1.17", "1.18"]
+        kubernetes: ["1.17", "1.18", "1.19"]
     steps:
       - name: Install python dependencies
         run: sudo apt-get update && sudo apt-get install -y python3-setuptools python3-pip

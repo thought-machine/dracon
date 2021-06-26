@@ -1,5 +1,5 @@
 ---
-apiVersion: dracon/v1alpha1
+apiVersion: dracon/v1beta1
 kind: Pipeline
 metadata:
   name: golang-project
@@ -30,5 +30,7 @@ spec:
   - name: elasticsearch-consumer
     runAfter: [enricher]
     taskRef: {name: golang-project-elasticsearch-consumer}
-    params: []
+    params:
+    - name: dracon-start-time
+      value: "$(tasks.fetch-source.results.dracon-start-time)"
     resources: {inputs: [], outputs: []}

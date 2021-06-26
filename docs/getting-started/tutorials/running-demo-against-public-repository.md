@@ -18,7 +18,7 @@
    ```bash
    $ cp -r "${PWD}/dracon/examples/pipelines/mixed-lang-project" "${PWD}"
    ```
-3. Update the `tekton.dev/v1alpha1, PipelineResource` in `pipeline-run.yaml`:
+3. Update the `tekton.dev/v1beta1, PipelineResource` in `pipeline-run.yaml`:
 
    1. Set `spec.params[0].value` to your desired git revision/branch.
    2. Set `spec.params[1].value` to your desired git public git url.
@@ -26,7 +26,7 @@
       ```yaml
       ---
       # git+https config
-      apiVersion: dracon/v1alpha1
+      apiVersion: dracon/v1beta1
       kind: PipelineResource
       metadata:
         name: "{{.RunID}}-git-github-oauth2_proxy"

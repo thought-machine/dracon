@@ -33,3 +33,17 @@ remote_file(
     url = f"https://github.com/tektoncd/dashboard/releases/download/v{TEKTONCD_DASHBOARD_VERSION}/tekton-dashboard-release-readonly.yaml",
     visibility = ["//scripts/development/..."],
 )
+
+remote_file(
+    name = "nfs-external-provisioner",
+    hashes = ["938edf9e16fdc91585a944b8f50182638fd5b653ac1311bfac73be768e2a730c"],
+    url = f"https://raw.githubusercontent.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner/master/deploy/kubernetes/deployment.yaml",
+    visibility = ["//scripts/development/..."],
+)
+
+remote_file(
+    name = "tektoncd_catalog_git-clone",
+    url = "https://raw.githubusercontent.com/tektoncd/catalog/main/task/git-clone/0.3/git-clone.yaml",
+    hashes = ["b84503226b69f807d6970f3b80cf275498229e682a8ed3a685f21276ad7b5760"],
+    visibility = ["//examples/pipelines/..."],
+)

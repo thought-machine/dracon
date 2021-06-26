@@ -1,11 +1,12 @@
 ---
-apiVersion: dracon/v1alpha1
+apiVersion: dracon/v1beta1
 kind: Consumer
 metadata:
   name: golang-project-elasticsearch-consumer
   labels: {}
 spec:
-  inputs: {resources: [], params: []}
+  params: []
+  resources: {inputs: [], outputs: []}
   steps:
   # run elasticsearch consumer
   - name: run-elasticsearch-consumer

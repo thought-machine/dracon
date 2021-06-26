@@ -1,0 +1,42 @@
+# ---
+# # git+https config
+# apiVersion: tekton.dev/v1alpha1
+# kind: PipelineResource
+# metadata:
+#   name: "{{.RunID}}-git-github-oauth2-proxy"
+#   labels: {}
+# spec:
+#   type: git
+#   params:
+#   - name: revision
+#     value: master
+#   - name: url
+#     value: https://github.com/pusher/oauth2_proxy.git
+---
+# # pipelinerun
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: "golang-project-"
+  # name: "golang-project-{{.RunID}}"
+  labels:
+    project: dracon
+spec:
+  pipelineRef: {name: golang-project}
+  podTemplate: {}
+  # serviceAccount: git-github-oauth2-proxy # replace with desired git source service account (if needed)
+  timeout: 1h0m0s
+  params:
+  - name: repo-url
+    value: https://github.com/pusher/oauth2_proxy.git
+  - name: branch-name
+    value: master
+  workspaces:
+  - name: source # this workspace name must be declared in the Pipeline
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+          - ReadWriteOnce # access mode may affect how you can use this volume in parallel tasks
+        resources:
+          requests:
+            storage: 1Gi

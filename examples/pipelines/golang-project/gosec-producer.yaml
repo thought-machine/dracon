@@ -1,12 +1,14 @@
 ---
-apiVersion: dracon/v1alpha1
+apiVersion: dracon/v1beta1
 kind: Producer
 metadata:
   name: golang-project-gosec-producer
   labels: {}
 spec:
-  inputs: {resources: [], params: []}
-  outputs: {resources: []}
+  params: []
+  resources: {inputs: [], outputs: []}
+  # inputs: {resources: [], params: []}
+  # outputs: {resources: []}
   volumes: []
   steps:
   # run gosec

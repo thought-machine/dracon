@@ -1,6 +1,6 @@
 ---
 # git+https config
-apiVersion: dracon/v1alpha1
+apiVersion: dracon/v1beta1
 kind: PipelineResource
 metadata:
   name: "{{.RunID}}-git-github-thoughtmachine-please"
@@ -14,7 +14,7 @@ spec:
     value: https://github.com/thought-machine/please.git
 ---
 # pipelinerun
-apiVersion: dracon/v1alpha1
+apiVersion: dracon/v1beta1
 kind: PipelineRun
 metadata:
   name: "mixed-lang-project-{{.RunID}}"

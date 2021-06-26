@@ -1,12 +1,12 @@
 ---
 # Enriched input
 - op: add
-  path: /spec/inputs/resources/-
+  path: /spec/resources/inputs/-
   value: {name: enricher, type: storage}
 
 - op: replace
   path: /apiVersion
-  value: tekton.dev/v1alpha1
+  value: tekton.dev/v1beta1
 - op: replace
   path: /kind
   value: Task
@@ -17,7 +17,7 @@
 
 {{range .PipelineParams}}
 - op: add
-  path: /spec/inputs/params/-
+  path: /spec/params/-
   value: {name: {{.Name}}, type: {{.Type}}}
 {{end}}
 

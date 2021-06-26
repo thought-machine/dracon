@@ -49,8 +49,8 @@ var runCmd = &cobra.Command{
 		patches, err := template.LoadPatchYAMLFiles(pipelineOpts.ExtraPatchesPath)
 
 		// append PipelineResources
-		pipelineResourceDocs, err := template.GeneratePipelineResourceDocs()
-		files["draconPipelineResources"] = pipelineResourceDocs
+		// pipelineResourceDocs, err := template.GeneratePipelineResourceDocs()
+		// files["draconPipelineResources"] = pipelineResourceDocs
 
 		resDocs, err := template.PatchFileYAMLs(files, patches)
 		if err != nil {
@@ -69,7 +69,7 @@ var runCmd = &cobra.Command{
 		}
 
 		for _, doc := range resDocs["PipelineRun"] {
-			err = kubernetes.Apply(string(doc), &kubernetes.KubectlOpts{
+			err = kubernetes.Create(string(doc), &kubernetes.KubectlOpts{
 				Namespace: kubernetesNamespace,
 				Context:   kubernetesContext,
 			})

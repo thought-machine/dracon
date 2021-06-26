@@ -1,11 +1,16 @@
 ---
 - op: replace
   path: /apiVersion
-  value: tekton.dev/v1alpha1
+  value: tekton.dev/v1beta1
 
 - op: add
   path: /metadata/labels/project
   value: dracon
+
+# Add workspace
+- op: add
+  path: /spec/workspaces
+  value: [{name: "dracon"}]
 
 {{ $pipelineParams := .PipelineParams}}
 {{ $enrichers := .PipelineTaskEnrichers }}
@@ -18,60 +23,28 @@
   value: {name: {{$pp.Name}}, description: "{{$pp.Description}}", type: {{$pp.Type}}}
 {{end}}
 
-# Source
-- op: add
-  path: /spec/resources/-
-  value: {name: source, type: storage}
-- op: add
-  path: /spec/tasks/0/resources/outputs/-
-  value: {name: source, resource: source}
-
-
-# Producers
-{{range $p := $producers}}
-- op: add
-  path: /spec/resources/-
-  value: {name: {{$p.Name}}-producer, type: storage}
-
-- op: add
-  path: /spec/tasks/{{$p.Index}}/resources/inputs/-
-  value: {name: source, resource: source}
-
-- op: add
-  path: /spec/tasks/{{$p.Index}}/resources/outputs/-
-  value: {name: producer, resource: {{$p.Name}}-producer}
-{{range $pp := $pipelineParams}}
-- op: add
-  path: /spec/tasks/{{$p.Index}}/params/-
-  value: {name: {{$pp.Name}}, value: $(params.{{$pp.Name}})}
-{{end}}
-{{end}}
-
 # Enrichers
 {{range $e := $enrichers}}
 - op: add
-  path: /spec/resources/-
-  value: {name: enricher, type: storage}
-- op: add
-  path: /spec/tasks/{{$e.Index}}/resources/outputs/-
-  value: {name: enricher, resource: enricher}
+  path: /spec/tasks/{{$e.Index}}/workspaces
+  value: [{name: "dracon", workspace: "dracon"}]
+{{end}}
 
 {{range $p := $producers}}
 - op: add
-  path: /spec/tasks/{{$e.Index}}/resources/inputs/-
-  value: {name: {{$p.Name}}-producer, resource: {{$p.Name}}-producer}
-{{end}}
+  path: /spec/tasks/{{$p.Index}}/workspaces
+  value: [{name: "dracon", workspace: "dracon"}]
 {{end}}
 
 # Consumers
 {{range $c := $consumers}}
 - op: add
-  path: /spec/tasks/{{$c.Index}}/resources/inputs/-
-  value: {name: enricher, resource: enricher}
+  path: /spec/tasks/{{$c.Index}}/workspaces
+  value: [{name: "dracon", workspace: "dracon"}]
 
-{{range $pp := $pipelineParams}}
-- op: add
-  path: /spec/tasks/{{$c.Index}}/params/-
-  value: {name: {{$pp.Name}}, value: $(params.{{$pp.Name}})}
-{{end}}
+# {{range $pp := $pipelineParams}}
+# - op: add
+#   path: /spec/tasks/{{$c.Index}}/params/-
+#   value: {name: {{$pp.Name}}, value: $(params.{{$pp.Name}})}
+# {{end}}
 {{end}}

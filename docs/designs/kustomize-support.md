@@ -25,14 +25,14 @@ patches:
 - path: patches/my-repository.yaml
   target:
     group: dracon
-    version: v1alpha1
+    version: v1beta1
     kind: PipelineResource
     name: "{{.RunID}}-git-github-oauth2-proxy"
 # note: this above patch doesn't currently read well so we may need to reconsider how we define pipelines.
 
 # ./patches/my-repository.yaml
 ---
-apiVersion: dracon/v1alpha1
+apiVersion: dracon/v1beta1
 kind: PipelineResource
 metadata:
   name: "{{.RunID}}-git-github-oauth2-proxy"

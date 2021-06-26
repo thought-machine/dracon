@@ -1,12 +1,13 @@
 ---
-apiVersion: dracon/v1alpha1
+apiVersion: dracon/v1beta1
 kind: Enricher
 metadata:
   name: golang-project-enricher
   labels: {}
 spec:
-  inputs: {resources: []}
-  outputs: {resources: []}
+  resources: {inputs: [], outputs: []}
+  # inputs: {resources: []}
+  # outputs: {resources: []}
   steps:
   # run enricher
   - name: run-enricher

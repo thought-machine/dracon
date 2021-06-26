@@ -26,8 +26,8 @@
    2. Name the resources consistently, we've opted for `gitssh-<repository_domain>-<repository_path_kebab_separated>`, examples:
       - `github.com/thought-machine/dracon` -> `gitssh-github-thought-machine-dracon`
       - `github.com/tektoncd/pipeline` -> `gitssh-github-tektoncd-pipeline`
-   3. Set the `tekton.dev/v1alpha1, PipelineRun` resource's `spec.serviceAccountName` to the `v1, ServiceAccount` you just added.
-   4. Remove the previous `tekton.dev/v1alpha1, PipelineResource`.
+   3. Set the `tekton.dev/v1beta1, PipelineRun` resource's `spec.serviceAccountName` to the `v1, ServiceAccount` you just added.
+   4. Remove the previous `tekton.dev/v1beta1, PipelineResource`.
 
       ```yaml
       ---
@@ -57,7 +57,7 @@
         - name: gitssh-github-tektoncd-pipeline
       ---
       # git+ssh config: pipeline resource
-      apiVersion: tekton.dev/v1alpha1
+      apiVersion: tekton.dev/v1beta1
       kind: PipelineResource
       metadata:
         name: "{{.RunID}}-gitssh-github-tektoncd-pipeline"
