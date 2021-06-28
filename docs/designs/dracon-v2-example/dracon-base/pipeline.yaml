@@ -1,0 +1,22 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: dracon-base
+spec:
+  params:
+  - name: repo-url
+    type: string
+    description: The git repository URL to clone from.
+  - name: branch-name
+    type: string
+    description: The git branch to clone.
+  tasks:
+  - name: clone-repository
+    taskRef:
+      name: git-clone
+    params:
+    - name: url
+      value: $(params.repo-url)
+    - name: revision
+      value: $(params.branch-name)
