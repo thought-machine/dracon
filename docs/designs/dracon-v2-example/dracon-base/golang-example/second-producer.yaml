@@ -1,0 +1,32 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: second-producer
+spec:
+  results:
+  - name: issues
+    description: The issues found by this Dracon producer.
+  steps:
+  # run gosec
+  - name: run-gosec
+    image: securego/gosec
+    command: ["gosec"]
+    args: 
+    - "-fmt=json"
+    - "-out=$HOME/tool.out"
+    - "/..."
+    
+  # parse results
+  - name: parse-gosec
+    image: index.docker.io/thoughtmachine/dracon-producer-gosec:latest
+    command: ["/parse"]
+    args: 
+    - "-in=$HOME/tool.out"
+    - "-out=$HOME/producer.out"
+
+  - name: produce-issues
+    image: bash:latest
+    script: |
+      #!/usr/bin/env bash
+      date +%s | tee $(results.issues.path)

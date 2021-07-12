@@ -20,3 +20,10 @@ spec:
       value: $(params.repo-url)
     - name: revision
       value: $(params.branch-name)
+  - name: enricher
+    taskRef:
+      name: enricher
+    params:
+    - name: producers
+      # value is populated by patches which add producers.
+      value: []

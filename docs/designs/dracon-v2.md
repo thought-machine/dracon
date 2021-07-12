@@ -3,10 +3,13 @@
 ## Goals
 
 - Latest Tekton w/ Tekton Dashboard
-  - New Workspace features.
-  - New Results features.
+  - New Workspace features. TODO: use NFS, deploy NFS server alongside Tekton.
+  - New Results features. Done.
   - PipelineResources are now replaced by Tasks.
 - Kustomize.
+  - Tasks:
+    - Prepend containers TODO: should be trivial w/ patches
+    - Add Volumes TODO: should be trivial w/ patches
 - Kustomize Distribution.
 
 
@@ -60,30 +63,6 @@ spec:
       date +%s | tee $(results.issues.path)
 ```
 
-TODO: How can we make this easier?
- - Define an interface for people to implement?
-   - Producer Tasks must output `issues` as a `result`.
-   - Producer Tasks must be defined in the Pipeline with their `issues` result as a parameter to the `enricher`.
- - A [Kustomize plugin](https://kubectl.docs.kubernetes.io/guides/extending_kustomize/)?
-   - create `dracon.thoughtmachine.net/v1/Pipeline`
-
-```yaml
----
-apiVersion: dracon.thoughtmachine.net/v1
-kind: Pipeline
-metadata:
-  name: notImportantHere
-producers:
-  - my-producer
-consumers:
-  - my-consumer
-# This would generate a tekton.dev/v1beta1/Pipeline with the given producers and consumers.
-# It would also be able to provide build-time validation (hopefully helpful output).
-# Therefore end-users would only need to modify the Pipeline if modifying the enricher or retrieval of sourcecode.
-
-# TODO: does this work with overlays? i.e. can we generate a Pipeline then use overlay kustomizations on it (e.g. change the task which retrieves source-code)?
-```
-
 ##### Adding a Dracon Consumer
 
 ```yaml
@@ -104,6 +83,13 @@ spec:
       value: "$(tasks.enricher.results.issues)"
 ```
 
+
+TODO: How can we make this easier?
+ - Define an interface for people to implement?
+   - Producer Tasks must output `issues` as a `result`.
+   - Producer Tasks must be defined in the Pipeline with their `issues` result as a parameter to the `enricher`.
+   - **Optional**: A Please build def which generates the yaml? just to keep code DRY.
+
 ## Kustomize Distribution
 
 End users should be able to use Kustomize to modify any of our example pipelines for their own use-cases. e.g.
@@ -112,16 +98,17 @@ End users should be able to use Kustomize to modify any of our example pipelines
 # ./kustomization.yaml
 resources:
 - github.com/thought-machine/dracon/examples/pipelines/golang-project?ref=v0.12.1
+- my-producer.yaml
 # if the end-user is using plz, they can use a remote_file and reference the output directory instead
 
 namespace: dracon-demo
 commonLabels:
-    my-org.io/team: my-team
+  my-org.io/team: my-team
 
 patches:
-- path: patches/my-producer.yaml
+- path: patches/add-my-producer.yaml
   target:
     group: tekton.dev
     version: v1beta1
-    kind: Task
+    kind: Pipeline
 ```

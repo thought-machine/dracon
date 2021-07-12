@@ -4,5 +4,8 @@ kind: Kustomization
 
 namespace: dracon
 
+openapi:
+  path: mycr_schema.json
+
 resources:
   - pipeline.yaml

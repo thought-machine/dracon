@@ -1,0 +1,19 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: unused
+spec:
+  tasks:
+  - name: second-producer
+    taskRef:
+      name: second-producer
+    params: 
+    - name: producers
+      value: "$(tasks.clone-repository.results.repository)"
+  # add output of task as parameter to the enricher to make the enricher dependent on this.
+  - name: enricher
+    params: 
+    - name: producers
+      value: 
+      - "$(tasks.second-producer.results.issues)"
