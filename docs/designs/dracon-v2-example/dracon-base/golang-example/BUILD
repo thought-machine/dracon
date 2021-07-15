@@ -1,15 +1,15 @@
-filegroup(
-    name = "golang-example",
-    srcs = glob(["**.yaml", "*.json"]),
-    visibility = ["PUBLIC"],
-)
+subinclude("//build/defs:kustomize")
 
-genrule(
-    name = "golang-example_k8s",
-    srcs = [":golang-example", "//docs/designs/dracon-v2-example/dracon-base/base"],
-    outs = ["golang-example_k8s.yaml"],
-    cmd = """
-$TOOLS build $PKG > $OUTS
-    """,
-    tools = ["//docs/designs/dracon-v2-example/third_party/binary:kustomize"],
+kustomized_config(
+    name = "golang-example",
+    srcs = [
+        "kustomization.yaml",
+        "gosec-producer.yaml",
+        "second-producer.yaml",
+        "patches/add-gosec-to-pipeline.yaml",
+        "patches/add-second-to-pipeline.yaml",
+    ],
+    deps = [
+        "//docs/designs/dracon-v2-example/dracon-base/base",
+    ],
 )

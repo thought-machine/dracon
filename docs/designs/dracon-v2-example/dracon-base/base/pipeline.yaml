@@ -2,7 +2,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: dracon-base
+  name: dracon
 spec:
   params:
   - name: repo-url
@@ -24,6 +24,6 @@ spec:
     taskRef:
       name: enricher
     params:
-    - name: producers
+    - name: producer-result-paths
       # value is populated by patches which add producers.
       value: []

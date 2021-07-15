@@ -14,6 +14,6 @@ spec:
   # add output of task as parameter to the enricher to make the enricher dependent on this.
   - name: enricher
     params: 
-    - name: producers
+    - name: producer-result-paths
       value: 
       - "$(tasks.second-producer.results.issues)"

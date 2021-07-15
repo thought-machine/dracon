@@ -9,11 +9,11 @@ spec:
     taskRef:
       name: gosec-producer
     params: 
-    - name: producers
-      value: "$(tasks.clone-repository.results.repository)"
+    - name: source-path
+      value: "$(tasks.get-source.results.url)"
   # add output of task as parameter to the enricher to make the enricher dependent on this.
   - name: enricher
     params: 
-    - name: producers
+    - name: producer-result-paths
       value: 
       - "$(tasks.gosec-producer.results.issues)"

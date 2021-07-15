@@ -1,15 +1,28 @@
-filegroup(
+subinclude("//build/defs:kustomize")
+
+kustomized_config(
     name = "base",
-    srcs = glob(["**.yaml", "*.json"]),
-    visibility = ["PUBLIC"],
+    srcs = [
+        "kustomization.yaml",
+        "tekton.dev_v1beta1_Pipeline_schema.json",
+        ":openapi_schema",
+        "test_schema.json",
+        "pipeline.yaml",
+        "transformer.yaml"
+    ],
+    visibility = ["//docs/designs/dracon-v2-example/..."],
+)
+
+sh_binary(
+    name = "generate_openapi_schema",
+    deps = ["//third_party/tools:jq"],
+    main = "generate_openapi_schema.sh",
 )
 
 genrule(
-    name = "base_k8s",
-    srcs = [":base"],
-    outs = ["base_k8s.yaml"],
-    cmd = """
-$TOOLS build $PKG > $OUTS
-    """,
-    tools = ["//docs/designs/dracon-v2-example/third_party/binary:kustomize"],
+    name = "openapi_schema",
+    srcs = ["//third_party/k8s:tektoncd_v1beta1_swagger"],
+    outs = ["openapi_schema.json"],
+    tools = [":generate_openapi_schema"],
+    cmd = "$TOOL",
 )

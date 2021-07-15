@@ -1,0 +1,19 @@
+nameReference:
+- kind: Task
+  fieldSpecs:
+  - path: spec/tasks/taskRef/name
+    kind: Pipeline
+  # - path: spec/containers/env/valueFrom/configMapKeyRef/name
+  #   version: v1
+  #   kind: Pod
+# - kind: Secret
+#   version: v1
+#   fieldSpecs:
+#   - path: spec/volumes/secret/secretName
+#     version: v1
+#     kind: Pod
+#   - path: spec/containers/env/valueFrom/secretKeyRef/name
+#     version: v1
+#     kind: Pod
+
+# TODO: try and get this working: https://github.com/kubernetes-sigs/kustomize/pull/498/files?short_path=2d246ca#diff-2d246ca3004a49c8ac05fb3de6b784be86057e61027f5482f01ed12be90be9e9

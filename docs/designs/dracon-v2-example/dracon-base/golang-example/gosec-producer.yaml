@@ -6,7 +6,7 @@ metadata:
 spec:
   results:
   - name: issues
-    description: The issues found by this Dracon producer.
+    description: The path for the issues found by this Dracon producer.
   steps:
   # run gosec
   - name: run-gosec
@@ -27,6 +27,4 @@ spec:
 
   - name: produce-issues
     image: bash:latest
-    script: |
-      #!/usr/bin/env bash
-      date +%s | tee $(results.issues.path)
+    script: echo "$HOME/producer.out" > $(results.issues.path)

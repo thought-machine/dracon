@@ -4,6 +4,7 @@
 def kustomized_config(
     name: str,
     srcs: list = [],
+    deps: list = [],
     images: list = [],
     visibility: list = [],
     kube_score_ignored_tests: list = [],
@@ -18,28 +19,32 @@ def kustomized_config(
         kube_score_ignored_tests: The kube_score tests to skip.
     """
     replace_images_rule=_replace_images_cmd(name, images)
-    replace_srcs_rule=_replace_srcs_cmd(name, srcs)
+    # replace_srcs_rule=_replace_srcs_cmd(name, srcs)
 
-    kustomized_rule=genrule(
+    filegroup(
         name = name,
         srcs = srcs,
+        visibility = visibility,
+    )
+
+    kustomized_rule=genrule(
+        name = f"{name}_k8s",
+        srcs = srcs,
+        deps = deps,
         outs = [f"{name}_kustomized.yaml"],
         cmd = f"""
 set -euo pipefail
-cp $PKG/* .
-kustomization_file="kustomization.yaml"
+kustomization_file="$PKG/kustomization.yaml"
 if [ ! -f "${kustomization_file}" ]; then
     echo "missing kustomization file in $PKG"
     exit 1
 fi
 $(exe {replace_images_rule})
-$(exe {replace_srcs_rule})
-$(exe {CONFIG.KUSTOMIZE_TOOL}) build . > $HOME/$OUTS
+$(exe {CONFIG.KUSTOMIZE_TOOL}) build $PKG > $HOME/$OUTS
         """,
         tools = [
             CONFIG.KUSTOMIZE_TOOL,
             replace_images_rule,
-            replace_srcs_rule,
         ],
         visibility = visibility,
     )
