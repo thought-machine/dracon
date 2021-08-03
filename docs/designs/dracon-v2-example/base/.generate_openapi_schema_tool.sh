@@ -70,6 +70,3 @@ $JQ_BIN 'del(.definitions["v1beta1.Param"].properties.value["$ref"])' $OUTS > $O
 $JQ_BIN 'del(.definitions["v1beta1.Param"].properties.value.default)' $OUTS > $OUTS.new && mv $OUTS.new $OUTS
 $JQ_BIN '.definitions["v1beta1.Param"].properties.value += { "x-kubernetes-patch-strategy": "merge" }' $OUTS > $OUTS.new && mv $OUTS.new $OUTS
 $JQ_BIN '.definitions["v1beta1.Param"].properties.value += { "x-kubernetes-list-type": "map" }' $OUTS > $OUTS.new && mv $OUTS.new $OUTS
-
-
-# TODO: taskRef is not being updated to nameSuffixed task-names :sob:

@@ -1,0 +1,22 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: a-task
+spec:
+  results:
+  - name: issues
+    description: The path for the issues found by this Dracon producer.
+  steps:
+  # run gosec
+  - name: run-gosec
+    image: securego/gosec
+    command: ["gosec"]
+    args: 
+    - "-fmt=json"
+    - "-out=$HOME/tool.out"
+    - "/..."
+
+  - name: produce-issues
+    image: bash:latest
+    script: echo "$HOME/producer.out" > $(results.issues.path)

@@ -1,0 +1,19 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: unused
+spec:
+  tasks:
+  - name: b-task
+    taskRef:
+      name: b-task
+    params: 
+    - name: source-path
+      value: "$(tasks.get-source.results.url)"
+  # add output of task as parameter to the enricher to make the enricher dependent on this.
+  - name: enricher
+    params: 
+    - name: producer-result-paths
+      value: 
+      - "$(tasks.b-task.results.issues)"

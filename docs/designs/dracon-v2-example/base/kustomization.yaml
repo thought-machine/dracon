@@ -2,14 +2,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: dracon
-
-openapi:
- path: openapi_schema.json
-
 resources:
   - pipeline.yaml
 
+openapi:
+  path: openapi_schema.json
 
 configurations: 
   - transformer.yaml

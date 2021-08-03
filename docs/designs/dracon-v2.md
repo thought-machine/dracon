@@ -8,9 +8,9 @@
   - PipelineResources are now replaced by Tasks.
 - Kustomize.
   - Tasks:
-    - Prepend containers TODO: should be trivial w/ patches
+    - Prepend containers TODO: should be trivial w/ patches. Need to attempt with Components.
     - Add Volumes TODO: should be trivial w/ patches
-- Kustomize Distribution.
+- Kustomize Distribution. We can use https://github.com/kubernetes-sigs/kustomize/blob/master/examples/remoteBuild.md#url-format
 
 
 ## Kustomize
@@ -19,6 +19,23 @@ Currently, the Dracon binary is essentially just a glorified json-patch tool wit
 
 Given a `dracon-base` Kustomization, we can add overlays to modify the Kubernetes resources (Pipeline, Task, PipelineRun, etc.).
 
+### Kustomize Components
+See: https://github.com/kubernetes-sigs/kustomize/blob/master/examples/components.md
+
+We propose to use Kustomize Components to package Dracon components (Producers, Consumers) which can be added to a Dracon pipeline via composition.
+
+For example, a file tree may look like:
+
+```
+./components
+./pipelines
+./pipelines/base
+./pipelines/golang-example
+./pipelines/mixed-example
+./pipelines/python-example
+```
+
+This allows us to focus on creating re-usable components that end-users can use to easily build their own pipelines.
 
 ### Modification of `tekton.dev/v1beta1/Pipeline`
 
@@ -29,7 +46,7 @@ https://github.com/tektoncd/pipeline/blob/main/docs/pipelines.md#passing-one-tas
 
 ```yaml
 ---
-# patches/add-my-producer.yaml
+# ./components/my-producer/patch-pipeline.yaml
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
@@ -46,7 +63,7 @@ spec:
       value: 
       - "$(tasks.my-producer.results.issues)"
 ---
-# resources/my-producer.yaml
+# ./components/my-producer/my-producer.yaml
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
@@ -61,6 +78,19 @@ spec:
     script: |
       #!/usr/bin/env bash
       date +%s | tee $(results.issues.path)
+---
+# ./components/my-producer/kustomization.yaml
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+
+resources:
+  - my-producer.yaml
+
+patches:
+  - path: patch-pipeline.yaml
+    target:
+      kind: Pipeline
 ```
 
 ##### Adding a Dracon Consumer

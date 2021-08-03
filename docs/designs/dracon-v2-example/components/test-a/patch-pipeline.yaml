@@ -5,15 +5,15 @@ metadata:
   name: unused
 spec:
   tasks:
-  - name: second-producer
+  - name: a-task
     taskRef:
-      name: second-producer
+      name: a-task
     params: 
-    - name: producers
-      value: "$(tasks.clone-repository.results.repository)"
+    - name: source-path
+      value: "$(tasks.get-source.results.url)"
   # add output of task as parameter to the enricher to make the enricher dependent on this.
   - name: enricher
     params: 
     - name: producer-result-paths
       value: 
-      - "$(tasks.second-producer.results.issues)"
+      - "$(tasks.a-task.results.issues)"

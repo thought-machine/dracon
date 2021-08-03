@@ -18,7 +18,7 @@ remote_file(
         "0e105edbb0ebc7c4115c610168f1d6b0ff3ceb38043dac92e18fa0698130d69f",  # linux_amd64
     ],
     url = f"https://github.com/mikefarah/yq/releases/download/v4.6.3/yq_{CONFIG.OS}_{CONFIG.ARCH}.tar.gz",
-    visibility = ["//scripts/..."],
+    visibility = ["//scripts/...", "//docs/designs/..."],
 )
 
 KUSTOMIZE_VERSION = "4.2.0"
@@ -36,6 +36,13 @@ remote_file(
 remote_file(
     name = "jq",
     url = "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64",
+    binary = True,
+    visibility = ["PUBLIC"],
+)
+
+remote_file(
+    name = "jd",
+    url = "https://github.com/josephburnett/jd/releases/download/v1.4.0/jd-amd64-linux",
     binary = True,
     visibility = ["PUBLIC"],
 )
