@@ -4,8 +4,8 @@ filegroup(
     name = "test-b",
     srcs = [
         "kustomization.yaml",
-        "resources.yaml",
         "patch-pipeline.yaml",
+        "resources.yaml",
     ],
     visibility = ["//docs/..."],
 )

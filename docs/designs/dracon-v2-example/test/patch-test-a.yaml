@@ -1,0 +1,10 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: a-task
+spec:
+  steps:
+  - name: pre-gosec
+    image: bash:latest
+    script: "echo pre-gosec"

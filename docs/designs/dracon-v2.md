@@ -8,8 +8,8 @@
   - PipelineResources are now replaced by Tasks.
 - Kustomize.
   - Tasks:
-    - Prepend containers TODO: should be trivial w/ patches. Need to attempt with Components.
-    - Add Volumes TODO: should be trivial w/ patches
+    - Prepend containers. Done, works with Components too.
+    - Add Volumes. Done, works with Components too.
 - Kustomize Distribution. We can use https://github.com/kubernetes-sigs/kustomize/blob/master/examples/remoteBuild.md#url-format
 
 

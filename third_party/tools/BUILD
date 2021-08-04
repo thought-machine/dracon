@@ -18,31 +18,35 @@ remote_file(
         "0e105edbb0ebc7c4115c610168f1d6b0ff3ceb38043dac92e18fa0698130d69f",  # linux_amd64
     ],
     url = f"https://github.com/mikefarah/yq/releases/download/v4.6.3/yq_{CONFIG.OS}_{CONFIG.ARCH}.tar.gz",
-    visibility = ["//scripts/...", "//docs/designs/..."],
+    visibility = [
+        "//docs/designs/...",
+        "//scripts/...",
+    ],
 )
 
 KUSTOMIZE_VERSION = "4.2.0"
+
 remote_file(
     name = "kustomize",
-    url = f"https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv{KUSTOMIZE_VERSION}/kustomize_v{KUSTOMIZE_VERSION}_{CONFIG.OS}_{CONFIG.ARCH}.tar.gz",
     binary = True,
     extract = True,
-    visibility = ["PUBLIC"],
     hashes = [
-        "220dd03dcda8e45dc50e4e42b2d71882cbc4c05e0ed863513e67930ecad939eb", # linux-amd64
+        "220dd03dcda8e45dc50e4e42b2d71882cbc4c05e0ed863513e67930ecad939eb",  # linux-amd64
     ],
+    url = f"https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv{KUSTOMIZE_VERSION}/kustomize_v{KUSTOMIZE_VERSION}_{CONFIG.OS}_{CONFIG.ARCH}.tar.gz",
+    visibility = ["PUBLIC"],
 )
 
 remote_file(
     name = "jq",
-    url = "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64",
     binary = True,
+    url = "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64",
     visibility = ["PUBLIC"],
 )
 
 remote_file(
     name = "jd",
-    url = "https://github.com/josephburnett/jd/releases/download/v1.4.0/jd-amd64-linux",
     binary = True,
+    url = "https://github.com/josephburnett/jd/releases/download/v1.4.0/jd-amd64-linux",
     visibility = ["PUBLIC"],
 )

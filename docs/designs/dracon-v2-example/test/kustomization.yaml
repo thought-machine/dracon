@@ -10,3 +10,6 @@ resources:
 components:
   - ../components/test-a
   - ../components/test-b
+
+patches:
+  - path: patch-test-a.yaml

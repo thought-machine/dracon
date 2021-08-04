@@ -13,17 +13,17 @@ kustomized_config(
 
 sh_binary(
     name = "generate_openapi_schema_tool",
-    deps = ["//third_party/tools:jq"],
     main = ".generate_openapi_schema_tool.sh",
-    visibility = ["//docs/..."]
+    visibility = ["//docs/..."],
+    deps = ["//third_party/tools:jq"],
 )
 
 genrule(
     name = "openapi_schema",
     srcs = ["//third_party/k8s:tektoncd_v1beta1_swagger"],
     outs = ["generated_openapi_schema.json"],
-    tools = [":generate_openapi_schema_tool"],
     cmd = "$TOOL",
+    tools = [":generate_openapi_schema_tool"],
 )
 
 gentest(
@@ -32,7 +32,8 @@ gentest(
         "openapi_schema.json",
         ":openapi_schema",
     ],
-    test_tools = ["//third_party/tools:jd"],
+    exit_on_error = True,
+    no_test_output = True,
     test_cmd = """
 output=$($TOOLS $(location openapi_schema.json) $(location :openapi_schema))
 if [[ $output ]]; then
@@ -40,6 +41,5 @@ if [[ $output ]]; then
     exit 1
 fi
     """,
-    no_test_output = True,
-    exit_on_error = True,
+    test_tools = ["//third_party/tools:jd"],
 )

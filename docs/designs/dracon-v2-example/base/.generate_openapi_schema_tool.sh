@@ -70,3 +70,8 @@ $JQ_BIN 'del(.definitions["v1beta1.Param"].properties.value["$ref"])' $OUTS > $O
 $JQ_BIN 'del(.definitions["v1beta1.Param"].properties.value.default)' $OUTS > $OUTS.new && mv $OUTS.new $OUTS
 $JQ_BIN '.definitions["v1beta1.Param"].properties.value += { "x-kubernetes-patch-strategy": "merge" }' $OUTS > $OUTS.new && mv $OUTS.new $OUTS
 $JQ_BIN '.definitions["v1beta1.Param"].properties.value += { "x-kubernetes-list-type": "map" }' $OUTS > $OUTS.new && mv $OUTS.new $OUTS
+
+
+# allow the Task.spec.steps list to be merged
+$JQ_BIN '.definitions["v1beta1.TaskSpec"].properties.steps += { "x-kubernetes-patch-strategy": "merge" }' $OUTS > $OUTS.new && mv $OUTS.new $OUTS
+$JQ_BIN '.definitions["v1beta1.TaskSpec"].properties.steps += { "x-kubernetes-patch-merge-key": "name" }' $OUTS > $OUTS.new && mv $OUTS.new $OUTS

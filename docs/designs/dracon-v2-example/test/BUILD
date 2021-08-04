@@ -4,6 +4,7 @@ kustomized_config(
     name = "_test",
     srcs = [
         "kustomization.yaml",
+        "patch-test-a.yaml",
     ],
     deps = [
         "//docs/designs/dracon-v2-example/base",
@@ -12,7 +13,6 @@ kustomized_config(
     ],
 )
 
-
 sh_test(
     name = "test",
     src = "test.sh",
@@ -20,5 +20,5 @@ sh_test(
         "SHUNIT": ["//third_party/sh:shunit2"],
         "YQ": ["//third_party/tools:yq"],
         "INPUT": [":_test_k8s"],
-    }
+    },
 )
