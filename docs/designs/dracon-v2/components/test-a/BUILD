@@ -1,11 +1,11 @@
 subinclude("//build/defs:kustomize")
 
 filegroup(
-    name = "test-b",
+    name = "test-a",
     srcs = [
         "kustomization.yaml",
         "patch-pipeline.yaml",
         "resources.yaml",
     ],
-    visibility = ["//docs/..."],
+    visibility = ["//docs/designs/dracon-v2/..."],
 )

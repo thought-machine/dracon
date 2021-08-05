@@ -1,11 +1,11 @@
 subinclude("//build/defs:kustomize")
 
 filegroup(
-    name = "gosec-producer",
+    name = "test-b",
     srcs = [
-        "gosec-producer.yaml",
         "kustomization.yaml",
         "patch-pipeline.yaml",
+        "resources.yaml",
     ],
-    visibility = ["//docs/..."],
+    visibility = ["//docs/designs/dracon-v2/..."],
 )

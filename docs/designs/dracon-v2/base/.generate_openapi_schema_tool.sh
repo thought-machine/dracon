@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-JQ_BIN="$(dirname $0)/third_party/tools/jq-linux64"
+JQ_BIN="$(dirname $0)/docs/designs/dracon-v2/third_party/binary/jq-linux64"
 
 elementIn () {
   local e match="$1"

@@ -26,4 +26,4 @@ testPipelineTaskRef() {
 }
 
 # Load shUnit2.
-source third_party/sh/shunit2
+source "$SHUNIT"

@@ -2,8 +2,9 @@
 
 set -euo pipefail
 
-YQ_BIN="third_party/tools/yq_linux_amd64"
-INPUT="docs/designs/dracon-v2-example/golang-example/golang-example_kustomized.yaml"
+SHUNIT="$DATA_SHUNIT"
+YQ_BIN="$DATA_YQ"
+INPUT="$DATA_INPUT"
 
 
 testEquality() {
@@ -20,4 +21,4 @@ testPipelineTaskRef() {
 }
 
 # Load shUnit2.
-source third_party/sh/shunit2
+source "$SHUNIT"

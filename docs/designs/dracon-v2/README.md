@@ -1,17 +1,72 @@
-# Dracon V2
+# Dracon V2 :train::train:
 
-## Goals
+Dracon's original interface has been around in its current state since the first release 0.1.0 ~1.5 years ago. Since then, we've become a bit wiser and more supporting tools have matured. This design document explores the improvements (some much needed) that we can make to help make Dracon more accessible and easy to use.
 
-- Latest Tekton w/ Tekton Dashboard
-  - New Workspace features. TODO: use NFS, deploy NFS server alongside Tekton.
-  - New Results features. Done.
-  - PipelineResources are now replaced by Tasks.
-- Kustomize.
-  - Tasks:
-    - Prepend containers. Done, works with Components too.
-    - Add Volumes. Done, works with Components too.
-- Kustomize Distribution. We can use https://github.com/kubernetes-sigs/kustomize/blob/master/examples/remoteBuild.md#url-format
+## Summary
 
+- Upgrade and support the latest Tekton Pipelines using `tekton.dev/v1beta1`
+  - `tekton.dev/v1alpha1.PipelineResource` is deprecated in favour of [_Tasks_][1].
+  - Replace [Minio][2] with new [_Workspace_][3] features. TODO: use NFS, deploy NFS server alongside Tekton.
+  - Use [Directed Acyclic Graph (DAG)][4] feature to order [_Tasks_][1].
+- Use [Kustomize][5] instead of our own `dracon` patching and templating binary.
+  - [_Components_][6] can be used to package Dracon _Producers_ and _Consumers_ as building blocks.
+  - [_Pipelines_][7] can be composed via composition of [_Components_][6].
+  - [_Components_][6] can be extended and modified via [_Patches_][8].
+  - Kustomize [_Remote Build_][9] can be used to distribute [_Pipelines_][7].
+
+[1]: https://github.com/tektoncd/pipeline/blob/v0.26.0/docs/tasks.md
+[2]: https://min.io
+[3]: https://github.com/tektoncd/pipeline/blob/v0.26.0/docs/workspaces.md
+[4]: https://github.com/tektoncd/pipeline/blob/v0.26.0/docs/pipelines.md#configuring-the-task-execution-order
+[5]: https://kustomize.io/
+[6]: https://github.com/kubernetes-sigs/kustomize/blob/kustomize/v4.2.0/examples/components.md
+[7]: https://github.com/tektoncd/pipeline/blob/v0.26.0/docs/pipelines.md
+[8]: https://github.com/kubernetes-sigs/kustomize/blob/kustomize/v4.2.0/examples/patchMultipleObjects.md
+[9]: https://github.com/kubernetes-sigs/kustomize/blob/master/examples/remoteBuild.md#url-format
+
+
+### Tekton Pipelines with `tekton.dev/v1beta1`
+
+
+#### Deprecation of `tekton.dev/v1alpha1.PipelineResource` 
+
+#### Replacement of Minio with Tekton Workspace
+
+#### Using Directed Acyclic Graph (DAG) to order Tekton Tasks
+
+
+### Kustomize
+
+#### Kustomize Components
+
+##### Tekton Pipeline Composition with Kustomize Components
+
+##### Extending and Modifying Kustomize Components via Kustomize Patches
+
+#### Kustomize Remote Build
+
+- GitHub release with base and components as artefacts.
+
+
+## Improvements to Extending Dracon (Producers, Consumers and Enrichers)
+
+* Please `dracon.build_defs` to generate Kustomize component.
+  * Enforces pipeline interface expectations e.g.:
+    * Adds pipeline patches for Producers that make them run before the Enricher(s).
+  * Component gets published as an GitHub Actions artefact on build.
+  * Component gets published as a GitHub Release artefact on release.
+
+## Full Example
+
+
+---
+---
+---
+Below this is old/needs merging into above doc
+---
+---
+---
+---
 
 ## Kustomize
 

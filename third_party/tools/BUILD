@@ -36,17 +36,3 @@ remote_file(
     url = f"https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv{KUSTOMIZE_VERSION}/kustomize_v{KUSTOMIZE_VERSION}_{CONFIG.OS}_{CONFIG.ARCH}.tar.gz",
     visibility = ["PUBLIC"],
 )
-
-remote_file(
-    name = "jq",
-    binary = True,
-    url = "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64",
-    visibility = ["PUBLIC"],
-)
-
-remote_file(
-    name = "jd",
-    binary = True,
-    url = "https://github.com/josephburnett/jd/releases/download/v1.4.0/jd-amd64-linux",
-    visibility = ["PUBLIC"],
-)

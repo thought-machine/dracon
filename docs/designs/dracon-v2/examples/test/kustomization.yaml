@@ -5,11 +5,11 @@ kind: Kustomization
 nameSuffix: -test
 
 resources:
-  - ../base
+  - ../../base
 
 components:
-  - ../components/test-a
-  - ../components/test-b
+  - ../../components/test-a
+  - ../../components/test-b
 
 patches:
   - path: patch-test-a.yaml

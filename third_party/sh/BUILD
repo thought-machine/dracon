@@ -18,5 +18,5 @@ remote_file(
     name = "shunit2",
     licences = ["Apache-2.0"],
     url = "https://raw.githubusercontent.com/kward/shunit2/b9102bb763cc603b3115ed30a5648bf950548097/shunit2",
-    visibility = ["//docs/designs/..."],
+    visibility = ["//docs/designs/dracon-v2/..."],
 )

@@ -6,7 +6,7 @@ nameSuffix: -golang-example
 namespace: dracon
 
 resources:
-  - ../base
+  - ../../base
 
 components:
-  - ../components/gosec-producer
+  - ../../components/gosec-producer

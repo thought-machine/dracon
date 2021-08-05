@@ -33,9 +33,3 @@ remote_file(
     url = f"https://github.com/tektoncd/dashboard/releases/download/v{TEKTONCD_DASHBOARD_VERSION}/tekton-dashboard-release-readonly.yaml",
     visibility = ["//scripts/development/..."],
 )
-
-remote_file(
-    name = "tektoncd_v1beta1_swagger",
-    url = "https://raw.githubusercontent.com/tektoncd/pipeline/main/pkg/apis/pipeline/v1beta1/swagger.json",
-    visibility = ["//docs/designs/dracon-v2-example/..."],
-)

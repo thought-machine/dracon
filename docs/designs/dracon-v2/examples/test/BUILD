@@ -7,9 +7,9 @@ kustomized_config(
         "patch-test-a.yaml",
     ],
     deps = [
-        "//docs/designs/dracon-v2-example/base",
-        "//docs/designs/dracon-v2-example/components/test-a",
-        "//docs/designs/dracon-v2-example/components/test-b",
+        "//docs/designs/dracon-v2/base",
+        "//docs/designs/dracon-v2/components/test-a",
+        "//docs/designs/dracon-v2/components/test-b",
     ],
 )
 
