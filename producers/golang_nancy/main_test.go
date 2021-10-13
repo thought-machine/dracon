@@ -32,6 +32,7 @@ func TestParseOut(t *testing.T) {
 		Description: fmt.Sprintf("CVSS Score: %v\nCvssVector: %s\nCve: %s\nCwe: %s\nReference: %s\n",
 			"5.5", "CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:N", "CVE-2018-1099",
 			"", "https://ossindex.sonatype.org/vuln/8a190129-526c-4ee0-b663-92f38139c165"),
+		Cve:		"CVE-2018-1099",
 	}
 	expectedIssues[1] = &v1.Issue{
 		Target:     "pkg:golang/github.com/coreos/etcd@0.5.0-alpha.5",
@@ -43,6 +44,7 @@ func TestParseOut(t *testing.T) {
 		Description: fmt.Sprintf("CVSS Score: %v\nCvssVector: %s\nCve: %s\nCwe: %s\nReference: %s\n",
 			"8.8", "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H", "CVE-2018-1098",
 			"", "https://ossindex.sonatype.org/vuln/5c876f5e-2814-4822-baf0-1092fc63ec25"),
+		Cve:		"CVE-2018-1098",
 	}
 	expectedIssues[2] = &v1.Issue{
 		Target:     "pkg:golang/github.com/gorilla/websocket@1.2.0",
@@ -71,6 +73,7 @@ func TestParseOut(t *testing.T) {
 				assert.EqualValues(t, expected.Cvss, issue.Cvss)
 				assert.EqualValues(t, expected.Confidence, issue.Confidence)
 				assert.EqualValues(t, expected.Description, issue.Description)
+				assert.EqualValues(t, expected.Cve, issue.Cve)
 			}
 		}
 	}
