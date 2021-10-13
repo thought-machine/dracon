@@ -45,6 +45,7 @@ func TestWriteDraconOut(t *testing.T) {
 				Target:      "/dracon/source/foobar",
 				Title:       "/dracon/source/barfoo",
 				Description: "/dracon/source/example.yaml",
+				Cve: 		 "123-321",
 			},
 		},
 	)
@@ -61,6 +62,7 @@ func TestWriteDraconOut(t *testing.T) {
 	assert.Equal(t, "./example.yaml", res.GetIssues()[0].GetDescription())
 	assert.Equal(t, baseTime.Unix(), res.GetScanInfo().GetScanStartTime().GetSeconds())
 	assert.Equal(t, "ab3d3290-cd9f-482c-97dc-ec48bdfcc4de", res.GetScanInfo().GetScanUuid())
+	assert.Equal(t,"123-321",res.GetIssues()[0].GetCve())
 }
 
 func TestWriteDraconOutAppend(t *testing.T) {
@@ -84,6 +86,7 @@ func TestWriteDraconOutAppend(t *testing.T) {
 					Target:      fmt.Sprintf("target%d", i),
 					Title:       fmt.Sprintf("title%d", i),
 					Description: fmt.Sprintf("desc%d", i),
+					Cve:		 fmt.Sprintf("cve%d", i),
 				},
 			},
 		)
@@ -104,5 +107,6 @@ func TestWriteDraconOutAppend(t *testing.T) {
 		assert.Equal(t, fmt.Sprintf("target%d", i), res.GetIssues()[i].GetTarget())
 		assert.Equal(t, fmt.Sprintf("title%d", i), res.GetIssues()[i].GetTitle())
 		assert.Equal(t, fmt.Sprintf("desc%d", i), res.GetIssues()[i].GetDescription())
+		assert.Equal(t, fmt.Sprintf("cve%d", i), res.GetIssues()[i].GetCve())
 	}
 }
