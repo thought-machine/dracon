@@ -21,6 +21,7 @@ func TestParseCombinedOut(t *testing.T) {
 	}
 	issues := parseCombinedOut(results)
 
+<<<<<<< HEAD
 	expectedIssues := []*v1.Issue{{
 		Target:     "ubuntu (ubuntu 18.04)",
 		Type:       "Container image vulnerability",
