@@ -28,6 +28,7 @@ func NewRaw(scanStartTime time.Time, res *v1.LaunchToolResponse, iss *v1.Issue) 
 		Count:          "1",
 		FalsePositive:  "false",
 		Hash:           "",
+		CVE:            iss.GetCve(),
 		// The fields below are not used in this consumer. We use the text versions instead.
 		// Severity:       iss.GetSeverity(),
 		// Confidence:     iss.GetConfidence(),
@@ -58,6 +59,7 @@ func NewEnriched(scanStartTime time.Time, res *v1.EnrichedLaunchToolResponse, is
 		Count:          strconv.Itoa(int(iss.GetCount())),          // formatted as string
 		FalsePositive:  strconv.FormatBool(iss.GetFalsePositive()), // formatted as string
 		Hash:           iss.GetHash(),
+		CVE:            iss.GetRawIssue().GetCve(),
 		// The fields below are not used in this consumer. We use the text versions instead.
 		// Severity:       iss.GetRawIssue().GetSeverity(),
 		// Confidence:     iss.GetRawIssue().GetConfidence(),
