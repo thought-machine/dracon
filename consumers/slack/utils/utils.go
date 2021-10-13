@@ -54,6 +54,7 @@ func getRawIssue(scanStartTime time.Time, res *v1.LaunchToolResponse, iss *v1.Is
 		FirstFound:    scanStartTime,
 		Count:         1,
 		FalsePositive: false,
+		CVE:           iss.GetCve(),
 	})
 	if err != nil {
 		return []byte{}, err
@@ -78,6 +79,7 @@ func getEnrichedIssue(scanStartTime time.Time, res *v1.EnrichedLaunchToolRespons
 		FirstFound:    firstSeenTime,
 		Count:         iss.GetCount(),
 		FalsePositive: iss.GetFalsePositive(),
+		CVE:           iss.GetRawIssue().GetCve(),
 	})
 	if err != nil {
 		return []byte{}, err

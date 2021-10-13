@@ -22,4 +22,5 @@ type FullDocument struct {
 	FirstFound    time.Time     `json:"first_found"`
 	Count         uint64        `json:"count"`
 	FalsePositive bool          `json:"false_positive"`
+	CVE           string        `json:"cve"`
 }
