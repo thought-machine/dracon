@@ -72,7 +72,7 @@ pip_library(
 
 pip_library(
     name = "idna",
-    hashes = []
+    hashes = [],
     version = "2.9",
 )
 
