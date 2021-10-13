@@ -20,6 +20,7 @@ func parseIssues(out []types.SafetyIssue) []*v1.Issue {
 			Cvss:        0.0,
 			Confidence:  v1.Confidence_CONFIDENCE_MEDIUM,
 			Description: fmt.Sprintf("%s\nCurrent Version: %s", r.Description, r.CurrentVersion),
+			Cve:         r.Cve,
 		})
 	}
 	return issues
