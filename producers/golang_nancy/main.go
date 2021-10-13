@@ -76,5 +76,6 @@ func parseResult(r *types.NancyVulnerabilities, target string) *v1.Issue {
 		Cvss:       cvss,
 		Description: fmt.Sprintf("CVSS Score: %v\nCvssVector: %s\nCve: %s\nCwe: %s\nReference: %s\n",
 			r.CvssScore, r.CvssVector, r.Cve, r.Cwe, r.Reference),
+		Cve:	     r.Cve,
 	}
 }
