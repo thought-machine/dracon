@@ -22,6 +22,8 @@ func TestGetHash(t *testing.T) {
 		Description: fmt.Sprintf("CVSS Score: %v\nCvssVector: %s\nCve: %s\nCwe: %s\nReference: %s\n",
 			"5.5", "CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:N", "CVE-2018-1099",
 			"", "https://ossindex.sonatype.org/vuln/8a190129-526c-4ee0-b663-92f38139c165"),
+		Cve: "123-321",
+		
 	}
 	assert.Equal(t, GetHash(expectedIssues), "ccc217a4c2fd348bc5c6c4d73ad4311a")
 
