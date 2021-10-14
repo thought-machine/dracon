@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/thought-machine/dracon/producers"
 	atypes "github.com/thought-machine/dracon/producers/npm_audit/types"
-	"github.com/thought-machine/dracon/producers/npm_audit/types/npm_full_audit"
-	"github.com/thought-machine/dracon/producers/npm_audit/types/npm_quick_audit"
+	"github.com/thought-machine/dracon/producers/npm_audit/types/npmfullaudit"
+	"github.com/thought-machine/dracon/producers/npm_audit/types/npmquickaudit"
 
 	"errors"
 	"flag"
@@ -17,8 +17,8 @@ var (
 
 func inFileToReport(inFile []byte) (atypes.Report, error) {
 	reportConstructors := []func([]byte) (atypes.Report, error){
-		npm_quick_audit.NewReport,
-		npm_full_audit.NewReport,
+		npmquickaudit.NewReport,
+		npmfullaudit.NewReport,
 	}
 
 	for _, constructor := range reportConstructors {
