@@ -1,7 +1,7 @@
 go_library(
-    name = "npm_full_audit",
+    name = "npmfullaudit",
     srcs = [
-        "npm_full_audit.go",
+        "npmfullaudit.go",
     ],
     visibility = ["//producers/npm_audit/..."],
     deps = [
@@ -12,12 +12,12 @@ go_library(
 )
 
 go_test(
-    name = "npm_full_audit_test",
+    name = "npmfullaudit_test",
     srcs = [
-        "npm_full_audit_test.go",
+        "npmfullaudit_test.go",
     ],
     deps = [
-        ":npm_full_audit",
+        ":npmfullaudit",
         "//api/proto:v1",
         "//producers",
         "//third_party/go:stretchr_testify",

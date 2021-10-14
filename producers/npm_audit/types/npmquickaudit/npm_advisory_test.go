@@ -38,7 +38,7 @@ func TestNewAdvisoryDataNotJSON(t *testing.T) {
 		MatchHeader("X-Spiferack", "1").
 		Reply(200).
 		AddHeader("Content-Type", "application/json").
-		File("producers/npm_audit/types/npm_quick_audit/npm_advisory_not_json")
+		File("producers/npm_audit/types/npmquickaudit/npm_advisory_not_json")
 
 	advisory, err := NewAdvisoryData("https://npmjs.com/advisories/666")
 	assert.Nil(t, advisory)
@@ -54,7 +54,7 @@ func TestNewAdvisoryDataNoAdvisoryData(t *testing.T) {
 		MatchHeader("X-Spiferack", "1").
 		Reply(200).
 		AddHeader("Content-Type", "application/json").
-		File("producers/npm_audit/types/npm_quick_audit/npm_advisory_no_advisorydata")
+		File("producers/npm_audit/types/npmquickaudit/npm_advisory_no_advisorydata")
 
 	advisory, err := NewAdvisoryData("https://npmjs.com/advisories/999")
 	assert.Nil(t, advisory)
@@ -70,7 +70,7 @@ func TestNewAdvisoryDataValid(t *testing.T) {
 		MatchHeader("X-Spiferack", "1").
 		Reply(200).
 		AddHeader("Content-Type", "application/json").
-		File("producers/npm_audit/types/npm_quick_audit/npm_advisory_1556")
+		File("producers/npm_audit/types/npmquickaudit/npm_advisory_1556")
 
 	advisory, err := NewAdvisoryData("https://npmjs.com/advisories/1556")
 	assert.NoError(t, err)
