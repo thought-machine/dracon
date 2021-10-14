@@ -9,8 +9,8 @@ go_binary(
         "//api/proto:v1",
         "//producers",
         "//producers/npm_audit/types",
-        "//producers/npm_audit/types/npm_full_audit",
-        "//producers/npm_audit/types/npm_quick_audit",
+        "//producers/npm_audit/types/npmfullaudit",
+        "//producers/npm_audit/types/npmquickaudit",
     ],
 )
 
