@@ -14,7 +14,6 @@ pip_library(
 
 pip_library(
     name = "protobuf",
-    hashes = [],
     licences = ["BSD 3-Clause"],
     version = "3.11.3",
     deps = [":six"],
@@ -35,14 +34,12 @@ pip_library(
 pip_library(
     name = "six",
     package_name = "six",
-    hashes = [],
     licences = ["MIT"],
     version = "1.14.0",
 )
 
 pip_library(
     name = "requests",
-    hashes = [],
     version = "2.23.0",
     deps = [
         ":certifi",
@@ -54,31 +51,26 @@ pip_library(
 
 pip_library(
     name = "urllib3",
-    hashes = [],
     version = "1.25.8",
 )
 
 pip_library(
     name = "certifi",
-    hashes = [],
     version = "2019.11.28",
 )
 
 pip_library(
     name = "chardet",
-    hashes = [],
     version = "3.0.4",
 )
 
 pip_library(
     name = "idna",
-    hashes = [],
     version = "2.9",
 )
 
 pip_library(
     name = "defectdojo_api",
-    hashes = [],
     licences = ["MIT"],
     version = "1.1.3",
     deps = [":requests"],
