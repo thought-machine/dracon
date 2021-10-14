@@ -8,12 +8,14 @@ type Config struct {
 	SyncMappings      []JiraToDraconVulnMappings `yaml:"syncMappings"`
 }
 
+// CustomField represents a Jira Custom Field
 type CustomField struct {
 	ID        string   `yaml:"id"`
 	FieldType string   `yaml:"fieldType"`
 	Values    []string `yaml:"values"`
 }
 
+// DefaultValues represents the Values that exist by default in all jira tickets we had access to
 type DefaultValues struct {
 	Project         string        `yaml:"project"`
 	IssueType       string        `yaml:"issueType"`
@@ -23,6 +25,7 @@ type DefaultValues struct {
 	CustomFields    []CustomField `yaml:"customFields,omitempty"`
 }
 
+// Mappings holds a mapping between a dracon api field and it's corresponding jira field
 type Mappings struct {
 	DraconField string `yaml:"draconField"`
 	JiraField   string `yaml:"jiraField"`

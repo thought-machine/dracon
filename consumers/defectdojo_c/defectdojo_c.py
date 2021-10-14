@@ -8,9 +8,11 @@ from third_party.python.defectdojo_api import defectdojo
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class DefectDojoConsumer(Consumer):
 
     def __init__(self, config: dict):
+        global logger
         self.processed_records = 0
         self.pvc_location = config.pvc_location
         self.api_key = config.api_key

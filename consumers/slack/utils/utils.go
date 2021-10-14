@@ -85,7 +85,7 @@ func getEnrichedIssue(scanStartTime time.Time, res *v1.EnrichedLaunchToolRespons
 	return jBytes, nil
 }
 
-// returns a list of stringified v1.LaunchToolResponse
+// ProcessRawMessages returns a list of stringified v1.LaunchToolResponse
 func ProcessRawMessages(responses []*v1.LaunchToolResponse) ([]string, error) {
 	messages := []string{}
 	for _, res := range responses {
@@ -101,7 +101,7 @@ func ProcessRawMessages(responses []*v1.LaunchToolResponse) ([]string, error) {
 	return messages, nil
 }
 
-// returns a list of stringified v1.EnrichedLaunchToolResponse
+//ProcessEnrichedMessages returns a list of stringified v1.EnrichedLaunchToolResponse
 func ProcessEnrichedMessages(responses []*v1.EnrichedLaunchToolResponse) ([]string, error) {
 	messages := []string{}
 	for _, res := range responses {
@@ -116,21 +116,29 @@ func ProcessEnrichedMessages(responses []*v1.EnrichedLaunchToolResponse) ([]stri
 	}
 	return messages, nil
 }
+
+//GetRawScanInfo returns the non-enriched tool response scan info
 func GetRawScanInfo(response *v1.LaunchToolResponse) *v1.ScanInfo {
 	return response.GetScanInfo()
 }
 
+//GetEnrichedScanInfo returns the enriched tool response scan info
 func GetEnrichedScanInfo(response *v1.EnrichedLaunchToolResponse) *v1.ScanInfo {
 	return response.GetOriginalResults().GetScanInfo()
 }
 
+// PushMetrics will write a short message to the webhook containing the info below
 func PushMetrics(scanUUID string, issuesNo int, scanStartTime time.Time, webhook string) {
 	message := fmt.Sprintf("Dracon scan %s started on %s has been completed with %d issues\n", scanUUID, scanStartTime, issuesNo)
 	push(message, webhook)
 }
+
+// PushMessage writes to the webhook
 func PushMessage(b string, webhook string) {
 	push(b, webhook)
 }
+
+// CountRawMessages a counter for un-enriched tool responses
 func CountRawMessages(responses []*v1.LaunchToolResponse) int {
 	result := 0
 	for _, res := range responses {
@@ -139,6 +147,7 @@ func CountRawMessages(responses []*v1.LaunchToolResponse) int {
 	return result
 }
 
+// CountEnrichedMessages a counter for enriched tool responses
 func CountEnrichedMessages(responses []*v1.EnrichedLaunchToolResponse) int {
 	result := 0
 	for _, res := range responses {

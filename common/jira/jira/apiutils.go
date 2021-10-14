@@ -72,11 +72,11 @@ func makeCustomField(fieldType string, values []string) interface{} {
 		}
 		return cf
 	case "float":
-		if f, err := strconv.ParseFloat(values[0], 64); err == nil {
-			return f
-		} else {
+		f, err := strconv.ParseFloat(values[0], 64)
+		if err != nil {
 			log.Fatalf("Error parsing float field-type: %v", err)
 		}
+		return f
 	case "simple-value":
 		return values[0]
 	default:

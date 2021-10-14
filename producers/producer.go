@@ -20,8 +20,11 @@ import (
 )
 
 var (
+	// InResults represents incoming tool output
 	InResults string
+	// OutFile points to the protobuf file where dracon results will be written
 	OutFile   string
+	// Append flag will append to the outfile instead of overwriting, useful when there's multiple inresults
 	Append    bool
 )
 
@@ -67,9 +70,8 @@ func ReadInFile() ([]byte, error) {
 func ParseJSON(in []byte, structure interface{}) error {
 	if err := json.Unmarshal(in, &structure); err != nil {
 		return err
-	} else {
-		return nil
 	}
+	return nil
 }
 
 // WriteDraconOut provides a generic method to write the resulting protobuf to the output file
@@ -96,9 +98,8 @@ func WriteDraconOut(
 	stat, err := os.Stat(OutFile)
 	if Append && err == nil && stat.Size() > 0 {
 		return putil.AppendResults(cleanIssues, OutFile)
-	} else {
-		return putil.WriteResults(toolName, cleanIssues, OutFile, scanUUUID, scanStartTime)
 	}
+	return putil.WriteResults(toolName, cleanIssues, OutFile, scanUUUID, scanStartTime)
 }
 
 func getSource() string {

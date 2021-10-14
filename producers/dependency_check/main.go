@@ -11,6 +11,7 @@ import (
 	"github.com/thought-machine/dracon/producers"
 )
 
+// DependencyVulnerability represents the Vulnerability block of Dependency check scan json output format
 type DependencyVulnerability struct {
 	target      string
 	cvss3       float64
@@ -22,6 +23,7 @@ type DependencyVulnerability struct {
 	description string
 }
 
+// UnmarshalJSON returns a list of Dependency Vulns from dependency check json
 func UnmarshalJSON(jsonBytes []byte) []DependencyVulnerability {
 	var result []DependencyVulnerability
 	var v map[string]interface{}

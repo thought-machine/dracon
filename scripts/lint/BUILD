@@ -10,8 +10,8 @@ source $SRCS
         "//scripts/util",
         "//third_party/lang:golint",
     ],
+    labels = ["lint"],  # disable in `plz lint` until all are passing
     shell = "/bin/bash",
-    # labels = ["lint"], disable in `plz lint` until all are passing
 )
 
 sh_cmd(

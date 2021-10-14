@@ -8,6 +8,7 @@ import (
 // MobSF.
 type ProjectType string
 
+// MobSF constants
 const (
 	AndroidEclipse ProjectType = "Android Eclipse"
 	AndroidStudio              = "Android Studio"
