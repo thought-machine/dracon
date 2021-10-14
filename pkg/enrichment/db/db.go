@@ -25,7 +25,7 @@ import (
 //go:embed *.sql
 var migrationsFS embed.FS
 
-// DB represents the db methods that are used for the enricher
+// EnrichDatabase represents the db methods that are used for the enricher
 type EnrichDatabase interface {
 	GetIssueByHash(string) (*v1.EnrichedIssue, error)
 	CreateIssue(context.Context, *v1.EnrichedIssue) error
@@ -33,7 +33,7 @@ type EnrichDatabase interface {
 	DeleteIssueByHash(string) error
 }
 
-// Database implements DB
+// DB  Database implements DB
 type DB struct {
 	*sqlx.DB
 }
@@ -102,9 +102,8 @@ func getSchemaSearchPathFromConnStr(connStr string) (string, error) {
 
 	if err == nil && url.Scheme == "postgres" {
 		return getSchemaSearchPathFromURL(url)
-	} else {
-		return getSchemaSearchPathFromKV(connStr)
-	}
+	} 
+	return getSchemaSearchPathFromKV(connStr)
 }
 
 // getSchemaSearchPathFromURL extracts the schema search path component from a
@@ -120,9 +119,8 @@ func getSchemaSearchPathFromURL(connURL *url.URL) (string, error) {
 		return "", nil
 	} else if len(path) == 1 {
 		return path[0], nil
-	} else {
-		return "", errors.New("Multiple search_paths defined in database connection DSN")
 	}
+	return "", errors.New("Multiple search_paths defined in database connection DSN")
 }
 
 // getSchemaSearchPathFromKV extracts the schema search path component from a

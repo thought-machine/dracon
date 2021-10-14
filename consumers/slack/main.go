@@ -11,8 +11,10 @@ import (
 )
 
 var (
-	Webhook    string // the webhook url to post to
-	LongFormat bool   //boolean, False by default, if set to True it dumps all findings in JSON format to the webhook url
+	// Webhook is the webhook url to post to
+	Webhook    string
+	// LongFormat : boolean, False by default, if set to True it dumps all findings in JSON format to the webhook url
+	LongFormat bool
 )
 
 func main() {

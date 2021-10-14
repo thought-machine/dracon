@@ -10,7 +10,8 @@ import (
 	"github.com/thought-machine/dracon/common/jira/config"
 )
 
-type client struct {
+// Client is a wrapper of a go-jira client with our config on top
+type Client struct {
 	JiraClient    *jira.Client
 	DryRunMode    bool
 	Config        config.Config
@@ -18,8 +19,8 @@ type client struct {
 }
 
 // NewClient returns a client containing the authentication details and the configuration settings
-func NewClient(user, token, url string, dryRun bool, config config.Config) *client {
-	return &client{
+func NewClient(user, token, url string, dryRun bool, config config.Config) *Client {
+	return &Client{
 		JiraClient:    authJiraClient(user, token, url),
 		DryRunMode:    dryRun,
 		Config:        config,
@@ -41,41 +42,41 @@ func authJiraClient(user, token, url string) *jira.Client {
 }
 
 // assembleIssue parses the Dracon message and serializes it into a Jira Issue object
-func (client client) assembleIssue(draconResult map[string]string) *jira.Issue {
+func (Client Client) assembleIssue(draconResult map[string]string) *jira.Issue {
 	// Mappings the Dracon Result fields to their corresponding Jira fields specified in the configuration
-	customFields := client.DefaultFields.CustomFields.Clone()
-	for _, m := range client.Config.Mappings {
+	customFields := Client.DefaultFields.CustomFields.Clone()
+	for _, m := range Client.Config.Mappings {
 		customFields[m.JiraField] = makeCustomField(m.FieldType, []string{draconResult[m.DraconField]})
 	}
 	summary, extra := makeSummary(draconResult)
-	description := makeDescription(draconResult, client.Config.DescriptionExtras)
+	description := makeDescription(draconResult, Client.Config.DescriptionExtras)
 	if extra != "" {
 		description = fmt.Sprintf(".... %s\n%s", extra, description)
 	}
 	return &jira.Issue{
 		Fields: &jira.IssueFields{
-			Project:         client.DefaultFields.Project,
-			Type:            client.DefaultFields.IssueType,
+			Project:         Client.DefaultFields.Project,
+			Type:            Client.DefaultFields.IssueType,
 			Description:     description,
 			Summary:         summary,
-			Components:      client.DefaultFields.Components,
-			AffectsVersions: client.DefaultFields.AffectsVersions,
-			Labels:          client.DefaultFields.Labels,
+			Components:      Client.DefaultFields.Components,
+			AffectsVersions: Client.DefaultFields.AffectsVersions,
+			Labels:          Client.DefaultFields.Labels,
 			Unknowns:        customFields,
 		},
 	}
 }
 
 // CreateIssue creates a new issue in Jira
-func (client client) CreateIssue(draconResult map[string]string) error {
-	issue := client.assembleIssue(draconResult)
+func (Client Client) CreateIssue(draconResult map[string]string) error {
+	issue := Client.assembleIssue(draconResult)
 
-	if client.DryRunMode {
+	if Client.DryRunMode {
 		log.Printf("Dry run mode. The following issue would have been created: '%s'", issue.Fields.Summary)
 		return nil
 	}
 
-	ri, resp, err := client.JiraClient.Issue.Create(issue)
+	ri, resp, err := Client.JiraClient.Issue.Create(issue)
 	if err != nil {
 		body, _ := ioutil.ReadAll(resp.Body)
 		log.Printf("Error occurred posting to Jira. Response body:\n%s", body)
@@ -86,12 +87,12 @@ func (client client) CreateIssue(draconResult map[string]string) error {
 }
 
 // SearchByJQL searches jira instance by JQL and returns results with history
-func (client client) SearchByJQL(jql string) ([]jira.Issue, error) {
+func (Client Client) SearchByJQL(jql string) ([]jira.Issue, error) {
 	var results []jira.Issue
 	startAt := 0
 	maxresults := 100
 	expand := "names,schema,operations,editmeta,changelog,renderedFields"
-	issues, response, err := client.JiraClient.Issue.Search(jql, &jira.SearchOptions{Expand: expand, StartAt: startAt, MaxResults: maxresults}) //maxresults is capped to 100 by attlasian
+	issues, response, err := Client.JiraClient.Issue.Search(jql, &jira.SearchOptions{Expand: expand, StartAt: startAt, MaxResults: maxresults}) //maxresults is capped to 100 by attlasian
 	if err != nil {
 		log.Print(response)
 		return nil, err
@@ -100,7 +101,7 @@ func (client client) SearchByJQL(jql string) ([]jira.Issue, error) {
 	startAt = len(results)
 	log.Print("The query returned ", response.Total, " results")
 	for len(results) < response.Total {
-		issues, response, err = client.JiraClient.Issue.Search(jql, &jira.SearchOptions{Expand: expand, StartAt: startAt, MaxResults: maxresults}) //maxresults is capped to 100 by attlasian
+		issues, response, err = Client.JiraClient.Issue.Search(jql, &jira.SearchOptions{Expand: expand, StartAt: startAt, MaxResults: maxresults}) //maxresults is capped to 100 by attlasian
 		if err != nil {
 			log.Print(response)
 			return nil, err

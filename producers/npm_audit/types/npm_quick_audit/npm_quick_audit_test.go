@@ -1,4 +1,4 @@
-package npm_quick_audit
+package npmquickaudit
 
 import (
 	v1 "github.com/thought-machine/dracon/api/proto/v1"

@@ -1,10 +1,10 @@
-// Package npm_quick_audit provides types and functions for working with audit
+// Package npmquickaudit provides types and functions for working with audit
 // reports from npm's "Quick Audit" endpoint (/-/npm/v1/security/audits/quick)
 // and transforming them into data structures understood by the Dracon enricher.
 // These reports are JSON objects organised by vulnerable package name; they do
 // not contain as much information about the vulnerabilities affecting each
 // package as npm Full Audit reports (hence the name).
-package npm_quick_audit
+package npmquickaudit
 
 import (
 	"encoding/json"
@@ -18,6 +18,7 @@ import (
 	atypes "github.com/thought-machine/dracon/producers/npm_audit/types"
 )
 
+// PrintableType package const, printed as part of the report or errors
 const PrintableType = "npm Quick Audit report"
 
 // Report represents an npm Quick Audit report. The key for Vulnerabilities
@@ -55,6 +56,7 @@ type Advisory struct {
 	Range      string `json:"range"`
 }
 
+// UnmarshalJSON converts NPM Audit JSON results to Advisory structs
 func (a *Advisory) UnmarshalJSON(data []byte) error {
 	// An advisory in the audit report is either a string containing a package
 	// name (which exists elsewhere in the report), or an object representing an
@@ -93,7 +95,7 @@ type Fix struct {
 	Version   string `json:"version"`
 	IsMajor   bool   `json:"isSemVerMajor"`
 }
-
+// UnmarshalJSON transforms between NPM Audit fix json and the Fix struct above
 func (f *Fix) UnmarshalJSON(data []byte) error {
 	var isAvailable bool
 	if err := json.Unmarshal(data, &isAvailable); err == nil {
@@ -147,14 +149,16 @@ func NewReport(report []byte) (atypes.Report, error) {
 	return r, nil
 }
 
+// SetPackagePath helper method to set the npm package path
 func (r *Report) SetPackagePath(packagePath string) {
 	r.PackagePath = packagePath
 }
-
+// Type helper method to set the type
 func (r *Report) Type() string {
 	return PrintableType
 }
 
+// AsIssues transforms between NPM issues and dracon issues
 func (r *Report) AsIssues() []*v1.Issue {
 	issues := make([]*v1.Issue, 0)
 

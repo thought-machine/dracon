@@ -13,24 +13,24 @@ import (
 	"github.com/thought-machine/dracon/producers"
 )
 
-type Jar struct {
+type jar struct {
 	XMLName xml.Name `xml:"Jar"`
 }
 
-type Project struct {
+type project struct {
 	XMLName xml.Name `xml:"Project"`
-	Jar     *Jar     `xml:"Jar"`
+	Jar     *jar     `xml:"Jar"`
 }
 
-type Method struct {
+type method struct {
 	XMLName    xml.Name     `xml:"Method"`
 	Classname  string       `xml:"classname,attr"`
 	Name       string       `xml:"name,attr"`
 	Signature  string       `xml:"signature,attr"`
 	IsStatic   string       `xml:"isStatic,attr"`
-	SourceLine []SourceLine `xml:"SourceLine"`
+	SourceLine []sourceLine `xml:"SourceLine"`
 }
-type SourceLine struct {
+type sourceLine struct {
 	XMLName       xml.Name `xml:"SourceLine"`
 	Classname     string   `xml:"classname,attr"`
 	Start         string   `xml:"start,attr"`
@@ -41,23 +41,23 @@ type SourceLine struct {
 	Sourcepath    string   `xml:"sourcepath,attr"`
 	Role          string   `xml:"role,attr"`
 }
-type Class struct {
+type class struct {
 	XMLName    xml.Name     `xml:"Class"`
 	Classname  string       `xml:"classname,attr"`
 	Role       string       `xml:"role,attr"`
-	SourceLine []SourceLine `xml:"SourceLine"`
+	SourceLine []sourceLine `xml:"SourceLine"`
 }
-type Field struct {
+type field struct {
 	XMLName    xml.Name     `xml:"Field"`
 	Classname  string       `xml:"classname,attr"`
-	SourceLine []SourceLine `xml:"SourceLine"`
+	SourceLine []sourceLine `xml:"SourceLine"`
 }
-type BugInstance struct {
+type bugInstance struct {
 	XMLName      xml.Name     `xml:"BugInstance"`
-	Class        []Class      `xml:"Class"`
-	Method       []Method     `xml:"Method"`
-	SourceLine   []SourceLine `xml:"SourceLine"`
-	Field        []Field      `xml:"Field"`
+	Class        []class      `xml:"Class"`
+	Method       []method     `xml:"Method"`
+	SourceLine   []sourceLine `xml:"SourceLine"`
+	Field        []field      `xml:"Field"`
 	LongMessage  string       `xml:"LongMessage"`
 	ShortMessage string       `xml:"ShortMessage"`
 	Type         string       `xml:"type,attr"`
@@ -66,10 +66,10 @@ type BugInstance struct {
 	Abbrev       string       `xml:"abbrev,attr"`
 	Category     string       `xml:"category,attr"`
 }
-type BugCollection struct {
+type bugCollection struct {
 	XMLName     xml.Name      `xml:"BugCollection"`
-	Project     *Project      `xml:"Project"`
-	BugInstance []BugInstance `xml:"BugInstance"`
+	Project     *project      `xml:"Project"`
+	BugInstance []bugInstance `xml:"BugInstance"`
 }
 
 func loadXML(filename string) ([]byte, error) {
@@ -89,7 +89,7 @@ func readXML(xmlFile []byte) []*v1.Issue {
 	*/
 
 	output := []*v1.Issue{}
-	var bugs BugCollection
+	var bugs bugCollection
 	if len(xmlFile) == 0 {
 		return output
 	}
@@ -122,7 +122,7 @@ func readXML(xmlFile []byte) []*v1.Issue {
 	}
 	return output
 }
-func parseLine(instance BugInstance, sourceLine SourceLine) *v1.Issue {
+func parseLine(instance bugInstance, sourceLine sourceLine) *v1.Issue {
 	return &v1.Issue{
 		Target:      fmt.Sprintf("%s:%s-%s", sourceLine.Sourcepath, sourceLine.Start, sourceLine.End),
 		Type:        instance.Type,

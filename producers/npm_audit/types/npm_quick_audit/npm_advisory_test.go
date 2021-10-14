@@ -1,4 +1,4 @@
-package npm_quick_audit
+package npmquickaudit
 
 import (
 	"testing"

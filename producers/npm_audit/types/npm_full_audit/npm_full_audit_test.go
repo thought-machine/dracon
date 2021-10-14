@@ -1,4 +1,4 @@
-package npm_full_audit
+package npmfullaudit
 
 import (
 	v1 "github.com/thought-machine/dracon/api/proto/v1"

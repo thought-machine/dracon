@@ -29,20 +29,20 @@ func ProcessMessages(allowDuplicates, allowFP bool, sevThreshold int) ([]map[str
 			return nil, 0, err
 		}
 		return messages, discarded, nil
-	} else {
-		log.Print("Parsing Enriched results")
-		responses, err := consumers.LoadEnrichedToolResponse()
-		if err != nil {
-			log.Print("Could not load Enriched tool response: ", err)
-			return nil, 0, err
-		}
-		messages, discarded, err := ProcessEnrichedMessages(responses, allowDuplicates, allowFP, sevThreshold)
-		if err != nil {
-			log.Print("Could not Process Enriched messages: ", err)
-			return nil, 0, err
-		}
-		return messages, discarded, nil
 	}
+	log.Print("Parsing Enriched results")
+	responses, err := consumers.LoadEnrichedToolResponse()
+	if err != nil {
+		log.Print("Could not load Enriched tool response: ", err)
+		return nil, 0, err
+	}
+	messages, discarded, err := ProcessEnrichedMessages(responses, allowDuplicates, allowFP, sevThreshold)
+	if err != nil {
+		log.Print("Could not Process Enriched messages: ", err)
+		return nil, 0, err
+	}
+	return messages, discarded, nil
+
 }
 
 // ProcessRawMessages returns a list of HashMaps of the v1.LaunchToolResponses
@@ -102,10 +102,12 @@ func ProcessEnrichedMessages(responses []*v1.EnrichedLaunchToolResponse, allowDu
 	return messages, discardedMsgs, nil
 }
 
+// GetRawScanInfo returns the non-enriched response's scan info
 func GetRawScanInfo(response *v1.LaunchToolResponse) *v1.ScanInfo {
 	return response.GetScanInfo()
 }
 
+// GetEnrichedScanInfo returns the enriched response's scan info
 func GetEnrichedScanInfo(response *v1.EnrichedLaunchToolResponse) *v1.ScanInfo {
 	return response.GetOriginalResults().GetScanInfo()
 }

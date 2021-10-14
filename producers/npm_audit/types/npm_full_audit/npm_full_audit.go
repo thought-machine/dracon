@@ -1,11 +1,11 @@
-// Package npm_full_audit provides types and functions for working with audit
+// Package npmfullaudit provides types and functions for working with audit
 // reports from npm's "Full Audit" endpoint (/-/npm/v1/security/audits) and
 // transforming them into data structures understood by the Dracon enricher.
 // These reports are JSON objects consisting primarily of "advisories" (a list
 // (of vulnerabilities known to affect the packages in the dependency tree) and
 // "actions" (a list of steps that can be taken to remediate those
 // vulnerabilities).
-package npm_full_audit
+package npmfullaudit
 
 import (
 	"encoding/json"
@@ -16,7 +16,7 @@ import (
 	"github.com/thought-machine/dracon/producers"
 	atypes "github.com/thought-machine/dracon/producers/npm_audit/types"
 )
-
+// PrintableType is helper info to be printed as the end result
 const PrintableType = "npm Full Audit report"
 
 // Report represents an npm Full Audit report. The key for Advisories represents
@@ -70,14 +70,16 @@ func NewReport(report []byte) (atypes.Report, error) {
 	return r, nil
 }
 
+// SetPackagePath registers the path of the npm package for the findings list
 func (r *Report) SetPackagePath(packagePath string) {
 	r.PackagePath = packagePath
 }
-
+// Type is a helper funciton that registers the type of the report
 func (r *Report) Type() string {
 	return PrintableType
 }
 
+// AsIssues is transforms npm audit issues to dracon issues
 func (r *Report) AsIssues() []*v1.Issue {
 	issues := make([]*v1.Issue, 0, len(r.Advisories))
 

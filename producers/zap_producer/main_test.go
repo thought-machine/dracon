@@ -53,7 +53,7 @@ func TestZapOutputWhenOneSiteAndOneAlert(t *testing.T) {
 	assert.NoError(t, err)
 	issues := parseOut(&results)
 	expectedIssues := []*v1.Issue{
-		&v1.Issue{
+		{
 			Target:     "https://thisisanexample.com",
 			Type:       "16",
 			Title:      "X-Content-Type-Options Header Missing",
