@@ -1,10 +1,10 @@
-KIND_VERSION = "0.10.0"
+KIND_VERSION = "0.11.1"
 
 remote_file(
     name = "kind",
     binary = True,
     hashes = [
-        "74767776488508d847b0bb941212c1cb76ace90d9439f4dee256d8a04f1309c6",  # linux-amd64
+        "949f81b3c30ca03a3d4effdecda04f100fa3edc07a28b19400f72ede7c5f0491",  # linux-amd64
     ],
     url = f"https://github.com/kubernetes-sigs/kind/releases/download/v{KIND_VERSION}/kind-{CONFIG.OS}-{CONFIG.ARCH}",
     visibility = ["//scripts/..."],

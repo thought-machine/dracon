@@ -60,7 +60,7 @@ util::prompt_skip() {
 util::waitForRollout() {
   local k8s_yaml kind namespace resource limit attempts
   k8s_yaml="$1"
-  limit=5 # 100 
+  limit=30 # 90 seconds
 
   kind_namespace_resources=($("$YQ_BIN" e -N '[. = .kind + "/" + .metadata.namespace + "/" + .metadata.name]' "$k8s_yaml" | sed 's/\/\//\/default\//g'))
 
