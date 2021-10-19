@@ -515,13 +515,14 @@ go_module(
 
 go_module(
     name = "lib_pq",
-    hashes = ["3d0e8ad6b65db01924c9506a8ae966ed42c56d9ec1785e57fd13e5c30ef0a0e3"],
+    hashes = ["73554178d73fe1067716841ddbfb7270ac0cba58219f2c86ed8d2ed5d49bc13e"],
     install = [
         ".",
         "oid",
+        "scram",
     ],
     module = "github.com/lib/pq",
-    version = "v1.0.0",
+    version = "v1.10.3",
 )
 
 go_module(
