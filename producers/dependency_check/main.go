@@ -21,7 +21,7 @@ type DependencyVulnerability struct {
 	severity    string
 	cvss2       float64
 	description string
-    cve         string
+	cve         string
 }
 
 // UnmarshalJSON returns a list of Dependency Vulns from dependency check json
@@ -64,7 +64,7 @@ func UnmarshalJSON(jsonBytes []byte) []DependencyVulnerability {
 					severity:    vv["severity"].(string),
 					cvss2:       cvss2,
 					description: vv["description"].(string),
-                    cve:         cve,
+					cve:         cve,
 				})
 			}
 		}

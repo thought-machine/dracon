@@ -23,9 +23,9 @@ var (
 	// InResults represents incoming tool output
 	InResults string
 	// OutFile points to the protobuf file where dracon results will be written
-	OutFile   string
+	OutFile string
 	// Append flag will append to the outfile instead of overwriting, useful when there's multiple inresults
-	Append    bool
+	Append bool
 )
 
 const (
