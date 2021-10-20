@@ -104,4 +104,4 @@ func parseResult(r *types.TrivyVulnerability, target string) *v1.Issue {
 		Description: fmt.Sprintf("CVSS Score: %v\nCvssVector: %s\nCve: %s\nCwe: %s\nReference: %s\nOriginal Description:%s\n",
 			r.CVSS.Nvd.V3Score, r.CVSS.Nvd.V3Vector, r.CVE, strings.Join(r.CweIDs[:], ","), r.PrimaryURL, r.Description),
 	}
-
+}
