@@ -1,44 +1,45 @@
 package types
 
+// ElasticSearchFilebeatResult represents how a filebeat result appears in elasticsearch
 type ElasticSearchFilebeatResult struct {
-	Hits         ElasticSearchFilebeatHits         `json:"hits"`
-	Aggregations ElasticSearchFilebeatAggregations `json:"aggregations"`
+	Hits         elasticSearchFilebeatHits         `json:"hits"`
+	Aggregations elasticSearchFilebeatAggregations `json:"aggregations"`
 }
 
-type ElasticSearchFilebeatHits struct {
-	Hits []ElasticSearchFilebeatHit `json:"hits"`
+type elasticSearchFilebeatHits struct {
+	Hits []elasticSearchFilebeatHit `json:"hits"`
 }
 
-type ElasticSearchFilebeatHit struct {
+type elasticSearchFilebeatHit struct {
 	ID     string                      `json:"_id"`
-	Source ElasticSearchFilebeatSource `json:"_source"`
+	Source elasticSearchFilebeatSource `json:"_source"`
 }
 
-type ElasticSearchFilebeatSource struct {
+type elasticSearchFilebeatSource struct {
 	Message   string                    `json:"message"`
 	Timestamp string                    `json:"@timestamp"`
-	Host      ElasticSearchFilebeatHost `json:"host"`
+	Host      elasticSearchFilebeatHost `json:"host"`
 }
 
-type ElasticSearchFilebeatHost struct {
+type elasticSearchFilebeatHost struct {
 	Name string `json:"name"`
 }
 
 // Note that the aggregation field name depends on the request.
-type ElasticSearchFilebeatAggregations struct {
-	Aggregation ElasticSearchFilebeatAggregation `json:"aggregation"`
+type elasticSearchFilebeatAggregations struct {
+	Aggregation elasticSearchFilebeatAggregation `json:"aggregation"`
 }
 
-type ElasticSearchFilebeatAggregation struct {
-	Buckets []ElasticSearchFilebeatBucket `json:"buckets"`
+type elasticSearchFilebeatAggregation struct {
+	Buckets []elasticSearchFilebeatBucket `json:"buckets"`
 }
 
 // Note that the metric field name depends on the request.
-type ElasticSearchFilebeatBucket struct {
+type elasticSearchFilebeatBucket struct {
 	Name   string                      `json:"key"`
-	Metric ElasticSearchFilebeatMetric `json:"metric"`
+	Metric elasticSearchFilebeatMetric `json:"metric"`
 }
 
-type ElasticSearchFilebeatMetric struct {
-	Hits ElasticSearchFilebeatHits `json:"hits"`
+type elasticSearchFilebeatMetric struct {
+	Hits elasticSearchFilebeatHits `json:"hits"`
 }

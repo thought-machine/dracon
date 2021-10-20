@@ -1,4 +1,4 @@
-package npm_quick_audit
+package npmquickaudit
 
 import (
 	v1 "github.com/thought-machine/dracon/api/proto/v1"
@@ -194,7 +194,7 @@ func TestAsIssuesValid(t *testing.T) {
 		MatchHeader("X-Spiferack", "1").
 		Reply(200).
 		AddHeader("Content-Type", "application/json").
-		File("producers/npm_audit/types/npm_quick_audit/npm_advisory_1556")
+		File("producers/npm_audit/types/npmquickaudit/npm_advisory_1556")
 
 	issues := quickAuditReport.AsIssues()
 	assert.True(t, assert.ObjectsAreEqual(quickAuditIssues, issues))

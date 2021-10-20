@@ -70,7 +70,7 @@ class Consumer(ABC):
                     protobuf.ParseFromString(msg_file.read())
                     collected_files.append(copy.deepcopy(protobuf))
 
-                except DecodeError as decode_error:
+                except (DecodeError, UnicodeDecodeError) as decode_error:
                     logger.warning('Unable to parse file %s skipping because of: %s',
                                    filename, str(decode_error))
                     # Note: here skipping is important,

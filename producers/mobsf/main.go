@@ -35,12 +35,13 @@ import (
 	"github.com/thought-machine/dracon/producers/mobsf/report/ios"
 )
 
+// Constants relating to how this producer operates
 const (
 	MobSFBindHost = "127.0.0.1"
 	MobSFBindPort = 8080
 )
 
-var MobSFAPIKey = generateAPIKey()
+var mobSFAPIKey = generateAPIKey()
 
 // parseCLIOptions returns a CLI struct representing the command line options
 // that were passed to this tool.
@@ -94,7 +95,7 @@ func startMobSF() (int, error) {
 		"--daemon", bindArg, "--workers=1", "--threads=10", "--timeout=1800",
 		"MobSF.wsgi:application",
 	)
-	mobSF.Env = append(os.Environ(), "MOBSF_API_KEY="+MobSFAPIKey)
+	mobSF.Env = append(os.Environ(), "MOBSF_API_KEY="+mobSFAPIKey)
 	mobSF.Dir = "/root/Mobile-Security-Framework-MobSF"
 
 	if err := mobSF.Run(); err != nil {
@@ -380,7 +381,7 @@ func uploadProjects(projects []*Project) error {
 			return fmt.Errorf("failed to create API request: %w", err)
 		}
 		req.Header.Set("Content-Type", multipartWriter.FormDataContentType())
-		req.Header.Set("Authorization", MobSFAPIKey)
+		req.Header.Set("Authorization", mobSFAPIKey)
 
 		// Send upload request
 		log.Println("Uploading zip file to MobSF")
@@ -418,7 +419,7 @@ func scanProject(project *Project, exclusions Exclusions) (mreport.Report, error
 	if err != nil {
 		return nil, fmt.Errorf("failed to create API scan request: %w", err)
 	}
-	req.Header.Set("Authorization", MobSFAPIKey)
+	req.Header.Set("Authorization", mobSFAPIKey)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	// Send scan request
@@ -440,7 +441,7 @@ func scanProject(project *Project, exclusions Exclusions) (mreport.Report, error
 	if err != nil {
 		return nil, fmt.Errorf("failed to create API report request: %w", err)
 	}
-	req.Header.Set("Authorization", MobSFAPIKey)
+	req.Header.Set("Authorization", mobSFAPIKey)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	// Send JSON report request

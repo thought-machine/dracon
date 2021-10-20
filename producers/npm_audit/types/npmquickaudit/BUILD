@@ -1,8 +1,8 @@
 go_library(
-    name = "npm_quick_audit",
+    name = "npmquickaudit",
     srcs = [
         "npm_advisory.go",
-        "npm_quick_audit.go",
+        "npmquickaudit.go",
     ],
     visibility = ["//producers/npm_audit/..."],
     deps = [
@@ -13,16 +13,16 @@ go_library(
 )
 
 go_test(
-    name = "npm_quick_audit_test",
+    name = "npmquickaudit_test",
     srcs = [
         "npm_advisory_test.go",
-        "npm_quick_audit_test.go",
+        "npmquickaudit_test.go",
     ],
     data = [
-        ":npm_quick_audit_test_data",
+        ":npmquickaudit_test_data",
     ],
     deps = [
-        ":npm_quick_audit",
+        ":npmquickaudit",
         "//api/proto:v1",
         "//producers",
         "//third_party/go:h2non_gock",
@@ -31,11 +31,11 @@ go_test(
 )
 
 filegroup(
-    name = "npm_quick_audit_test_data",
+    name = "npmquickaudit_test_data",
     srcs = [
         "npm_advisory_1556",
         "npm_advisory_no_advisorydata",
         "npm_advisory_not_json",
     ],
-    visibility = [":npm_quick_audit_test"],
+    visibility = [":npmquickaudit_test"],
 )

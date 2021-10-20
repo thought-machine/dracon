@@ -11,7 +11,7 @@ import (
 	"github.com/thought-machine/dracon/pkg/enrichment/db"
 	"github.com/thought-machine/dracon/producers/jira_producer/sync"
 )
-
+// Command Line parameters
 var (
 	AuthUser         string
 	AuthToken        string

@@ -80,7 +80,7 @@ var (
 		},
 	}
 
-	sampleClient = &client{
+	sampleClient = &Client{
 		JiraClient:    authJiraClient("test_user", "test_token", "test_url"),
 		DryRunMode:    true,
 		Config:        sampleConfig,

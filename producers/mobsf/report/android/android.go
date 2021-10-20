@@ -19,6 +19,7 @@ type Report struct {
 	CodeAnalysisExclusions map[string]bool                        `json:"-"`
 }
 
+// NewReport instantiates a report
 func NewReport(report []byte, exclusions map[string]bool) (mreport.Report, error) {
 	var r *Report
 	if err := json.Unmarshal(report, &r); err != nil {
@@ -30,10 +31,12 @@ func NewReport(report []byte, exclusions map[string]bool) (mreport.Report, error
 	return r, nil
 }
 
+// SetRootDir is a helper method
 func (r *Report) SetRootDir(path string) {
 	r.RootDir = path
 }
 
+// AsIssues returns mobsf android findings as dracon issues
 func (r *Report) AsIssues() []*v1.Issue {
 	issues := make([]*v1.Issue, 0)
 

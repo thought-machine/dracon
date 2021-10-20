@@ -7,7 +7,7 @@ type ZapOut struct {
 	Site      []ZapSites `json:"site"`
 }
 
-// ZapSite represents a zap site section
+// ZapSites represents a zap site section
 type ZapSites struct {
 	Name   string      `json:"@name"`
 	Host   string      `json:"@host"`
@@ -18,13 +18,13 @@ type ZapSites struct {
 
 // ZapInstances represents a zap occurrence for a specific alert
 type ZapInstances struct {
-	Uri    string `json:"uri"`
+	URI    string `json:"uri"`
 	Method string `json:"method"`
 }
 
-// ZapAlert represents a zap vulnerability
+// ZapAlerts represents a zap vulnerability
 type ZapAlerts struct {
-	PluginId    string         `json:"Id"`
+	PluginID    string         `json:"Id"`
 	AlertRef    string         `json:"alertRef"`
 	Alert       string         `json:"alert"`
 	Name        string         `json:"name"`
@@ -37,7 +37,7 @@ type ZapAlerts struct {
 	Solution    string         `json:"solution"`
 	OtherInfo   string         `json:"otherinfo"`
 	Reference   string         `json:"reference"`
-	CweId       string         `json:"cweid"`
-	WascId      string         `json:"wascid"`
-	SourceId    string         `json:"sourceid"`
+	CweID       string         `json:"cweid"`
+	WascID      string         `json:"wascid"`
+	SourceID    string         `json:"sourceid"`
 }

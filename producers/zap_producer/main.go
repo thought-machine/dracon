@@ -45,7 +45,7 @@ func parseIssue(r *types.ZapAlerts, target string) *v1.Issue {
 	cvss := 0.0
 	return &v1.Issue{
 		Target:      target,
-		Type:        r.CweId,
+		Type:        r.CweID,
 		Title:       r.Name,
 		Severity:    riskcodeToSeverity(r.RiskCode),
 		Confidence:  zapconfidenceToConfidence(r.Confidence),

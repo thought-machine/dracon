@@ -14,13 +14,13 @@ type Report interface {
 	// processed by the Dracon enricher.
 	AsIssues() []*v1.Issue
 }
-
+// CodeAnalysisFinding Describes a mobsf finding
 type CodeAnalysisFinding struct {
 	Files    map[string]string    `json:"files"`
-	Metadata CodeAnalysisMetadata `json:"metadata"`
+	Metadata codeAnalysisMetadata `json:"metadata"`
 }
 
-type CodeAnalysisMetadata struct {
+type codeAnalysisMetadata struct {
 	CVSS        float64 `json:"cvss"`
 	CWE         string  `json:"cwe"`
 	Description string  `json:"description"`

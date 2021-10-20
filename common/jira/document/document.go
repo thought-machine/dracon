@@ -105,6 +105,7 @@ func confidenceToText(confidence v1.Confidence) string {
 	}
 }
 
+// TextToSeverity maps between dracon Severity and Jira severity textual fields
 func TextToSeverity(severity string) v1.Severity {
 
 	// The Severity field is normally mapped into the jira 'Impact' field, so the assumption
@@ -122,6 +123,8 @@ func TextToSeverity(severity string) v1.Severity {
 		return v1.Severity_SEVERITY_INFO
 	}
 }
+
+// TextToConfidence maps between dracon Confidence and a it's ext representation, used for adding the Confidence to Jira description.
 func TextToConfidence(confidence string) v1.Confidence {
 	switch confidence {
 

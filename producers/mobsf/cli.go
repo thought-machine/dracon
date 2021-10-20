@@ -54,9 +54,8 @@ func (e *Exclusions) Set(value string) error {
 func (e *Exclusions) SetFor(platform string) map[string]bool {
 	if _, found := e.PerPlatform[platform]; found {
 		return e.PerPlatform[platform]
-	} else {
-		return map[string]bool{}
 	}
+	return map[string]bool{}
 }
 
 // CLI represents the command line options supported by this tool.

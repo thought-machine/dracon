@@ -6,6 +6,7 @@ import (
 	v1 "github.com/thought-machine/dracon/api/proto/v1"
 )
 
+// FullDocument represents a complete slack message that will be sent if the long-format switch is set
 type FullDocument struct {
 	ScanStartTime time.Time     `json:"scan_start_time"`
 	ScanID        string        `json:"scan_id"`
