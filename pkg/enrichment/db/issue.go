@@ -23,7 +23,7 @@ type issue struct {
     Confidence  int32   `db:"confidence"`
     Description string  `db:"description"`
     Source      string  `db:"source"`
-    CVE			string  `db:"cve"`
+    CVE         string  `db:"cve"`
 }
 
 func toDBIssue(i *v1.EnrichedIssue) (*issue, error) {
