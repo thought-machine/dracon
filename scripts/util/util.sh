@@ -60,7 +60,7 @@ util::prompt_skip() {
 util::waitForRollout() {
   local k8s_yaml kind namespace resource limit attempts
   k8s_yaml="$1"
-  limit=100
+  limit=30 # 90 seconds (30 attempts * sleep 3)
 
   kind_namespace_resources=($("$YQ_BIN" e -N '[. = .kind + "/" + .metadata.namespace + "/" + .metadata.name]' "$k8s_yaml" | sed 's/\/\//\/default\//g'))
 
@@ -72,6 +72,7 @@ util::waitForRollout() {
     if [[ "$kind" =~ ^(Deployment|Statefulset)$ ]]; then
       util::rinfor "waiting for deployment ${namespace}/${resource}"
       rollout_status_cmd="kubectl -n ${namespace} rollout status ${kind}/${resource}"
+      
       until $rollout_status_cmd > /dev/null || [ $attempts -eq $limit ]; do
         attempts=$((attempts + 1))
         sleep 3
@@ -79,6 +80,7 @@ util::waitForRollout() {
     fi
     if [ $attempts -eq $limit ]; then
       util::rerror "Deployment '${namespace}/${resource}' did not roll out $($rollout_status_cmd)"
+      kubectl -n ${namespace} describe ${kind} ${resource}
     fi
   done  
 }
