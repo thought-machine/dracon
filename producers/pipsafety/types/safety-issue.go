@@ -22,7 +22,7 @@ func (i *SafetyIssue) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
-	re := regexp.MustCompile(`CVE-\d{4}-\d{4,7}`)
+	re := regexp.MustCompile(`CVE-\d{4}-\d+`)
 	match := re.FindStringSubmatch(string(data))
 	cve := ""
 	if len(match) > 0 {
