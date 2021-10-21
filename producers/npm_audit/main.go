@@ -10,6 +10,7 @@ import (
 	"flag"
 	"log"
 )
+
 // producer flags
 var (
 	PackagePath string

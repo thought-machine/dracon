@@ -14,6 +14,7 @@ type Report interface {
 	// processed by the Dracon enricher.
 	AsIssues() []*v1.Issue
 }
+
 // CodeAnalysisFinding Describes a mobsf finding
 type CodeAnalysisFinding struct {
 	Files    map[string]string    `json:"files"`

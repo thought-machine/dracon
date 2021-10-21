@@ -10,4 +10,7 @@ if ! "${GO_LINT}" -set_exit_status ${dirs[@]}; then
     exit 1
 fi
 
+util::infor "running go vet"
+"${GO_VET}" ${dirs[@]}
+
 util::rsuccess "linted go files"

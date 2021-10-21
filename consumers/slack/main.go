@@ -12,7 +12,7 @@ import (
 
 var (
 	// Webhook is the webhook url to post to
-	Webhook    string
+	Webhook string
 	// LongFormat : boolean, False by default, if set to True it dumps all findings in JSON format to the webhook url
 	LongFormat bool
 )

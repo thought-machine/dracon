@@ -8,6 +8,12 @@ go_toolchain(
     version = "1.16.3",
 )
 
+sh_cmd(
+    name = "go_vet",
+    data = [":go_tool|go"],
+    cmd = "$(out_exe :go_tool|go) vet \\\$@",
+)
+
 go_module(
     name = "golint",
     binary = True,

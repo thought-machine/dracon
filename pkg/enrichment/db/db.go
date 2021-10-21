@@ -102,7 +102,7 @@ func getSchemaSearchPathFromConnStr(connStr string) (string, error) {
 
 	if err == nil && url.Scheme == "postgres" {
 		return getSchemaSearchPathFromURL(url)
-	} 
+	}
 	return getSchemaSearchPathFromKV(connStr)
 }
 
