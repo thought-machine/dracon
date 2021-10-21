@@ -95,6 +95,7 @@ type Fix struct {
 	Version   string `json:"version"`
 	IsMajor   bool   `json:"isSemVerMajor"`
 }
+
 // UnmarshalJSON transforms between NPM Audit fix json and the Fix struct above
 func (f *Fix) UnmarshalJSON(data []byte) error {
 	var isAvailable bool
@@ -153,6 +154,7 @@ func NewReport(report []byte) (atypes.Report, error) {
 func (r *Report) SetPackagePath(packagePath string) {
 	r.PackagePath = packagePath
 }
+
 // Type helper method to set the type
 func (r *Report) Type() string {
 	return PrintableType

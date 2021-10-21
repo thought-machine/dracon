@@ -16,6 +16,7 @@ import (
 	"github.com/thought-machine/dracon/producers"
 	atypes "github.com/thought-machine/dracon/producers/npm_audit/types"
 )
+
 // PrintableType is helper info to be printed as the end result
 const PrintableType = "npm Full Audit report"
 
@@ -74,6 +75,7 @@ func NewReport(report []byte) (atypes.Report, error) {
 func (r *Report) SetPackagePath(packagePath string) {
 	r.PackagePath = packagePath
 }
+
 // Type is a helper funciton that registers the type of the report
 func (r *Report) Type() string {
 	return PrintableType

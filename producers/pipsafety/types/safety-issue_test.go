@@ -30,11 +30,13 @@ func TestUnmarshalJSON(t *testing.T) {
 		CurrentVersion:    "2.2.6",
 		Description:       "Aegea 2.2.7 avoids CVE-2018-1000805.",
 		VersionConstraint: "<2.2.7",
+		Cve:               "CVE-2018-1000805",
 	}, {
 		Name:              "aegea",
 		CurrentVersion:    "2.2.6",
 		Description:       "Aegea 2.2.7 avoids CVE-2018-1000805.",
 		VersionConstraint: "<2.2.7",
+		Cve:               "CVE-2018-1000805",
 	}}
 	safetyIssues := []SafetyIssue{}
 	err := json.Unmarshal([]byte(exampleOutput), &safetyIssues)

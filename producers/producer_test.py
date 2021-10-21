@@ -19,6 +19,7 @@ class TestProducer(unittest.TestCase):
                     target="/dracon/source/foobar",
                     title="/dracon/source/barfoo",
                     description="/dracon/source/example.yaml",
+                    cve="123-321",
                 )
             ])
             fp.flush()
@@ -31,7 +32,8 @@ class TestProducer(unittest.TestCase):
                     target="./foobar",
                     title="./barfoo",
                     description="./example.yaml",
-                    source="unknown"
+                    source="unknown",
+                    cve="123-321"
                 )]
             ), pblaunch)
 

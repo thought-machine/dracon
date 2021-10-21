@@ -87,7 +87,7 @@ func TestZapOutputWhenTwoSitesAndMultipleAlerts(t *testing.T) {
 	assert.NoError(t, err)
 	issues := parseOut(&results)
 	expectedIssues := []*v1.Issue{
-		&v1.Issue{
+		{
 			Target:     "https://thisisanexample.com",
 			Type:       "16",
 			Title:      "X-Content-Type-Options Header Missing",
@@ -99,7 +99,7 @@ func TestZapOutputWhenTwoSitesAndMultipleAlerts(t *testing.T) {
 				"<p>Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.</p><p>If possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing.</p>",
 				"<p>http://msdn.microsoft.com/en-us/library/ie/gg622941%28v=vs.85%29.aspx</p><p>https://owasp.org/www-community/Security_Headers</p>"),
 		},
-		&v1.Issue{
+		{
 			Target:     "https://thisisanexample.com",
 			Type:       "16",
 			Title:      "X-Frame-Options Header Not Set",
@@ -111,7 +111,7 @@ func TestZapOutputWhenTwoSitesAndMultipleAlerts(t *testing.T) {
 				"<p>Most modern Web browsers support the X-Frame-Options HTTP header. Ensure it's set on all web pages returned by your site (if you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. ALLOW-FROM allows specific websites to frame the web page in supported web browsers).</p>",
 				"<p>https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options</p>"),
 		},
-		&v1.Issue{
+		{
 			Target:     "https://thisithesecondexample.com",
 			Type:       "16",
 			Title:      "X-Content-Type-Options Header Missing",
