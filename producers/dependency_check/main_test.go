@@ -20,7 +20,7 @@ func TestParseIssues(t *testing.T) {
 		Cvss:        7.5,
 		Confidence:  v1.Confidence_CONFIDENCE_MEDIUM,
 		Description: ".NET Core 1.0, 1.1, and 2.0 allow an unauthenticated attacker to remotely cause a denial of service attack against a .NET Core web application by improperly parsing certificate data. A denial of service vulnerability exists when .NET Core improperly handles parsing certificate data, aka \".NET CORE Denial Of Service Vulnerability\".",
-		Cve: "CVE-2017-11770",
+		Cve:         "CVE-2017-11770",
 	}
 	assert.Equal(t, issues[0].Target, expectedIssue.Target)
 	assert.Equal(t, issues[0].Type, expectedIssue.Type)

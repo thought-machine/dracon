@@ -23,7 +23,7 @@ type issue struct {
 	Confidence  int32   `db:"confidence"`
 	Description string  `db:"description"`
 	Source      string  `db:"source"`
-	CVE			string  `db:"cve"`
+	CVE         string  `db:"cve"`
 }
 
 func toDBIssue(i *v1.EnrichedIssue) (*issue, error) {
@@ -78,7 +78,7 @@ func toEnrichedIssue(i *issue) (*v1.EnrichedIssue, error) {
 			Confidence:  v1.Confidence(i.Confidence),
 			Description: i.Description,
 			Source:      i.Source,
-			Cve:		 i.CVE,
+			Cve:         i.CVE,
 		},
 	}, nil
 }
@@ -104,35 +104,35 @@ func (db *DB) CreateIssue(ctx context.Context, eI *v1.EnrichedIssue) error {
 	}
 	_, err = tx.NamedExec(`INSERT INTO
 issues (
-	"target",
-	"type",
-	"title",
-	severity,
-	cvss,
-	confidence,
-	"description",
-	source,
-	"hash",
-	first_seen,
-	occurrences,
-	false_positive,
-	updated_at,
-	cve
+    "target",
+    "type",
+    "title",
+    severity,
+    cvss,
+    confidence,
+    "description",
+    source,
+    "hash",
+    first_seen,
+    occurrences,
+    false_positive,
+    updated_at,
+    cve
 ) VALUES (
-	:target,
-	:type,
-	:title,
-	:severity,
-	:cvss,
-	:confidence,
-	:description,
-	:source,
-	:hash,
-	:first_seen,
-	:occurrences,
-	:false_positive,
-	:updated_at,
-	:cve);`,
+    :target,
+    :type,
+    :title,
+    :severity,
+    :cvss,
+    :confidence,
+    :description,
+    :source,
+    :hash,
+    :first_seen,
+    :occurrences,
+    :false_positive,
+    :updated_at,
+    :cve);`,
 		map[string]interface{}{
 			"target":         i.Target,
 			"type":           i.Type,
@@ -147,7 +147,7 @@ issues (
 			"occurrences":    i.Occurrences,
 			"false_positive": i.FalsePositive,
 			"updated_at":     i.UpdatedAt,
-			"cve":			  i.CVE,
+			"cve":            i.CVE,
 		},
 	)
 	if err != nil {
@@ -169,8 +169,8 @@ func (db *DB) UpdateIssue(ctx context.Context, eI *v1.EnrichedIssue) error {
 	}
 	_, err = tx.NamedExec(`UPDATE issues
 SET
-	occurrences=:occurrences,
-	updated_at=:updated_at
+    occurrences=:occurrences,
+    updated_at=:updated_at
 WHERE "hash"=:hash;`,
 		map[string]interface{}{
 			"occurrences": i.Occurrences,

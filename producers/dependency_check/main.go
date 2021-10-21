@@ -64,7 +64,7 @@ func UnmarshalJSON(jsonBytes []byte) []DependencyVulnerability {
 					severity:    vv["severity"].(string),
 					cvss2:       cvss2,
 					description: vv["description"].(string),
-					cve:		 cve,
+					cve:         cve,
 				})
 			}
 		}
