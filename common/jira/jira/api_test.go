@@ -46,6 +46,7 @@ var (
 		"description":     "this is a test description",
 		"first_found":     "0001-01-01T00:00:00Z",
 		"false_positive":  "true",
+		"cve":             "CVE-0000-99999",
 	}
 
 	expIssue = jira.Issue{

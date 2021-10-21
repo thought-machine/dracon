@@ -27,6 +27,7 @@ func TestCountEnrichedMessages(t *testing.T) {
 			Target:      "//foo1/bar1:baz2",
 			Title:       "Unit Test Title",
 			Type:        "test type",
+			Cve:         "CVE-0000-99999",
 		}}
 	expectedMessage := 2
 	response := []*v1.EnrichedLaunchToolResponse{
@@ -52,6 +53,7 @@ func TestCountRawMessages(t *testing.T) {
 		Target:      "//foo1/bar1:baz2",
 		Title:       "Unit Test Title",
 		Type:        "test type",
+		Cve:         "CVE-0000-99999",
 	}
 	expectedMessage := 3
 	response := []*v1.LaunchToolResponse{{Issues: []*v1.Issue{eIssue, eIssue, eIssue}, ScanInfo: &v1.ScanInfo{}}}
@@ -65,7 +67,7 @@ func TestProcessEnrichedMessages(t *testing.T) {
 	tstamp, _ = time.Parse("2008-01-02T15:04:05.000Z", "2020-04-13 11:51:53+01:00")
 	updatedAt, _ := ptypes.TimestampProto(tstamp)
 
-	expectedMessage := `{"scan_start_time":"0001-01-01T00:00:00Z","scan_id":"babbb83-4627-41c6-8ba0-70ee866290e9","tool_name":"test","source":"//foo/bar:baz","target":"//foo1/bar1:baz2","type":"test type","title":"Unit Test Title","severity":0,"cvss":0,"confidence":0,"description":"this is a test description","first_found":"0001-01-01T00:00:00Z","count":2,"false_positive":true}`
+	expectedMessage := `{"scan_start_time":"0001-01-01T00:00:00Z","scan_id":"babbb83-4627-41c6-8ba0-70ee866290e9","tool_name":"test","source":"//foo/bar:baz","target":"//foo1/bar1:baz2","type":"test type","title":"Unit Test Title","severity":0,"cvss":0,"confidence":0,"description":"this is a test description","first_found":"0001-01-01T00:00:00Z","count":2,"false_positive":true,"cve":"CVE-0000-99999"}`
 	response := []*v1.EnrichedLaunchToolResponse{
 		{
 			OriginalResults: &v1.LaunchToolResponse{
@@ -80,6 +82,7 @@ func TestProcessEnrichedMessages(t *testing.T) {
 						Target:      "//foo1/bar1:baz2",
 						Title:       "Unit Test Title",
 						Type:        "test type",
+						Cve:         "CVE-0000-99999",
 					},
 				},
 				ScanInfo: &v1.ScanInfo{
@@ -103,6 +106,7 @@ func TestProcessEnrichedMessages(t *testing.T) {
 						Target:      "//foo1/bar1:baz2",
 						Title:       "Unit Test Title",
 						Type:        "test type",
+						Cve:         "CVE-0000-99999",
 					},
 				},
 			},
@@ -116,7 +120,7 @@ func TestProcessEnrichedMessages(t *testing.T) {
 func TestProcessRawMessages(t *testing.T) {
 	tstamp, _ := time.Parse("2006-01-02T15:04:05.000Z", "2020-04-13 11:51:53+01:00")
 	startTime, _ := ptypes.TimestampProto(tstamp)
-	expectedMessage := `{"scan_start_time":"0001-01-01T00:00:00Z","scan_id":"babbb83-4627-41c6-8ba0-70ee866290e9","tool_name":"test","source":"//foo/bar:baz","target":"//foo1/bar1:baz2","type":"test type","title":"Unit Test Title","severity":0,"cvss":0,"confidence":0,"description":"this is a test description","first_found":"0001-01-01T00:00:00Z","count":1,"false_positive":false}`
+	expectedMessage := `{"scan_start_time":"0001-01-01T00:00:00Z","scan_id":"babbb83-4627-41c6-8ba0-70ee866290e9","tool_name":"test","source":"//foo/bar:baz","target":"//foo1/bar1:baz2","type":"test type","title":"Unit Test Title","severity":0,"cvss":0,"confidence":0,"description":"this is a test description","first_found":"0001-01-01T00:00:00Z","count":1,"false_positive":false,"cve":"CVE-0000-99999"}`
 
 	response := []*v1.LaunchToolResponse{
 		{
@@ -131,6 +135,7 @@ func TestProcessRawMessages(t *testing.T) {
 					Target:      "//foo1/bar1:baz2",
 					Title:       "Unit Test Title",
 					Type:        "test type",
+					Cve:         "CVE-0000-99999",
 				},
 			},
 			ScanInfo: &v1.ScanInfo{

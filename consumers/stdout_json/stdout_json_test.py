@@ -38,6 +38,7 @@ class TestJSONConsumer(unittest.TestCase):
         issue.description = "test.description"
         issue.severity = issue_pb2.Severity.SEVERITY_LOW
         issue.confidence = issue_pb2.Confidence.CONFIDENCE_LOW
+        issue.cve = "CVE-0000-99999"
 
         scan_results.issues.extend([issue])
         first_seen = Timestamp()
@@ -110,7 +111,8 @@ class TestJSONConsumer(unittest.TestCase):
             'description': "test.description",
             'first_found': '',
             'count': 1,
-            'false_positive': ''
+            'false_positive': '',
+            'cve': 'CVE-0000-99999',
         }
 
         self.config.pvc_location = self.raw_dtemp

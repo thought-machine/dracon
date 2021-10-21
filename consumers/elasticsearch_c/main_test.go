@@ -36,6 +36,7 @@ var (
 		FirstFound:     scanStartTime,
 		Count:          2,
 		FalsePositive:  false,
+		CVE:            "CVE-0000-99999",
 	})
 )
 

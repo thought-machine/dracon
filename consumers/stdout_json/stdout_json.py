@@ -68,7 +68,8 @@ class StdoutJsonConsumer(Consumer):
                     'description': issue.description,
                     'first_found': first_found,
                     'count': count,
-                    'false_positive': false_positive
+                    'false_positive': false_positive,
+                    'cve':  issue.cve,
                 }
                 self.print_data(data)
 

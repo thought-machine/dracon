@@ -103,6 +103,7 @@ func getRawIssue(scanStartTime time.Time, res *v1.LaunchToolResponse, iss *v1.Is
 		FirstFound:    scanStartTime,
 		Count:         1,
 		FalsePositive: false,
+		CVE:           iss.GetCve(),
 	})
 	if err != nil {
 		return []byte{}, err
@@ -161,6 +162,7 @@ func getEnrichedIssue(scanStartTime time.Time, res *v1.EnrichedLaunchToolRespons
 		FalsePositive:  iss.GetFalsePositive(),
 		SeverityText:   severtiyToText(iss.GetRawIssue().GetSeverity()),
 		ConfidenceText: confidenceToText(iss.GetRawIssue().GetConfidence()),
+		CVE:            iss.GetRawIssue().GetCve(),
 	})
 	if err != nil {
 		return []byte{}, err
@@ -185,6 +187,7 @@ type esDocument struct {
 	FirstFound     time.Time     `json:"first_found"`
 	Count          uint64        `json:"count"`
 	FalsePositive  bool          `json:"false_positive"`
+	CVE            string        `json:"cve"`
 }
 
 var esClient interface{}
