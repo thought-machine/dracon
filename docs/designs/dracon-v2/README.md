@@ -6,7 +6,7 @@ Dracon's original interface has been around in its current state since the first
 
 - Upgrade and support the latest version of [Tekton Pipelines][0] using `tekton.dev/v1beta1`
   - `tekton.dev/v1alpha1.PipelineResource` is deprecated in favour of [_Tasks_][1].
-  - Replace [Minio][2] with new [_Workspace_][3] features. TODO: use NFS, deploy NFS server alongside Tekton.
+  - Replace [Minio][2] with new [_Workspace_][3] features. TODO: use ceph, deploy ceph with [Rook](https://rook.io/)
   - Use [Directed Acyclic Graph (DAG)][4] feature to order [_Tasks_][1].
 - Use [Kustomize][5] instead of our own `dracon` patching and templating binary.
   - [_Components_][6] can be used to package Dracon _Producers_ and _Consumers_ as building blocks.
