@@ -3,6 +3,7 @@
 package producers
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"flag"
@@ -53,12 +54,31 @@ func ParseFlags() error {
 	return nil
 }
 
+func ReadLines() ([][]byte, error) {
+	file, err := os.Open(InResults)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner((file))
+
+	var result [][]byte
+
+	for scanner.Scan() {
+		result = append(result, scanner.Bytes())
+	}
+
+	return result, nil
+}
+
 // ReadInFile returns the contents of the file given by InResults.
 func ReadInFile() ([]byte, error) {
 	file, err := os.Open(InResults)
 	if err != nil {
 		return nil, err
 	}
+	defer file.Close()
 
 	buffer := new(bytes.Buffer)
 	buffer.ReadFrom(file)
