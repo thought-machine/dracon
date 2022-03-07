@@ -196,8 +196,8 @@ func TestParseValidReportContainsAllSupportedFields(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, report)
 
-	assert.NotNil(t, report.Summary)
-	assert.Len(t, report.AuditAdvisory, 2)
+	assert.NotNil(t, report.AuditSummary)
+	assert.Len(t, report.AuditAdvisories, 2)
 	assert.Len(t, report.AuditActions, 1)
 }
 
@@ -209,9 +209,9 @@ func TestParseValidReportSummary(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, report)
 
-	assert.NotNil(t, report.Summary)
+	assert.NotNil(t, report.AuditSummary)
 
-	expectedSummaryData := SummaryData{
+	expectedSummaryData := AuditSummaryData{
 		Vulnerabilities: Vulnerabilities{
 			Info:     1,
 			Low:      10,
@@ -225,7 +225,7 @@ func TestParseValidReportSummary(t *testing.T) {
 		TotalDependencies:    6274,
 	}
 
-	assert.True(t, reflect.DeepEqual(&expectedSummaryData, report.Summary), report.Summary)
+	assert.True(t, reflect.DeepEqual(&expectedSummaryData, report.AuditSummary), report.AuditSummary)
 }
 
 func TestParseValidReportAdvisories(t *testing.T) {
@@ -236,9 +236,9 @@ func TestParseValidReportAdvisories(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, report)
 
-	assert.Len(t, report.AuditAdvisory, 2)
+	assert.Len(t, report.AuditAdvisories, 2)
 
-	expectedAdvisories := []*AuditData{
+	expectedAdvisories := []*AuditAdvisoryData{
 		{
 			Resolution: AuditResolution{
 				Id:       1004946,
@@ -339,7 +339,7 @@ func TestParseValidReportAdvisories(t *testing.T) {
 		},
 	}
 
-	assert.True(t, reflect.DeepEqual(expectedAdvisories, report.AuditAdvisory), report.AuditAdvisory)
+	assert.True(t, reflect.DeepEqual(expectedAdvisories, report.AuditAdvisories), report.AuditAdvisories)
 }
 
 func TestParseValidReportActions(t *testing.T) {
@@ -382,7 +382,7 @@ func TestParseValidReportAsIssues(t *testing.T) {
 
 	assert.Nil(t, err)
 
-	assert.Len(t, report.AuditAdvisory, 2)
+	assert.Len(t, report.AuditAdvisories, 2)
 
 	issues := report.AsIssues()
 	assert.Len(t, issues, 2)

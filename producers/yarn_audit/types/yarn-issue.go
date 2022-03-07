@@ -44,9 +44,9 @@ func (yl *YarnAuditLine) UnmarshalJSON(data []byte) error {
 
 	switch typ.Type {
 	case "auditSummary":
-		yl.Data = new(SummaryData)
+		yl.Data = new(AuditSummaryData)
 	case "auditAdvisory":
-		yl.Data = new(AuditData)
+		yl.Data = new(AuditAdvisoryData)
 	case "auditAction":
 		yl.Data = new(AuditActionData)
 	default:
@@ -64,12 +64,12 @@ type AuditActionData struct {
 	Action     AuditAction `json:"action"`
 }
 
-type AuditData struct {
+type AuditAdvisoryData struct {
 	Resolution AuditResolution `json:"resolution"`
 	Advisory   Advisory        `json:"advisory"`
 }
 
-func (audit *AuditData) AsIssue() *v1.Issue {
+func (audit *AuditAdvisoryData) AsIssue() *v1.Issue {
 	var targetName string
 	if audit.Resolution.Path != "" {
 		targetName = audit.Resolution.Path + ": "
@@ -87,7 +87,7 @@ func (audit *AuditData) AsIssue() *v1.Issue {
 	}
 }
 
-type SummaryData struct {
+type AuditSummaryData struct {
 	Vulnerabilities      Vulnerabilities `json:"vulnerabilities"`
 	Dependencies         int             `json:"dependencies"`
 	DevDependencies      int             `json:"devDependencies"`
@@ -174,9 +174,9 @@ type Contact struct {
 }
 
 type YarnAuditReport struct {
-	AuditAdvisory []*AuditData
+	AuditAdvisories []*AuditAdvisoryData
 	AuditActions  []*AuditActionData
-	Summary       *SummaryData
+	AuditSummary       *AuditSummaryData
 }
 
 func NewReport(reportLines [][]byte) (*YarnAuditReport, []error) {
@@ -193,17 +193,17 @@ func NewReport(reportLines [][]byte) (*YarnAuditReport, []error) {
 		} else {
 
 			switch auditLine.Data.(type) {
-			case *SummaryData:
-				report.Summary = auditLine.Data.(*SummaryData)
-			case *AuditData:
-				report.AuditAdvisory = append(report.AuditAdvisory, auditLine.Data.(*AuditData))
+			case *AuditSummaryData:
+				report.AuditSummary = auditLine.Data.(*AuditSummaryData)
+			case *AuditAdvisoryData:
+				report.AuditAdvisories = append(report.AuditAdvisories, auditLine.Data.(*AuditAdvisoryData))
 			case *AuditActionData:
 				report.AuditActions = append(report.AuditActions, auditLine.Data.(*AuditActionData))
 			}
 		}
 	}
 
-	if len(report.AuditAdvisory) > 0 {
+	if len(report.AuditAdvisories) > 0 {
 		return &report, errors
 	}
 
@@ -213,7 +213,7 @@ func NewReport(reportLines [][]byte) (*YarnAuditReport, []error) {
 func (r *YarnAuditReport) AsIssues() []*v1.Issue {
 	issues := make([]*v1.Issue, 0)
 
-	for _, audit := range r.AuditAdvisory {
+	for _, audit := range r.AuditAdvisories {
 		issues = append(issues, audit.AsIssue())
 	}
 
