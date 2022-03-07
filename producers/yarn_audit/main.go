@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/thought-machine/dracon/producers/yarn_audit/types"
-	"log"
-
 	"github.com/thought-machine/dracon/producers"
+	"github.com/thought-machine/dracon/producers/yarn_audit/types"
+
+	"log"
 )
 
 func main() {

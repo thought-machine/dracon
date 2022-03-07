@@ -25,8 +25,7 @@ func TestParseInvalidJSON(t *testing.T) {
 
 // In reality these would be single lines, but for readability in test these should also work
 var fullYarnJSONLines [][]byte = [][]byte{
-	[]byte(`
-	{
+	[]byte(`{
     "type": "auditAdvisory",
     "data": {
       "resolution": {
@@ -78,28 +77,43 @@ var fullYarnJSONLines [][]byte = [][]byte{
       }
     }
   }`),
-	[]byte(`
-  {
+	[]byte(`{
+    "type": "unsupported",
+    "data": {
+      "vulnerabilities": {
+        "info": 1,
+        "low": 10,
+        "moderate": 177,
+        "high": 94,
+        "critical": 4
+      },
+      "dependencies": 6274,
+      "devDependencies": 0,
+      "optionalDependencies": 0,
+      "totalDependencies": 6274
+    }
+  }`),
+	[]byte(`{
     "type": "auditAdvisory",
     "data": {
       "resolution": {
-        "id": 1004946,
+        "id": 1004947,
         "path": "advisory2Path",
-        "dev": false,
+        "dev": true,
         "optional": false,
         "bundled": false
       },
       "advisory": {
         "findings": [
           {
-            "version": "5.0.0",
+            "version": "1.1.0",
             "paths": [
               "some/path",
               "another/path"
             ]
           },
           {
-            "version": "5.0.0",
+            "version": "1.1.0",
             "paths": [
               "more/findings/path"
             ]
@@ -108,7 +122,7 @@ var fullYarnJSONLines [][]byte = [][]byte{
         "metadata": null,
         "vulnerable_versions": ">1.1.1 <1.2.0",
         "module_name": "not-so-awesome-module",
-        "severity": "moderate",
+        "severity": "low",
         "github_advisory_id": "GHSA-93q8-gq69-wqmw",
         "cves": [
           "CVE-2022-0002"
@@ -117,10 +131,10 @@ var fullYarnJSONLines [][]byte = [][]byte{
         "patched_versions": ">=1.2.0",
         "updated": "2021-09-23T15:45:50.000Z",
         "recommendation": "Upgrade to version 1.2.0 or later",
-        "cwe": "CWE-918",
+        "cwe": "CWE-920",
         "found_by": null,
         "deleted": null,
-        "id": 1004946,
+        "id": 1004947,
         "references": "- https://advisory2.test.url/Ref1\n- https://advisory2.test.url/Ref2\n- https://advisory2.test.url/Ref3",
         "created": "2021-11-18T16:00:48.472Z",
         "reported_by": null,
@@ -154,6 +168,9 @@ var fullYarnJSONLines [][]byte = [][]byte{
     }
   }`),
 	[]byte(`{
+    "completely": "unsupported"
+  }`),
+	[]byte(`{
     "type": "auditSummary",
     "data": {
       "vulnerabilities": {
@@ -169,28 +186,9 @@ var fullYarnJSONLines [][]byte = [][]byte{
       "totalDependencies": 6274
     }
   }`),
-	[]byte(`{
-    "type": "unsupported",
-    "data": {
-      "vulnerabilities": {
-        "info": 1,
-        "low": 10,
-        "moderate": 177,
-        "high": 94,
-        "critical": 4
-      },
-      "dependencies": 6274,
-      "devDependencies": 0,
-      "optionalDependencies": 0,
-      "totalDependencies": 6274
-    }
-  }`),
-	[]byte(`{
-    "completely": "unsupported"
-  }`),
 }
 
-func TestParseValidReportContainsAllFields(t *testing.T) {
+func TestParseValidReportContainsAllSupportedFields(t *testing.T) {
 	report, err := NewReport(
 		fullYarnJSONLines,
 	)
@@ -240,57 +238,108 @@ func TestParseValidReportAdvisories(t *testing.T) {
 
 	assert.Len(t, report.AuditAdvisory, 2)
 
-	expectedFirstAdvisory := AuditData{
-		Resolution: AuditResolution{
-			Id:       1004946,
-			Path:     "advisory1Path",
-			Dev:      false,
-			Optional: false,
-			Bundled:  false,
+	expectedAdvisories := []*AuditData{
+		{
+			Resolution: AuditResolution{
+				Id:       1004946,
+				Path:     "advisory1Path",
+				Dev:      false,
+				Optional: false,
+				Bundled:  false,
+			},
+			Advisory: Advisory{
+				Findings: []Finding{
+					{
+						Version: "5.0.0",
+						Paths: []string{
+							"some/path",
+							"another/path",
+						},
+					},
+					{
+						Version: "5.0.0",
+						Paths: []string{
+							"more/findings/path",
+						},
+					},
+				},
+				Metadata:           nil,
+				VulnerableVersions: ">2.1.1 <5.0.1",
+				ModuleName:         "super-awesome-module",
+				Severity:           "moderate",
+				GithubAdvisoryId:   "GHSA-93q8-gq69-wqmw",
+				Cves: []string{
+					"CVE-2022-0001",
+				},
+				Access:          "public",
+				PatchedVersions: ">=5.0.1",
+				Updated:         "2021-09-23T15:45:50.000Z",
+				Recommendation:  "Upgrade to version 5.0.1 or later",
+				Cwe:             "CWE-918",
+				FoundBy:         nil,
+				Deleted:         false,
+				Id:              1004946,
+				References:      "- https://advisory1.test.url/Ref1\n- https://advisory1.test.url/Ref2",
+				Created:         "2021-11-18T16:00:48.472Z",
+				ReportedBy:      nil,
+				Title:           "ADVISORY 1 TITLE",
+				NpmAdvisoryId:   nil,
+				Overview:        "Advisory 1 overview",
+				URL:             "https://advisory.1.url",
+			},
 		},
-		Advisory: Advisory{
-			Findings: []Finding{
-				{
-					Version: "5.0.0",
-					Paths: []string{
-						"some/path",
-						"another/path",
+		{
+			Resolution: AuditResolution{
+				Id:       1004947,
+				Path:     "advisory2Path",
+				Dev:      true,
+				Optional: false,
+				Bundled:  false,
+			},
+			Advisory: Advisory{
+				Findings: []Finding{
+					{
+						Version: "1.1.0",
+						Paths: []string{
+							"some/path",
+							"another/path",
+						},
+					},
+					{
+						Version: "1.1.0",
+						Paths: []string{
+							"more/findings/path",
+						},
 					},
 				},
-				{
-					Version: "5.0.0",
-					Paths: []string{
-						"more/findings/path",
-					},
+				Metadata:           nil,
+				VulnerableVersions: ">1.1.1 <1.2.0",
+				ModuleName:         "not-so-awesome-module",
+				Severity:           "low",
+				GithubAdvisoryId:   "GHSA-93q8-gq69-wqmw",
+				Cves: []string{
+					"CVE-2022-0002",
 				},
+				Access:          "public",
+				PatchedVersions: ">=1.2.0",
+				Updated:         "2021-09-23T15:45:50.000Z",
+				Recommendation:  "Upgrade to version 1.2.0 or later",
+				Cwe:             "CWE-920",
+				FoundBy:         nil,
+				Deleted:         false,
+				Id:              1004947,
+				References:      "- https://advisory2.test.url/Ref1\n- https://advisory2.test.url/Ref2\n- https://advisory2.test.url/Ref3",
+				Created:         "2021-11-18T16:00:48.472Z",
+				ReportedBy:      nil,
+				Title:           "ADVISORY 2 TITLE",
+				NpmAdvisoryId:   nil,
+				Overview:        "Advisory 2 overview",
+				URL:             "https://advisory.2.url",
 			},
-			Metadata:           nil,
-			VulnerableVersions: ">2.1.1 <5.0.1",
-			ModuleName:         "super-awesome-module",
-			Severity:           "moderate",
-			GithubAdvisoryId:   "GHSA-93q8-gq69-wqmw",
-			Cves: []string{
-				"CVE-2022-0001",
-			},
-			Access:          "public",
-			PatchedVersions: ">=5.0.1",
-			Updated:         "2021-09-23T15:45:50.000Z",
-			Recommendation:  "Upgrade to version 5.0.1 or later",
-			Cwe:             "CWE-918",
-			FoundBy:         nil,
-			Deleted:         false,
-			Id:              1004946,
-			References:      "- https://advisory1.test.url/Ref1\n- https://advisory1.test.url/Ref2",
-			Created:         "2021-11-18T16:00:48.472Z",
-			ReportedBy:      nil,
-			Title:           "ADVISORY 1 TITLE",
-			NpmAdvisoryId:   nil,
-			Overview:        "Advisory 1 overview",
-			URL:             "https://advisory.1.url",
 		},
 	}
 
-	assert.True(t, reflect.DeepEqual(&expectedFirstAdvisory, report.AuditAdvisory[0]), report.AuditAdvisory[0])
+	assert.True(t, reflect.DeepEqual(expectedAdvisories, report.AuditAdvisory), report.AuditAdvisory)
 }
 
 func TestParseValidReportActions(t *testing.T) {
@@ -357,9 +406,9 @@ Advisory URL: https://advisory.1.url
 		},
 		&v1.Issue{
 			Target:     "advisory2Path: not-so-awesome-module",
-			Type:       "CWE-918",
+			Type:       "CWE-920",
 			Title:      "ADVISORY 2 TITLE",
-			Severity:   v1.Severity_SEVERITY_MEDIUM,
+			Severity:   v1.Severity_SEVERITY_LOW,
 			Confidence: v1.Confidence_CONFIDENCE_HIGH,
 			Description: `Vulnerable Versions: >1.1.1 <1.2.0
 Recommendation: Upgrade to version 1.2.0 or later
