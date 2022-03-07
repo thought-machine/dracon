@@ -61,7 +61,7 @@ func ReadLines() ([][]byte, error) {
 	}
 	defer file.Close()
 
-	scanner := bufio.NewScanner((file))
+	scanner := bufio.NewScanner(file)
 
 	var result [][]byte
 
