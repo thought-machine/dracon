@@ -1,5 +1,5 @@
 FROM //build/docker:dracon-base-go
 
-COPY nancy /parse
+COPY yarn_audit /parse
 
 ENTRYPOINT ["/parse"]
