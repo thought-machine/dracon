@@ -17,14 +17,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	report, err := types.NewReport(inLines)
+	report, errors := types.NewReport(inLines)
 
-	if len(err) > 0 {
-		errorMessage := "Errors creating Yarn Audit report: %s"
+	// Individual errors should already be printed to logs
+	if len(errors) > 0 {
+		errorMessage := "Errors creating Yarn Audit report: %d"
 		if report != nil{
-			log.Printf(errorMessage, err)
+			log.Printf(errorMessage, len(errors))
 		} else {
-			log.Fatalf(errorMessage, err)
+			log.Fatalf(errorMessage, len(errors))
 		}
 	}
 
