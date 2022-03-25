@@ -211,8 +211,8 @@ func TestParseValidReportSummary(t *testing.T) {
 
 	assert.NotNil(t, report.AuditSummary)
 
-	expectedSummaryData := AuditSummaryData{
-		Vulnerabilities: Vulnerabilities{
+	expectedSummaryData := auditSummaryData{
+		Vulnerabilities: vulnerabilities{
 			Info:     1,
 			Low:      10,
 			Moderate: 177,
@@ -238,17 +238,17 @@ func TestParseValidReportAdvisories(t *testing.T) {
 
 	assert.Len(t, report.AuditAdvisories, 2)
 
-	expectedAdvisories := []*AuditAdvisoryData{
+	expectedAdvisories := []*auditAdvisoryData{
 		{
-			Resolution: AuditResolution{
-				Id:       1004946,
+			Resolution: auditResolution{
+				ID:       1004946,
 				Path:     "advisory1Path",
 				Dev:      false,
 				Optional: false,
 				Bundled:  false,
 			},
-			Advisory: Advisory{
-				Findings: []Finding{
+			Advisory: yarnAdvisory{
+				Findings: []finding{
 					{
 						Version: "5.0.0",
 						Paths: []string{
@@ -267,7 +267,7 @@ func TestParseValidReportAdvisories(t *testing.T) {
 				VulnerableVersions: ">2.1.1 <5.0.1",
 				ModuleName:         "super-awesome-module",
 				Severity:           "moderate",
-				GithubAdvisoryId:   "GHSA-93q8-gq69-wqmw",
+				GithubAdvisoryID:   "GHSA-93q8-gq69-wqmw",
 				Cves: []string{
 					"CVE-2022-0001",
 				},
@@ -278,26 +278,26 @@ func TestParseValidReportAdvisories(t *testing.T) {
 				Cwe:             "CWE-918",
 				FoundBy:         nil,
 				Deleted:         false,
-				Id:              1004946,
+				ID:              1004946,
 				References:      "- https://advisory1.test.url/Ref1\n- https://advisory1.test.url/Ref2",
 				Created:         "2021-11-18T16:00:48.472Z",
 				ReportedBy:      nil,
 				Title:           "ADVISORY 1 TITLE",
-				NpmAdvisoryId:   nil,
+				NpmAdvisoryID:   nil,
 				Overview:        "Advisory 1 overview",
 				URL:             "https://advisory.1.url",
 			},
 		},
 		{
-			Resolution: AuditResolution{
-				Id:       1004947,
+			Resolution: auditResolution{
+				ID:       1004947,
 				Path:     "advisory2Path",
 				Dev:      true,
 				Optional: false,
 				Bundled:  false,
 			},
-			Advisory: Advisory{
-				Findings: []Finding{
+			Advisory: yarnAdvisory{
+				Findings: []finding{
 					{
 						Version: "1.1.0",
 						Paths: []string{
@@ -316,7 +316,7 @@ func TestParseValidReportAdvisories(t *testing.T) {
 				VulnerableVersions: ">1.1.1 <1.2.0",
 				ModuleName:         "not-so-awesome-module",
 				Severity:           "low",
-				GithubAdvisoryId:   "GHSA-93q8-gq69-wqmw",
+				GithubAdvisoryID:   "GHSA-93q8-gq69-wqmw",
 				Cves: []string{
 					"CVE-2022-0002",
 				},
@@ -327,12 +327,12 @@ func TestParseValidReportAdvisories(t *testing.T) {
 				Cwe:             "CWE-920",
 				FoundBy:         nil,
 				Deleted:         false,
-				Id:              1004947,
+				ID:              1004947,
 				References:      "- https://advisory2.test.url/Ref1\n- https://advisory2.test.url/Ref2\n- https://advisory2.test.url/Ref3",
 				Created:         "2021-11-18T16:00:48.472Z",
 				ReportedBy:      nil,
 				Title:           "ADVISORY 2 TITLE",
-				NpmAdvisoryId:   nil,
+				NpmAdvisoryID:   nil,
 				Overview:        "Advisory 2 overview",
 				URL:             "https://advisory.2.url",
 			},
@@ -352,17 +352,17 @@ func TestParseValidReportActions(t *testing.T) {
 
 	assert.Len(t, report.AuditActions, 1)
 
-	expectedActionData := AuditActionData{
+	expectedActionData := auditActionData{
 		Cmd:        "action command",
 		IsBreaking: false,
-		Action: AuditAction{
+		Action: auditAction{
 			Action:  "action string",
 			Module:  "action module string",
 			Target:  "action target",
 			IsMajor: true,
-			Resolves: []AuditResolution{
+			Resolves: []auditResolution{
 				{
-					Id:       1,
+					ID:       1,
 					Path:     "action reolve path",
 					Dev:      true,
 					Optional: true,
