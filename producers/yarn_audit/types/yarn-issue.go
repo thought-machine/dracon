@@ -28,12 +28,12 @@ func yarnToIssueSeverity(severity string) v1.Severity {
 	}
 }
 
-type YarnAuditLine struct {
+type yarnAuditLine struct {
 	Type string      `json:"type"`
 	Data interface{} `json:"data"`
 }
 
-func (yl *YarnAuditLine) UnmarshalJSON(data []byte) error {
+func (yl *yarnAuditLine) UnmarshalJSON(data []byte) error {
 	var typ struct {
 		Type string `json:"type"`
 	}
@@ -44,32 +44,33 @@ func (yl *YarnAuditLine) UnmarshalJSON(data []byte) error {
 
 	switch typ.Type {
 	case "auditSummary":
-		yl.Data = new(AuditSummaryData)
+		yl.Data = new(auditSummaryData)
 	case "auditAdvisory":
-		yl.Data = new(AuditAdvisoryData)
+		yl.Data = new(auditAdvisoryData)
 	case "auditAction":
-		yl.Data = new(AuditActionData)
+		yl.Data = new(auditActionData)
 	default:
 		log.Printf("Parsed unsupported type: %s", typ.Type)
 	}
 
-	type tmp YarnAuditLine // avoids infinite recursion
+	type tmp yarnAuditLine // avoids infinite recursion
 	return json.Unmarshal(data, (*tmp)(yl))
 
 }
 
-type AuditActionData struct {
+type auditActionData struct {
 	Cmd        string      `json:"cmd"`
 	IsBreaking bool        `json:"isBreaking"`
-	Action     AuditAction `json:"action"`
+	Action     auditAction `json:"action"`
 }
 
-type AuditAdvisoryData struct {
-	Resolution AuditResolution `json:"resolution"`
-	Advisory   Advisory        `json:"advisory"`
+type auditAdvisoryData struct {
+	Resolution auditResolution `json:"resolution"`
+	Advisory   yarnAdvisory        `json:"advisory"`
 }
 
-func (audit *AuditAdvisoryData) AsIssue() *v1.Issue {
+// AsIssue returns data as a Dracon v1.Issue
+func (audit *auditAdvisoryData) AsIssue() *v1.Issue {
 	var targetName string
 	if audit.Resolution.Path != "" {
 		targetName = audit.Resolution.Path + ": "
@@ -87,23 +88,23 @@ func (audit *AuditAdvisoryData) AsIssue() *v1.Issue {
 	}
 }
 
-type AuditSummaryData struct {
-	Vulnerabilities      Vulnerabilities `json:"vulnerabilities"`
+type auditSummaryData struct {
+	Vulnerabilities      vulnerabilities `json:"vulnerabilities"`
 	Dependencies         int             `json:"dependencies"`
 	DevDependencies      int             `json:"devDependencies"`
 	OptionalDependencies int             `json:"optionalDependencies"`
 	TotalDependencies    int             `json:"totalDependencies"`
 }
 
-type AuditAction struct {
+type auditAction struct {
 	Action   string            `json:"action"`
 	Module   string            `json:"module"`
 	Target   string            `json:"target"`
 	IsMajor  bool              `json:"isMajor"`
-	Resolves []AuditResolution `json:"resolves"`
+	Resolves []auditResolution `json:"resolves"`
 }
 
-type Vulnerabilities struct {
+type vulnerabilities struct {
 	Info     int `json:"info"`
 	Low      int `json:"low"`
 	Moderate int `json:"moderate"`
@@ -111,32 +112,32 @@ type Vulnerabilities struct {
 	Critical int `json:"critical"`
 }
 
-type Advisory struct {
-	Findings           []Finding         `json:"findings"`
-	Metadata           *AdvisoryMetaData `json:"metadata"`
+type yarnAdvisory struct {
+	Findings           []finding         `json:"findings"`
+	Metadata           *advisoryMetaData `json:"metadata"`
 	VulnerableVersions string            `json:"vulnerable_versions"`
 	ModuleName         string            `json:"module_name"`
 	Severity           string            `json:"severity"`
-	GithubAdvisoryId   string            `json:"github_advisory_id"`
+	GithubAdvisoryID   string            `json:"github_advisory_id"`
 	Cves               []string          `json:"cves"`
 	Access             string            `json:"access"`
 	PatchedVersions    string            `json:"patched_versions"`
 	Updated            string            `json:"updated"`
 	Recommendation     string            `json:"recommendation"`
 	Cwe                string            `json:"cwe"`
-	FoundBy            *Contact          `json:"found_by"`
+	FoundBy            *contact          `json:"found_by"`
 	Deleted            bool              `json:"deleted"`
-	Id                 int               `json:"id"`
+	ID                 int               `json:"id"`
 	References         string            `json:"references"`
 	Created            string            `json:"created"`
-	ReportedBy         *Contact          `json:"reported_by"`
+	ReportedBy         *contact          `json:"reported_by"`
 	Title              string            `json:"title"`
-	NpmAdvisoryId      interface{}       `json:"npm_advisory_id"`
+	NpmAdvisoryID      interface{}       `json:"npm_advisory_id"`
 	Overview           string            `json:"overview"`
 	URL                string            `json:"url"`
 }
 
-func (advisory *Advisory) GetDescription() string {
+func (advisory *yarnAdvisory) GetDescription() string {
 	return fmt.Sprintf(
 		"Vulnerable Versions: %s\nRecommendation: %s\nOverview: %s\nReferences:\n%s\nAdvisory URL: %s\n",
 		advisory.VulnerableVersions,
@@ -147,7 +148,7 @@ func (advisory *Advisory) GetDescription() string {
 	)
 }
 
-type Finding struct {
+type finding struct {
 	Version  string   `json:"version"`
 	Paths    []string `json:"paths"`
 	Dev      bool     `json:"dev"`
@@ -155,30 +156,32 @@ type Finding struct {
 	Bundled  bool     `json:"bundled"`
 }
 
-type AuditResolution struct {
-	Id       int    `json:"id"`
+type auditResolution struct {
+	ID       int    `json:"id"`
 	Path     string `json:"path"`
 	Dev      bool   `json:"dev"`
 	Optional bool   `json:"optional"`
 	Bundled  bool   `json:"bundled"`
 }
 
-type AdvisoryMetaData struct {
-	Module_type         string `json:"module_type"`
+type advisoryMetaData struct {
+	ModuleType         string `json:"module_type"`
 	Exploitability      int    `json:"exploitability"`
-	Affected_components string `json:"affected_components"`
+	AffectedComponents string `json:"affected_components"`
 }
 
-type Contact struct {
+type contact struct {
 	Name string `json: name`
 }
 
+// YarnAuditReport includes yarn audit data grouped by advisories, actions and summary
 type YarnAuditReport struct {
-	AuditAdvisories []*AuditAdvisoryData
-	AuditActions  []*AuditActionData
-	AuditSummary       *AuditSummaryData
+	AuditAdvisories []*auditAdvisoryData
+	AuditActions  []*auditActionData
+	AuditSummary       *auditSummaryData
 }
 
+// NewReport returns a YarnAuditReport, assuming each line is jsonline and returns any errors
 func NewReport(reportLines [][]byte) (*YarnAuditReport, []error) {
 
 	var report YarnAuditReport
@@ -186,30 +189,31 @@ func NewReport(reportLines [][]byte) (*YarnAuditReport, []error) {
 	var errors []error
 
 	for _, line := range reportLines {
-		var auditLine YarnAuditLine
+		var auditLine yarnAuditLine
 		if err := producers.ParseJSON(line, &auditLine); err != nil {
 			log.Printf("Error parsing JSON line '%s': %s\n", line, err)
 			errors = append(errors, err)
 		} else {
 
 			switch auditLine.Data.(type) {
-			case *AuditSummaryData:
-				report.AuditSummary = auditLine.Data.(*AuditSummaryData)
-			case *AuditAdvisoryData:
-				report.AuditAdvisories = append(report.AuditAdvisories, auditLine.Data.(*AuditAdvisoryData))
-			case *AuditActionData:
-				report.AuditActions = append(report.AuditActions, auditLine.Data.(*AuditActionData))
+			case *auditSummaryData:
+				report.AuditSummary = auditLine.Data.(*auditSummaryData)
+			case *auditAdvisoryData:
+				report.AuditAdvisories = append(report.AuditAdvisories, auditLine.Data.(*auditAdvisoryData))
+			case *auditActionData:
+				report.AuditActions = append(report.AuditActions, auditLine.Data.(*auditActionData))
 			}
 		}
 	}
 
-	if len(report.AuditAdvisories) > 0 {
+	if report.AuditAdvisories != nil && len(report.AuditAdvisories) > 0 {
 		return &report, errors
 	}
 
 	return nil, errors
 }
 
+// AsIssues returns the YarnAuditReport as Dracon v1.Issue list. Currently only converts the YarnAuditReport.AuditAdvisories
 func (r *YarnAuditReport) AsIssues() []*v1.Issue {
 	issues := make([]*v1.Issue, 0)
 
