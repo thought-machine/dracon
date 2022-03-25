@@ -1,6 +1,6 @@
 subinclude("//third_party/defs:docker")
 
-# this producer covers nancy https://github.com/sonatype-nexus-community/nancy
+# this producer covers yarn audit https://classic.yarnpkg.com/lang/en/docs/cli/audit/
 
 go_binary(
     name = "yarn_audit",
