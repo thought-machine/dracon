@@ -15,7 +15,7 @@ go_binary(
 docker_image(
     name = "image",
     srcs = [
-        ":stdout_json",
+        ":slack",
     ],
     base_image = "//build/docker:dracon-base-go",
     image = "dracon-consumer-stdout-json",
