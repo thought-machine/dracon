@@ -1,33 +1,22 @@
 subinclude("//third_party/defs:docker")
 
-python_binary(
+go_binary(
     name = "stdout_json",
-    main = "stdout_json.py",
-    deps = [
-        "//api/proto:v1",
-        "//consumers:consumers_base_python",
-        "//third_party/python:protobuf",
-    ],
-)
-
-python_test(
-    name = "stdout_json_test",
     srcs = [
-        "stdout_json_test.py",
+        "main.go",
     ],
     deps = [
-        ":stdout_json",
         "//api/proto:v1",
-        "//consumers:consumers_base_python",
-        "//third_party/python:protobuf",
+        "//consumers",
+        "//third_party/go:protobuf",
     ],
 )
 
 docker_image(
-    name = "dracon-consumer-stdout",
+    name = "image",
     srcs = [
-        ":stdout_json",
+        ":slack",
     ],
-    base_image = "//build/docker:dracon-base-python",
+    base_image = "//build/docker:dracon-base-go",
     image = "dracon-consumer-stdout-json",
 )

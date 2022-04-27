@@ -1,5 +1,5 @@
-FROM //build/docker:dracon-base-python
+FROM //build/docker:dracon-base-go
 
-COPY /stdout_json.pex /consume.pex
+COPY stdout_json /consume
 
-ENTRYPOINT ["/consume.pex"]
+ENTRYPOINT ["/consume"]
