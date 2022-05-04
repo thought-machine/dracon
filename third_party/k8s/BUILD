@@ -16,20 +16,20 @@ remote_file(
     visibility = ["//scripts/development/kind/..."],
 )
 
-TEKTONCD_PIPELINE_VERSION = "0.19.0"
+TEKTONCD_PIPELINE_VERSION = "0.34.1"
 
 remote_file(
     name = "tektoncd_pipeline",
-    hashes = ["a6a9049595137ec95cd50f8c0767a01cf54e941f7b2381710596f1bc4f8db29b"],
+    hashes = ["9b12e7ed10e38aba742c22b49148fdccf806a985bf94de5c4c9857dd31e5ba75"],
     url = f"https://github.com/tektoncd/pipeline/releases/download/v{TEKTONCD_PIPELINE_VERSION}/release.yaml",
     visibility = ["//scripts/development/..."],
 )
 
-TEKTONCD_DASHBOARD_VERSION = "0.14.0"
+TEKTONCD_DASHBOARD_VERSION = "0.25.0"
 
 remote_file(
     name = "tektoncd_dashboard",
-    hashes = ["938edf9e16fdc91585a944b8f50182638fd5b653ac1311bfac73be768e2a730c"],
+    hashes = ["955a4e3afbdbaa3b67577154d5bf022888629ff3ea70d99197c0c1c6b529e056"],
     url = f"https://github.com/tektoncd/dashboard/releases/download/v{TEKTONCD_DASHBOARD_VERSION}/tekton-dashboard-release-readonly.yaml",
     visibility = ["//scripts/development/..."],
 )
