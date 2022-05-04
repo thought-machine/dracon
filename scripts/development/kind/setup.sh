@@ -11,9 +11,9 @@ kubernetes_version="${FLAGS_kubernetes_version//./_}"
 
 declare -A KUBERNETES_VERSIONS
 KUBERNETES_VERSIONS=(
-  ["1_20"]="kindest/node:v1.20.15@sha256:2d93744654696ea4270c04ec83e7940177295aac99223b224b052c79d4e7693e"
-  ["1_21"]="kindest/node:v1.21.10@sha256:f35554e42a1081cfc9f7bce5635aea15996e4ec842b689e1508a8746de7d309b"
-  ["1_22"]="kindest/node:v1.22.7@sha256:c195c17f2a9f6ad5bbddc9eb8bad68fa21709162aabf2b84e4a3896db05c0808"
+  ["1_20"]="kindest/node:v1.20.15@sha256:393bb9096c6c4d723bb17bceb0896407d7db581532d11ea2839c80b28e5d8deb"
+  ["1_21"]="kindest/node:v1.21.10@sha256:84709f09756ba4f863769bdcabe5edafc2ada72d3c8c44d6515fc581b66b029c"
+  ["1_22"]="kindest/node:v1.22.7@sha256:1dfd72d193bf7da64765fd2f2898f78663b9ba366c2aa74be1fd7498a1873166"
 )
 
 kubernetes_context="kind-${FLAGS_kind_cluster}"
