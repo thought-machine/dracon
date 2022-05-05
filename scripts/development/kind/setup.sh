@@ -3,7 +3,7 @@
 set -Eeuo pipefail
 
 DEFINE_string 'kind_cluster' 'dracon' 'Kind cluster to use' 'c'
-DEFINE_string 'kubernetes_version' '1.17' 'Kubernetes version to use' 'k'
+DEFINE_string 'kubernetes_version' '1.21' 'Kubernetes version to use' 'k'
 FLAGS "$@" || exit $?
 eval set -- "${FLAGS_ARGV}"
 
@@ -11,9 +11,7 @@ kubernetes_version="${FLAGS_kubernetes_version//./_}"
 
 declare -A KUBERNETES_VERSIONS
 KUBERNETES_VERSIONS=(
-  ["1_16"]="kindest/node:v1.16.15@sha256:83067ed51bf2a3395b24687094e283a7c7c865ccc12a8b1d7aa673ba0c5e8861"
-  ["1_17"]="kindest/node:v1.17.17@sha256:66f1d0d91a88b8a001811e2f1054af60eef3b669a9a74f9b6db871f2f1eeed00"
-  ["1_18"]="kindest/node:v1.18.19@sha256:7af1492e19b3192a79f606e43c35fb741e520d195f96399284515f077b3b622c"
+  ["1_21"]="kindest/node:v1.21.10@sha256:84709f09756ba4f863769bdcabe5edafc2ada72d3c8c44d6515fc581b66b029c"
 )
 
 kubernetes_context="kind-${FLAGS_kind_cluster}"
