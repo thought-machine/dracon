@@ -675,7 +675,7 @@ go_module(
 go_module(
     name = "aws-sdk-go-v2-securityhub",
     hashes = ["79e029054a3381f7d26f7ff8f6e16decfd1d289f618883e2db11c1b3fe7d22b3"],
-    install = [ "types"],
+    install = ["types"],
     licences = ["Apache License 2.0"],
     module = "github.com/aws/aws-sdk-go-v2/service/securityhub",
     version = "v1.21.2",
