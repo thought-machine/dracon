@@ -57,6 +57,24 @@ func TestMainFn(t *testing.T) {
 			},
 		},
 		{
+			inputFileName: "securityhub_finding.json",
+			expErr:        false,
+			expStdout:     `wrote 1 issues from to ./producers/securityhub/out.pb`,
+			expIssues: []*v1.Issue{
+				{
+					Target:      "arn:aws:ec2:eu-west-2:123456789:security-group/sg-01ef4a31dbea6f188cfbf",
+					Type:        "Software and Configuration Checks/Industry and Regulatory Standards/CIS AWS Foundations Benchmark",
+					Title:       "4.3 Ensure the default security group of every VPC restricts all traffic",
+					Severity:    3,
+					Cvss:        0,
+					Confidence:  2,
+					Description: "A VPC comes with a default security group whose initial settings deny all inbound traffic, allow all outbound traffic, and allow all traffic between instances assigned to the security group. If you don't specify a security group when you launch an instance, the instance is automatically assigned to this default security group. It is recommended that the default security group restrict all traffic.",
+					Source:      "unknown",
+					Cve:         "",
+				},
+			},
+		},
+		{
 			inputFileName: "inspector_finding.json",
 			expErr:        false,
 			expStdout:     `wrote 1 issues from to ./producers/securityhub/out.pb`,
