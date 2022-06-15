@@ -671,3 +671,34 @@ go_module(
         ":x_net",
     ],
 )
+
+go_module(
+    name = "aws-sdk-go-v2-securityhub",
+    hashes = ["79e029054a3381f7d26f7ff8f6e16decfd1d289f618883e2db11c1b3fe7d22b3"],
+    install = ["types"],
+    licences = ["Apache License 2.0"],
+    module = "github.com/aws/aws-sdk-go-v2/service/securityhub",
+    version = "v1.21.2",
+    deps = [
+        ":smithy-go",
+    ],
+)
+
+go_module(
+    name = "smithy-go",
+    hashes = ["f9a7b4e00ea8176609b0968bbe93c22aacce117edbf970aad12efe09cff8411f"],
+    install = ["..."],
+    licences = ["Apache License 2.0"],
+    module = "github.com/aws/smithy-go",
+    version = "v1.11.2",
+    deps = [":go-cmp"],
+)
+
+go_module(
+    name = "go-cmp",
+    hashes = ["e2a3cc3fa78ebf31d69c23955cb175c6277315a7fea2e6cc5a64467a4f81a2f9"],
+    install = ["..."],
+    licences = ["BSD-3-Clause"],
+    module = "github.com/google/go-cmp",
+    version = "v0.5.8",
+)
