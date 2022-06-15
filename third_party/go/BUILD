@@ -672,7 +672,6 @@ go_module(
     ],
 )
 
-
 go_module(
     name = "aws-sdk-go-v2",
     hashes = ["4a5ee8638a787c897979668c43179aba0e8558cd79835657bd13db17e38110aa"],
@@ -684,9 +683,9 @@ go_module(
     module = "github.com/aws/aws-sdk-go-v2",
     version = "v1.16.4",
     deps = [
-        ":smithy-go",
         ":go-jmespath",
-    ]
+        ":smithy-go",
+    ],
 )
 
 go_module(
@@ -696,7 +695,7 @@ go_module(
     licences = ["Apache License 2.0"],
     module = "github.com/aws/smithy-go",
     version = "v1.11.2",
-    deps = [":go-cmp"]
+    deps = [":go-cmp"],
 )
 
 go_module(
@@ -728,9 +727,9 @@ go_module(
     version = "v1.21.2",
     deps = [
         ":aws-sdk-go-v2",
-        ":aws-sdk-go-v2-internal-endpoints",
         ":aws-sdk-go-v2-internal-configsources",
-    ]
+        ":aws-sdk-go-v2-internal-endpoints",
+    ],
 )
 
 go_module(
@@ -742,7 +741,7 @@ go_module(
     licences = ["Apache License 2.0"],
     module = "github.com/aws/aws-sdk-go-v2/internal/endpoints/v2",
     version = "v2.4.5",
-    deps = [":aws-sdk-go-v2"]
+    deps = [":aws-sdk-go-v2"],
 )
 
 go_module(
@@ -754,5 +753,5 @@ go_module(
     licences = ["Apache License 2.0"],
     module = "github.com/aws/aws-sdk-go-v2/internal/configsources",
     version = "v1.1.11",
-    deps = [":aws-sdk-go-v2"]
+    deps = [":aws-sdk-go-v2"],
 )

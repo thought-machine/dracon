@@ -9,7 +9,7 @@ go_binary(
         "//api/proto:v1",
         "//producers",
         "//third_party/go:aws-sdk-go-v2-securityhub",
-    ]
+    ],
 )
 
 go_test(
@@ -21,11 +21,11 @@ go_test(
     data = glob(["./testcases/*.json"]),
     deps = [
         "//api/proto:v1",
-        "//producers",
         "//pkg/putil",
+        "//producers",
         "//third_party/go:aws-sdk-go-v2-securityhub",
         "//third_party/go:stretchr_testify",
-    ]
+    ],
 )
 
 docker_image(
