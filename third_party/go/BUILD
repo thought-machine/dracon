@@ -673,17 +673,13 @@ go_module(
 )
 
 go_module(
-    name = "aws-sdk-go-v2",
-    hashes = ["4a5ee8638a787c897979668c43179aba0e8558cd79835657bd13db17e38110aa"],
-    install = [
-        "...",
-        "internal/...",
-    ],
+    name = "aws-sdk-go-v2-securityhub",
+    hashes = ["79e029054a3381f7d26f7ff8f6e16decfd1d289f618883e2db11c1b3fe7d22b3"],
+    install = [ "types"],
     licences = ["Apache License 2.0"],
-    module = "github.com/aws/aws-sdk-go-v2",
-    version = "v1.16.4",
+    module = "github.com/aws/aws-sdk-go-v2/service/securityhub",
+    version = "v1.21.2",
     deps = [
-        ":go-jmespath",
         ":smithy-go",
     ],
 )
@@ -705,53 +701,4 @@ go_module(
     licences = ["BSD-3-Clause"],
     module = "github.com/google/go-cmp",
     version = "v0.5.8",
-)
-
-go_module(
-    name = "go-jmespath",
-    hashes = ["5712f8eead992804005ee820359c7eda34d4161d7b7345e838c144ec32014224"],
-    install = ["..."],
-    licences = ["Apache License 2.0"],
-    module = "github.com/jmespath/go-jmespath",
-    version = "v0.4.0",
-)
-
-go_module(
-    name = "aws-sdk-go-v2-securityhub",
-    hashes = ["79e029054a3381f7d26f7ff8f6e16decfd1d289f618883e2db11c1b3fe7d22b3"],
-    install = [
-        "...",
-    ],
-    licences = ["Apache License 2.0"],
-    module = "github.com/aws/aws-sdk-go-v2/service/securityhub",
-    version = "v1.21.2",
-    deps = [
-        ":aws-sdk-go-v2",
-        ":aws-sdk-go-v2-internal-configsources",
-        ":aws-sdk-go-v2-internal-endpoints",
-    ],
-)
-
-go_module(
-    name = "aws-sdk-go-v2-internal-endpoints",
-    hashes = ["3421bc57ce48d3330372f5cc5dbd600abbcfaf78c38abd61099abf776845dd05"],
-    install = [
-        "...",
-    ],
-    licences = ["Apache License 2.0"],
-    module = "github.com/aws/aws-sdk-go-v2/internal/endpoints/v2",
-    version = "v2.4.5",
-    deps = [":aws-sdk-go-v2"],
-)
-
-go_module(
-    name = "aws-sdk-go-v2-internal-configsources",
-    hashes = ["5d03187899ad439938bac9656ef5b155d376fc708ae9498d70a1e95835cb77e4"],
-    install = [
-        "...",
-    ],
-    licences = ["Apache License 2.0"],
-    module = "github.com/aws/aws-sdk-go-v2/internal/configsources",
-    version = "v1.1.11",
-    deps = [":aws-sdk-go-v2"],
 )
