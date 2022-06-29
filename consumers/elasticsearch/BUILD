@@ -1,7 +1,7 @@
 subinclude("//third_party/defs:docker")
 
 go_binary(
-    name = "elasticsearch_c",
+    name = "elasticsearch",
     srcs = [
         "main.go",
     ],
@@ -9,13 +9,13 @@ go_binary(
     deps = [
         "//api/proto:v1",
         "//consumers",
-        "//third_party/go:elastic_go-elasticsearch_v7",
+        "//third_party/go:elastic_go-elasticsearch_v8",
         "//third_party/go:protobuf",
     ],
 )
 
 go_test(
-    name = "elasticsearch_c_test",
+    name = "elasticsearch_test",
     srcs = [
         "main.go",
         "main_test.go",
@@ -23,7 +23,7 @@ go_test(
     deps = [
         "//api/proto:v1",
         "//consumers",
-        "//third_party/go:elastic_go-elasticsearch_v7",
+        "//third_party/go:elastic_go-elasticsearch_v8",
         "//third_party/go:gogo_protobuf",
         "//third_party/go:protobuf",
         "//third_party/go:stretchr_testify",
@@ -33,7 +33,7 @@ go_test(
 docker_image(
     name = "dracon-consumer-elasticsearch",
     srcs = [
-        ":elasticsearch_c",
+        ":elasticsearch",
     ],
     base_image = "//build/docker:dracon-base-go",
     image = "dracon-consumer-elasticsearch",

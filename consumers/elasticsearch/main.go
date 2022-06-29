@@ -8,14 +8,12 @@ import (
 	"log"
 	"time"
 
-	//  TODO(hjenkins): Support multiple versions of ES
-	// elasticsearchv5 "github.com/elastic/go-elasticsearch/v5"
-	// elasticsearchv6 "github.com/elastic/go-elasticsearch/v6"
-	v1 "github.com/thought-machine/dracon/api/proto/v1"
-
-	elasticsearchv7 "github.com/elastic/go-elasticsearch/v7"
-	"github.com/golang/protobuf/ptypes"
+	"github.com/thought-machine/dracon/api/proto/v1"
 	"github.com/thought-machine/dracon/consumers"
+
+	//  TODO: Support multiple versions of ES
+	elasticsearch "github.com/elastic/go-elasticsearch/v8"
+	"github.com/golang/protobuf/ptypes"
 )
 
 var (
@@ -47,7 +45,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err := getESClient(); err != nil {
+	es, err := getESClient()
+	if err != nil {
 		log.Fatal("could not contact remote Elasticsearch: ", err)
 	}
 
@@ -65,7 +64,11 @@ func main() {
 				if err != nil {
 					log.Fatal("Could not parse raw issue", err)
 				}
-				esPush(b)
+				res, err := es.Index(esIndex, bytes.NewBuffer(b))
+				log.Printf("%+v", res)
+				if err != nil {
+					log.Fatal("Could not push raw issue", err)
+				}
 			}
 		}
 	} else {
@@ -81,7 +84,11 @@ func main() {
 				if err != nil {
 					log.Fatal("Could not parse enriched issue", err)
 				}
-				esPush(b)
+				res, err := es.Index(esIndex, bytes.NewBuffer(b))
+				log.Printf("%+v", res)
+				if err != nil {
+					log.Fatal("Could not push enriched issue", err)
+				}
 			}
 		}
 	}
@@ -190,21 +197,19 @@ type esDocument struct {
 	CVE            string        `json:"cve"`
 }
 
-var esClient interface{}
-
-func getESClient() error {
-	var es *elasticsearchv7.Client
+func getESClient() (*elasticsearch.Client, error) {
+	var es *elasticsearch.Client
 	var err error = nil
 	if basicAuthUser != "" && basicAuthPass != "" {
-		es, err = elasticsearchv7.NewClient(elasticsearchv7.Config{
+		es, err = elasticsearch.NewClient(elasticsearch.Config{
 			Username: basicAuthUser,
 			Password: basicAuthPass,
 		})
 	} else {
-		es, err = elasticsearchv7.NewDefaultClient()
+		es, err = elasticsearch.NewDefaultClient()
 	}
 	if err != nil {
-		return err
+		return nil, err
 	}
 	type esInfo struct {
 		Version struct {
@@ -214,46 +219,25 @@ func getESClient() error {
 
 	res, err := es.Info()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	var info esInfo
 	if err := json.NewDecoder(res.Body).Decode(&info); err != nil {
-		return err
+		return nil, err
 	}
 	switch info.Version.Number[0] {
-	// case '5':
-	// 	esClient, err = elasticsearchv5.NewDefaultClient()
-	// case '6':
-	// 	esClient, err = elasticsearchv6.NewDefaultClient()
-	case '7':
+	case '8':
 		if basicAuthUser != "" && basicAuthPass != "" {
-			esClient, err = elasticsearchv7.NewClient(elasticsearchv7.Config{
+			es, err = elasticsearch.NewClient(elasticsearch.Config{
 				Username: basicAuthUser,
 				Password: basicAuthPass,
 			})
 		} else {
-			esClient, err = elasticsearchv7.NewDefaultClient()
+			es, err = elasticsearch.NewDefaultClient()
 		}
 
 	default:
-		err = fmt.Errorf("unsupported version %s", info.Version.Number)
+		err = fmt.Errorf("unsupported ES Server version %s", info.Version.Number)
 	}
-	return err
-}
-
-func esPush(b []byte) error {
-	var err error
-	var res interface{}
-	switch x := esClient.(type) {
-	// case *elasticsearchv5.Client:
-	// 	res, err = x.Index(esIndex, bytes.NewBuffer(b), x.Index.WithDocumentType("doc"))
-	// case *elasticsearchv6.Client:
-	// 	res, err = x.Index(esIndex, bytes.NewBuffer(b), x.Index.WithDocumentType("doc"))
-	case *elasticsearchv7.Client:
-		res, err = x.Index(esIndex, bytes.NewBuffer(b))
-	default:
-		err = fmt.Errorf("unsupported client %T", esClient)
-	}
-	log.Printf("%+v", res)
-	return err
+	return es, err
 }
