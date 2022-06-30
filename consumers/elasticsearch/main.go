@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/thought-machine/dracon/api/proto/v1"
@@ -17,13 +18,15 @@ import (
 )
 
 var (
-	esURL         string
+	esUrls        string
+	esAddrs       []string
 	esIndex       string
 	basicAuthUser string
 	basicAuthPass string
 )
 
 func init() {
+	flag.StringVar(&esUrls, "es-urls", "", "[OPTIONAL] URLs to connect to elasticsearch comma seperated. Can also use env variable ELASTICSEARCH_URL")
 	flag.StringVar(&esIndex, "es-index", "", "the index in elasticsearch to push results to")
 	flag.StringVar(&basicAuthUser, "basic-auth-user", "", "[OPTIONAL] the basic auth username")
 	flag.StringVar(&basicAuthPass, "basic-auth-pass", "", "[OPTIONAL] the basic auth password")
@@ -37,11 +40,16 @@ func parseFlags() error {
 	if len(esIndex) < 1 {
 		return fmt.Errorf("es-index is undefined")
 	}
+	if len(esUrls) > 0 {
+		for _, u := range strings.Split(esUrls, ",") {
+			esAddrs = append(esAddrs, strings.TrimSpace(u))
+		}
+	}
 	return nil
 }
 
 func main() {
-	if err := consumers.ParseFlags(); err != nil {
+	if err := parseFlags(); err != nil {
 		log.Fatal(err)
 	}
 
@@ -200,14 +208,18 @@ type esDocument struct {
 func getESClient() (*elasticsearch.Client, error) {
 	var es *elasticsearch.Client
 	var err error = nil
+	var esConfig elasticsearch.Config = elasticsearch.Config{}
+
 	if basicAuthUser != "" && basicAuthPass != "" {
-		es, err = elasticsearch.NewClient(elasticsearch.Config{
-			Username: basicAuthUser,
-			Password: basicAuthPass,
-		})
-	} else {
-		es, err = elasticsearch.NewDefaultClient()
+		esConfig.Username = basicAuthUser
+		esConfig.Password = basicAuthPass
 	}
+
+	if len(esAddrs) >= 0 {
+		esConfig.Addresses = esAddrs
+	}
+
+	es, err = elasticsearch.NewClient(esConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -227,15 +239,7 @@ func getESClient() (*elasticsearch.Client, error) {
 	}
 	switch info.Version.Number[0] {
 	case '8':
-		if basicAuthUser != "" && basicAuthPass != "" {
-			es, err = elasticsearch.NewClient(elasticsearch.Config{
-				Username: basicAuthUser,
-				Password: basicAuthPass,
-			})
-		} else {
-			es, err = elasticsearch.NewDefaultClient()
-		}
-
+		// noop - we support this version
 	default:
 		err = fmt.Errorf("unsupported ES Server version %s", info.Version.Number)
 	}
