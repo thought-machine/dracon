@@ -14,7 +14,7 @@ kustomized_config(
         "spotbugs-producer.yaml",
     ],
     images = [
-        "//consumers/elasticsearch_c:dracon-consumer-elasticsearch",
+        "//consumers/elasticsearch:dracon-consumer-elasticsearch",
         "//cmd/enricher:dracon-enricher",
         "//source/git:dracon-source-git",
         "//producers/golang_gosec:dracon-producer-gosec",

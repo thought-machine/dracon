@@ -6,26 +6,27 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
-	//  TODO(hjenkins): Support multiple versions of ES
-	// elasticsearchv5 "github.com/elastic/go-elasticsearch/v5"
-	// elasticsearchv6 "github.com/elastic/go-elasticsearch/v6"
-	v1 "github.com/thought-machine/dracon/api/proto/v1"
-
-	elasticsearchv7 "github.com/elastic/go-elasticsearch/v7"
-	"github.com/golang/protobuf/ptypes"
+	"github.com/thought-machine/dracon/api/proto/v1"
 	"github.com/thought-machine/dracon/consumers"
+
+	//  TODO: Support multiple versions of ES
+	elasticsearch "github.com/elastic/go-elasticsearch/v8"
+	"github.com/golang/protobuf/ptypes"
 )
 
 var (
-	esURL         string
+	esUrls        string
+	esAddrs       []string
 	esIndex       string
 	basicAuthUser string
 	basicAuthPass string
 )
 
 func init() {
+	flag.StringVar(&esUrls, "es-urls", "", "[OPTIONAL] URLs to connect to elasticsearch comma seperated. Can also use env variable ELASTICSEARCH_URL")
 	flag.StringVar(&esIndex, "es-index", "", "the index in elasticsearch to push results to")
 	flag.StringVar(&basicAuthUser, "basic-auth-user", "", "[OPTIONAL] the basic auth username")
 	flag.StringVar(&basicAuthPass, "basic-auth-pass", "", "[OPTIONAL] the basic auth password")
@@ -39,15 +40,21 @@ func parseFlags() error {
 	if len(esIndex) < 1 {
 		return fmt.Errorf("es-index is undefined")
 	}
+	if len(esUrls) > 0 {
+		for _, u := range strings.Split(esUrls, ",") {
+			esAddrs = append(esAddrs, strings.TrimSpace(u))
+		}
+	}
 	return nil
 }
 
 func main() {
-	if err := consumers.ParseFlags(); err != nil {
+	if err := parseFlags(); err != nil {
 		log.Fatal(err)
 	}
 
-	if err := getESClient(); err != nil {
+	es, err := getESClient()
+	if err != nil {
 		log.Fatal("could not contact remote Elasticsearch: ", err)
 	}
 
@@ -65,7 +72,11 @@ func main() {
 				if err != nil {
 					log.Fatal("Could not parse raw issue", err)
 				}
-				esPush(b)
+				res, err := es.Index(esIndex, bytes.NewBuffer(b))
+				log.Printf("%+v", res)
+				if err != nil {
+					log.Fatal("Could not push raw issue", err)
+				}
 			}
 		}
 	} else {
@@ -81,7 +92,11 @@ func main() {
 				if err != nil {
 					log.Fatal("Could not parse enriched issue", err)
 				}
-				esPush(b)
+				res, err := es.Index(esIndex, bytes.NewBuffer(b))
+				log.Printf("%+v", res)
+				if err != nil {
+					log.Fatal("Could not push enriched issue", err)
+				}
 			}
 		}
 	}
@@ -190,21 +205,23 @@ type esDocument struct {
 	CVE            string        `json:"cve"`
 }
 
-var esClient interface{}
-
-func getESClient() error {
-	var es *elasticsearchv7.Client
+func getESClient() (*elasticsearch.Client, error) {
+	var es *elasticsearch.Client
 	var err error = nil
+	var esConfig elasticsearch.Config = elasticsearch.Config{}
+
 	if basicAuthUser != "" && basicAuthPass != "" {
-		es, err = elasticsearchv7.NewClient(elasticsearchv7.Config{
-			Username: basicAuthUser,
-			Password: basicAuthPass,
-		})
-	} else {
-		es, err = elasticsearchv7.NewDefaultClient()
+		esConfig.Username = basicAuthUser
+		esConfig.Password = basicAuthPass
 	}
+
+	if len(esAddrs) >= 0 {
+		esConfig.Addresses = esAddrs
+	}
+
+	es, err = elasticsearch.NewClient(esConfig)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	type esInfo struct {
 		Version struct {
@@ -214,46 +231,17 @@ func getESClient() error {
 
 	res, err := es.Info()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	var info esInfo
 	if err := json.NewDecoder(res.Body).Decode(&info); err != nil {
-		return err
+		return nil, err
 	}
 	switch info.Version.Number[0] {
-	// case '5':
-	// 	esClient, err = elasticsearchv5.NewDefaultClient()
-	// case '6':
-	// 	esClient, err = elasticsearchv6.NewDefaultClient()
-	case '7':
-		if basicAuthUser != "" && basicAuthPass != "" {
-			esClient, err = elasticsearchv7.NewClient(elasticsearchv7.Config{
-				Username: basicAuthUser,
-				Password: basicAuthPass,
-			})
-		} else {
-			esClient, err = elasticsearchv7.NewDefaultClient()
-		}
-
+	case '8':
+		// noop - we support this version
 	default:
-		err = fmt.Errorf("unsupported version %s", info.Version.Number)
+		err = fmt.Errorf("unsupported ES Server version %s", info.Version.Number)
 	}
-	return err
-}
-
-func esPush(b []byte) error {
-	var err error
-	var res interface{}
-	switch x := esClient.(type) {
-	// case *elasticsearchv5.Client:
-	// 	res, err = x.Index(esIndex, bytes.NewBuffer(b), x.Index.WithDocumentType("doc"))
-	// case *elasticsearchv6.Client:
-	// 	res, err = x.Index(esIndex, bytes.NewBuffer(b), x.Index.WithDocumentType("doc"))
-	case *elasticsearchv7.Client:
-		res, err = x.Index(esIndex, bytes.NewBuffer(b))
-	default:
-		err = fmt.Errorf("unsupported client %T", esClient)
-	}
-	log.Printf("%+v", res)
-	return err
+	return es, err
 }

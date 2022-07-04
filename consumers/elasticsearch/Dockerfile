@@ -1,5 +1,5 @@
 FROM //build/docker:dracon-base-go
 
-COPY elasticsearch_c /consume
+COPY elasticsearch /consume
 
 ENTRYPOINT ["/consume"]

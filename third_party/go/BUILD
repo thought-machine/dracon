@@ -1,25 +1,29 @@
 package(default_visibility = ["PUBLIC"])
 
-# TODO(hjenkins): support ES 5 in ES consumer
 go_module(
-    name = "elastic_go-elasticsearch_v5",
-    hashes = ["41840bb5dbdd99ead7037d2f55633e9616202d1e58696f0c1d6c8cc22a569a20"],
-    module = "github.com/elastic/go-elasticsearch/v5",
-    version = "v5.6.1",
-)
-
-# TODO(hjenkins): support ES 6 in ES consumer
-go_module(
-    name = "elastic_go-elasticsearch_v6",
-    hashes = ["e4691676db41046d251321bd12b88d86ecdab869a17d96374fd4eb633dddc400"],
+    name = "elastic_go-elasticsearch_v8",
+    hashes = ["7b3982f8aedf1ff8eff63afdd960916b15cf88464ac1c1e06f1a0f5b7b7add97"],
     install = [
         ".",
         "esapi",
-        "estransport",
         "internal/version",
     ],
-    module = "github.com/elastic/go-elasticsearch/v6",
-    version = "v6.8.2",
+    module = "github.com/elastic/go-elasticsearch/v8",
+    version = "v8.3.0",
+    deps = [
+        ":elastic-transport_v8",
+    ],
+)
+
+go_module(
+    name = "elastic-transport_v8",
+    hashes = ["5bff3ce3a964eab1b8a1c4f1175ccc96776fbfe2843e02fab369d2dbe8d025f7"],
+    install = [
+        "elastictransport",
+        "elastictransport/version",
+    ],
+    module = "github.com/elastic/elastic-transport-go/v8",
+    version = "v8.1.0",
 )
 
 go_module(
@@ -74,19 +78,6 @@ go_module(
     licences = ["BSD 3-Clause"],
     module = "github.com/trivago/tgo",
     version = "v1.0.7",
-)
-
-go_module(
-    name = "elastic_go-elasticsearch_v7",
-    hashes = ["943a5660abb1d2d08b47e9f3951d86667ca47c6ab2e85fd983cdd69673ccb541"],
-    install = [
-        ".",
-        "esapi",
-        "estransport",
-        "internal/version",
-    ],
-    module = "github.com/elastic/go-elasticsearch/v7",
-    version = "v7.6.0",
 )
 
 go_module(

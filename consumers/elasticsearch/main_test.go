@@ -3,19 +3,20 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	v1 "github.com/thought-machine/dracon/api/proto/v1"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
 	"time"
 
+	v1 "github.com/thought-machine/dracon/api/proto/v1"
+
 	"github.com/stretchr/testify/assert"
 )
 
 var (
 	want             = "OK"
-	info             = `{"Version":{"Number":"7.1.23"}}`
+	info             = `{"Version":{"Number":"8.1.0"}}`
 	scanUUID         = "test-uuid"
 	scanStartTime, _ = time.Parse("2006-01-02T15:04:05.000Z", "2020-04-13 11:51:53+01:00")
 
@@ -47,9 +48,9 @@ func TestEsPushBasicAuth(t *testing.T) {
 	esStub := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		buf := new(bytes.Buffer)
 		buf.ReadFrom(r.Body)
-		w.WriteHeader(200)
+		w.Header().Set("X-Elastic-Product", "Elasticsearch")
+		w.WriteHeader(http.StatusOK)
 		if r.Method == "GET" {
-
 			uname, pass, ok := r.BasicAuth()
 			assert.Equal(t, uname, "foo")
 			assert.Equal(t, pass, "bar")
@@ -76,14 +77,16 @@ func TestEsPushBasicAuth(t *testing.T) {
 	// basic auth ops
 	basicAuthUser = "foo"
 	basicAuthPass = "bar"
-	assert.Nil(t, getESClient())
-	esPush(esIn)
+	client, err := getESClient()
+	assert.Nil(t, err)
+	client.Index(esIndex, bytes.NewBuffer(esIn))
 }
 func TestEsPush(t *testing.T) {
 	esStub := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		buf := new(bytes.Buffer)
 		buf.ReadFrom(r.Body)
-		w.WriteHeader(200)
+		w.Header().Set("X-Elastic-Product", "Elasticsearch")
+		w.WriteHeader(http.StatusOK)
 		if r.Method == "GET" {
 			w.Write([]byte(info))
 		} else if r.Method == "POST" {
@@ -95,6 +98,7 @@ func TestEsPush(t *testing.T) {
 	}))
 	defer esStub.Close()
 	os.Setenv("ELASTICSEARCH_URL", esStub.URL)
-	assert.Nil(t, getESClient())
-	esPush(esIn)
+	client, err := getESClient()
+	assert.Nil(t, err)
+	client.Index(esIndex, bytes.NewBuffer(esIn))
 }

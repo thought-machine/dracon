@@ -12,7 +12,7 @@ kustomized_config(
         "pipeline-run.yaml",
     ],
     images = [
-        "//consumers/elasticsearch_c:dracon-consumer-elasticsearch",
+        "//consumers/elasticsearch:dracon-consumer-elasticsearch",
         "//cmd/enricher:dracon-enricher",
         "//source/git:dracon-source-git",
         "//producers/python_bandit:dracon-producer-bandit",
