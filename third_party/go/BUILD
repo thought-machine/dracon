@@ -693,3 +693,12 @@ go_module(
     module = "github.com/google/go-cmp",
     version = "v0.5.8",
 )
+
+go_module(
+    name = "go-sarif",
+    hashes = [""],
+    install = ["..."],
+    licences = ["Unlicense license"],
+    module = "github.com/owerumney/go-sarif",
+    version = "v2.1.2",
+)
