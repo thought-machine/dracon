@@ -696,9 +696,9 @@ go_module(
 
 go_module(
     name = "go-sarif",
-    hashes = [""],
+    hashes = ["sha1: 22c50e984ceddf7ea457e1f57ad6766c4f905df9"],
     install = ["..."],
     licences = ["Unlicense license"],
-    module = "github.com/owerumney/go-sarif",
+    module = "github.com/owenrumney/go-sarif/v2",
     version = "v2.1.2",
 )

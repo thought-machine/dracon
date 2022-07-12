@@ -9,7 +9,6 @@ go_binary(
     deps = [
         "//api/proto:v1",
         "//producers",
-        "//producers/sarif/types",
         "//third_party/go:go-sarif",
     ],
 )
@@ -23,7 +22,7 @@ go_test(
     deps = [
         "//api/proto:v1",
         "//producers",
-        "//producers/sarif/types",
+        "//third_party/go:go-sarif",
         "//third_party/go:stretchr_testify",
     ],
 )
