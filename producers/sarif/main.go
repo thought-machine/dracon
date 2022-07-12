@@ -51,6 +51,7 @@ func parseOut(run sarif.Run) []*v1.Issue {
 	return issues
 }
 
+// LevelToSeverity transforms error, warning and note levels to high, medium and low respectively
 func LevelToSeverity(level string) v1.Severity {
 	if level == "error" {
 		return v1.Severity_SEVERITY_HIGH
