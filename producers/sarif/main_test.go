@@ -39,6 +39,78 @@ func TestParseOut(t *testing.T) {
 	}
 }
 
+func TestParseOutTrivy(t *testing.T) {
+	results, err := sarif.FromString(trivyOutput)
+	if err != nil {
+		t.Logf(err.Error())
+		t.Fail()
+	}
+
+	expectedIssues := []*v1.Issue{
+		&v1.Issue{
+			Target:      "library/ubuntu",
+			Type:        "Security Automation Result",
+			Title:       "CVE-2016-20013",
+			Severity:    v1.Severity_SEVERITY_LOW,
+			Confidence:  v1.Confidence_CONFIDENCE_MEDIUM,
+			Description: "Package: libc6\nInstalled Version: 2.35-0ubuntu3\nVulnerability CVE-2016-20013\nSeverity: LOW\nFixed Version: \nLink: [CVE-2016-20013](https://avd.aquasec.com/nvd/cve-2016-20013)",
+		},
+	}
+	for _, run := range results.Runs {
+		issues := parseOut(*run)
+
+		assert.Equal(t, expectedIssues, issues)
+	}
+}
+
+var trivyOutput = `{
+	"version": "2.1.0",
+	"$schema": "https://json.schemastore.org/sarif-2.1.0-rtm.5.json",
+	"runs": [
+	  {
+		"tool": {
+		  "driver": {
+			"fullName": "Trivy Vulnerability Scanner",
+			"informationUri": "https://github.com/aquasecurity/trivy",
+			"name": "Trivy",
+			"version": "0.29.2"
+		  }
+		},
+		"results": [
+		  {
+			"ruleId": "CVE-2016-20013",
+			"ruleIndex": 3,
+			"level": "note",
+			"message": {
+			  "text": "Package: libc6\nInstalled Version: 2.35-0ubuntu3\nVulnerability CVE-2016-20013\nSeverity: LOW\nFixed Version: \nLink: [CVE-2016-20013](https://avd.aquasec.com/nvd/cve-2016-20013)"
+			},
+			"locations": [
+			  {
+				"physicalLocation": {
+				  "artifactLocation": {
+					"uri": "library/ubuntu",
+					"uriBaseId": "ROOTPATH"
+				  },
+				  "region": {
+					"startLine": 1,
+					"startColumn": 1,
+					"endLine": 1,
+					"endColumn": 1
+				  }
+				}
+			  }
+			]
+		  }
+		],
+		"columnKind": "utf16CodeUnits",
+		"originalUriBaseIds": {
+		  "ROOTPATH": {
+			"uri": "file:///"
+		  }
+		}
+	  }
+	]
+  }`
 var exampleOutput = `{
 	"runs": [{
 		"results": [{
