@@ -17,14 +17,14 @@ func TestParseOut(t *testing.T) {
 	}
 
 	expectedIssues := []*v1.Issue{
-		&v1.Issue{
+		{
 			Target:      "main.go",
 			Type:        "Security Automation Result",
 			Title:       "G404",
 			Severity:    v1.Severity_SEVERITY_HIGH,
 			Confidence:  v1.Confidence_CONFIDENCE_MEDIUM,
 			Description: "Use of weak random number generator (math/rand instead of crypto/rand)"},
-		&v1.Issue{
+		{
 			Target:      "main.go",
 			Type:        "Security Automation Result",
 			Title:       "G104",
@@ -47,7 +47,7 @@ func TestParseOutTrivy(t *testing.T) {
 	}
 
 	expectedIssues := []*v1.Issue{
-		&v1.Issue{
+		{
 			Target:      "library/ubuntu",
 			Type:        "Security Automation Result",
 			Title:       "CVE-2016-20013",
