@@ -21,6 +21,7 @@ gotool = //third_party/lang:go_tool|go
 defaultinterpreter = python3
 moduledir = third_party.python
 usepypi = true
+disablevendorflags = true
 
 [proto]
 protoctool = //third_party/proto:protoc

@@ -26,6 +26,7 @@ pip_library(
         "b3ce5a39751dd052c771fb6b840bf5c4eaeaa8356ed8549718eaab6acf06c0eb",  # TM Mirror
         "841b1413fc9f13ed481b7c2df0d3a8c58879d405aa2f289a7998e78119ba1b73",  # Public
         "ba8b2677634bce32cc743242ae5a2596c2f5c82ff1826b40ce0093a0f8d0b3c5",  # GitHub Actions
+        "331ca5f64f49cba507b2dd66b0d327acf6dffa5acae53bad1e949e5e80b3fe5f",
     ],
     licences = ["MIT"],
     version = "40.4.3",
