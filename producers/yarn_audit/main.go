@@ -12,27 +12,20 @@ func main() {
 		log.Fatal(err)
 	}
 
-	inLines, err := producers.ReadLines()
+	in, err := producers.ReadInFile()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	report, errors := types.NewReport(inLines)
-
-	// Individual errors should already be printed to logs
-	if len(errors) > 0 {
-		errorMessage := "Errors creating Yarn Audit report: %d"
-		if report != nil{
-			log.Printf(errorMessage, len(errors))
-		} else {
-			log.Fatalf(errorMessage, len(errors))
-		}
+	_, auditAdvisories, _, err := types.NewReport(in)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	if report != nil {
+	if auditAdvisories != nil {
 		if err := producers.WriteDraconOut(
 			"yarn-audit",
-			report.AsIssues(),
+			types.AsIssues(auditAdvisories),
 		); err != nil {
 			log.Fatal(err)
 		}

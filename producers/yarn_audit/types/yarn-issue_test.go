@@ -13,19 +13,18 @@ var invalidJSON = `Not a valid JSON object`
 
 func TestParseInvalidJSON(t *testing.T) {
 	oneLine := []byte(invalidJSON)
-	report, err := NewReport([][]byte{
-		oneLine,
-		oneLine,
-	})
+	actions, advisories, summaries, err := NewReport(oneLine)
 
-	assert.Nil(t, report)
+	assert.Nil(t, actions)
+	assert.Nil(t, advisories)
+	assert.Nil(t, summaries)
 
-	assert.Len(t, err, 2)
+	assert.NotNil(t, err)
 }
 
 // In reality these would be single lines, but for readability in test these should also work
-var fullYarnJSONLines [][]byte = [][]byte{
-	[]byte(`{
+var fullYarnJSONLines []byte = []byte(
+  `[{
     "type": "auditAdvisory",
     "data": {
       "resolution": {
@@ -63,7 +62,7 @@ var fullYarnJSONLines [][]byte = [][]byte{
         "patched_versions": ">=5.0.1",
         "updated": "2021-09-23T15:45:50.000Z",
         "recommendation": "Upgrade to version 5.0.1 or later",
-        "cwe": "CWE-918",
+        "cwe": ["CWE-918"],
         "found_by": null,
         "deleted": null,
         "id": 1004946,
@@ -76,8 +75,8 @@ var fullYarnJSONLines [][]byte = [][]byte{
         "url": "https://advisory.1.url"
       }
     }
-  }`),
-	[]byte(`{
+  },
+  {
     "type": "unsupported",
     "data": {
       "vulnerabilities": {
@@ -92,8 +91,8 @@ var fullYarnJSONLines [][]byte = [][]byte{
       "optionalDependencies": 0,
       "totalDependencies": 6274
     }
-  }`),
-	[]byte(`{
+  },
+  {
     "type": "auditAdvisory",
     "data": {
       "resolution": {
@@ -131,7 +130,7 @@ var fullYarnJSONLines [][]byte = [][]byte{
         "patched_versions": ">=1.2.0",
         "updated": "2021-09-23T15:45:50.000Z",
         "recommendation": "Upgrade to version 1.2.0 or later",
-        "cwe": "CWE-920",
+        "cwe": ["CWE-920"],
         "found_by": null,
         "deleted": null,
         "id": 1004947,
@@ -144,8 +143,8 @@ var fullYarnJSONLines [][]byte = [][]byte{
         "url": "https://advisory.2.url"
       }
     }
-  }`),
-	[]byte(`{
+  },
+  {
     "type":"auditAction",
     "data":{
       "cmd":"action command",
@@ -166,11 +165,11 @@ var fullYarnJSONLines [][]byte = [][]byte{
         ]
       }
     }
-  }`),
-	[]byte(`{
+  },
+  {
     "completely": "unsupported"
-  }`),
-	[]byte(`{
+  },
+  {
     "type": "auditSummary",
     "data": {
       "vulnerabilities": {
@@ -185,206 +184,211 @@ var fullYarnJSONLines [][]byte = [][]byte{
       "optionalDependencies": 0,
       "totalDependencies": 6274
     }
-  }`),
-}
+  }]`)
 
 func TestParseValidReportContainsAllSupportedFields(t *testing.T) {
-	report, err := NewReport(
-		fullYarnJSONLines,
-	)
+	actions, advisories, summaries, err := NewReport(fullYarnJSONLines)
 
 	assert.Nil(t, err)
-	assert.NotNil(t, report)
 
-	assert.NotNil(t, report.AuditSummary)
-	assert.Len(t, report.AuditAdvisories, 2)
-	assert.Len(t, report.AuditActions, 1)
+	assert.Len(t, *actions, 1)
+	assert.Len(t, *advisories, 2)
+	assert.Len(t, *summaries, 1)
 }
 
 func TestParseValidReportSummary(t *testing.T) {
-	report, err := NewReport(
-		fullYarnJSONLines,
-	)
+	_, _, summaries, err := NewReport(fullYarnJSONLines)
 
 	assert.Nil(t, err)
-	assert.NotNil(t, report)
 
-	assert.NotNil(t, report.AuditSummary)
+	assert.Len(t, *summaries, 1)
 
-	expectedSummaryData := auditSummaryData{
-		Vulnerabilities: vulnerabilities{
-			Info:     1,
-			Low:      10,
-			Moderate: 177,
-			High:     94,
-			Critical: 4,
+	expectedSummaries := []auditSummary{
+		{
+			Type: "auditSummary",
+			Data: auditSummaryData{
+				Vulnerabilities: vulnerabilities{
+					Info:     1,
+					Low:      10,
+					Moderate: 177,
+					High:     94,
+					Critical: 4,
+				},
+				Dependencies:         6274,
+				DevDependencies:      0,
+				OptionalDependencies: 0,
+				TotalDependencies:    6274,
+			},
 		},
-		Dependencies:         6274,
-		DevDependencies:      0,
-		OptionalDependencies: 0,
-		TotalDependencies:    6274,
 	}
 
-	assert.True(t, reflect.DeepEqual(&expectedSummaryData, report.AuditSummary), report.AuditSummary)
+	assert.True(t, reflect.DeepEqual(expectedSummaries, *summaries), *summaries)
 }
 
 func TestParseValidReportAdvisories(t *testing.T) {
-	report, err := NewReport(
-		fullYarnJSONLines,
-	)
+	_, advisories, _, err := NewReport(fullYarnJSONLines)
 
 	assert.Nil(t, err)
-	assert.NotNil(t, report)
 
-	assert.Len(t, report.AuditAdvisories, 2)
+	assert.Len(t, *advisories, 2)
 
-	expectedAdvisories := []*auditAdvisoryData{
+	expectedAdvisories := []auditAdvisory{
 		{
-			Resolution: auditResolution{
-				ID:       1004946,
-				Path:     "advisory1Path",
-				Dev:      false,
-				Optional: false,
-				Bundled:  false,
-			},
-			Advisory: yarnAdvisory{
-				Findings: []finding{
-					{
-						Version: "5.0.0",
-						Paths: []string{
-							"some/path",
-							"another/path",
+			Type: "auditAdvisory",
+			Data: auditAdvisoryData{
+				Resolution: auditResolution{
+					ID:       1004946,
+					Path:     "advisory1Path",
+					Dev:      false,
+					Optional: false,
+					Bundled:  false,
+				},
+				Advisory: yarnAdvisory{
+					Findings: []finding{
+						{
+							Version: "5.0.0",
+							Paths: []string{
+								"some/path",
+								"another/path",
+							},
+						},
+						{
+							Version: "5.0.0",
+							Paths: []string{
+								"more/findings/path",
+							},
 						},
 					},
-					{
-						Version: "5.0.0",
-						Paths: []string{
-							"more/findings/path",
-						},
+					Metadata:           nil,
+					VulnerableVersions: ">2.1.1 <5.0.1",
+					ModuleName:         "super-awesome-module",
+					Severity:           "moderate",
+					GithubAdvisoryID:   "GHSA-93q8-gq69-wqmw",
+					Cves: []string{
+						"CVE-2022-0001",
 					},
+					Access:          "public",
+					PatchedVersions: ">=5.0.1",
+					Updated:         "2021-09-23T15:45:50.000Z",
+					Recommendation:  "Upgrade to version 5.0.1 or later",
+					Cwe: []string{
+						"CWE-918",
+					},
+					FoundBy:         nil,
+					Deleted:         false,
+					ID:              1004946,
+					References:      "- https://advisory1.test.url/Ref1\n- https://advisory1.test.url/Ref2",
+					Created:         "2021-11-18T16:00:48.472Z",
+					ReportedBy:      nil,
+					Title:           "ADVISORY 1 TITLE",
+					NpmAdvisoryID:   nil,
+					Overview:        "Advisory 1 overview",
+					URL:             "https://advisory.1.url",
 				},
-				Metadata:           nil,
-				VulnerableVersions: ">2.1.1 <5.0.1",
-				ModuleName:         "super-awesome-module",
-				Severity:           "moderate",
-				GithubAdvisoryID:   "GHSA-93q8-gq69-wqmw",
-				Cves: []string{
-					"CVE-2022-0001",
-				},
-				Access:          "public",
-				PatchedVersions: ">=5.0.1",
-				Updated:         "2021-09-23T15:45:50.000Z",
-				Recommendation:  "Upgrade to version 5.0.1 or later",
-				Cwe:             "CWE-918",
-				FoundBy:         nil,
-				Deleted:         false,
-				ID:              1004946,
-				References:      "- https://advisory1.test.url/Ref1\n- https://advisory1.test.url/Ref2",
-				Created:         "2021-11-18T16:00:48.472Z",
-				ReportedBy:      nil,
-				Title:           "ADVISORY 1 TITLE",
-				NpmAdvisoryID:   nil,
-				Overview:        "Advisory 1 overview",
-				URL:             "https://advisory.1.url",
 			},
 		},
 		{
-			Resolution: auditResolution{
-				ID:       1004947,
-				Path:     "advisory2Path",
-				Dev:      true,
-				Optional: false,
-				Bundled:  false,
-			},
-			Advisory: yarnAdvisory{
-				Findings: []finding{
-					{
-						Version: "1.1.0",
-						Paths: []string{
-							"some/path",
-							"another/path",
+			Type: "auditAdvisory",
+			Data: auditAdvisoryData{
+				Resolution: auditResolution{
+					ID:       1004947,
+					Path:     "advisory2Path",
+					Dev:      true,
+					Optional: false,
+					Bundled:  false,
+				},
+				Advisory: yarnAdvisory{
+					Findings: []finding{
+						{
+							Version: "1.1.0",
+							Paths: []string{
+								"some/path",
+								"another/path",
+							},
+						},
+						{
+							Version: "1.1.0",
+							Paths: []string{
+								"more/findings/path",
+							},
 						},
 					},
-					{
-						Version: "1.1.0",
-						Paths: []string{
-							"more/findings/path",
-						},
+					Metadata:           nil,
+					VulnerableVersions: ">1.1.1 <1.2.0",
+					ModuleName:         "not-so-awesome-module",
+					Severity:           "low",
+					GithubAdvisoryID:   "GHSA-93q8-gq69-wqmw",
+					Cves: []string{
+						"CVE-2022-0002",
 					},
+					Access:          "public",
+					PatchedVersions: ">=1.2.0",
+					Updated:         "2021-09-23T15:45:50.000Z",
+					Recommendation:  "Upgrade to version 1.2.0 or later",
+					Cwe: []string{
+						"CWE-920",
+					},
+					FoundBy:         nil,
+					Deleted:         false,
+					ID:              1004947,
+					References:      "- https://advisory2.test.url/Ref1\n- https://advisory2.test.url/Ref2\n- https://advisory2.test.url/Ref3",
+					Created:         "2021-11-18T16:00:48.472Z",
+					ReportedBy:      nil,
+					Title:           "ADVISORY 2 TITLE",
+					NpmAdvisoryID:   nil,
+					Overview:        "Advisory 2 overview",
+					URL:             "https://advisory.2.url",
 				},
-				Metadata:           nil,
-				VulnerableVersions: ">1.1.1 <1.2.0",
-				ModuleName:         "not-so-awesome-module",
-				Severity:           "low",
-				GithubAdvisoryID:   "GHSA-93q8-gq69-wqmw",
-				Cves: []string{
-					"CVE-2022-0002",
-				},
-				Access:          "public",
-				PatchedVersions: ">=1.2.0",
-				Updated:         "2021-09-23T15:45:50.000Z",
-				Recommendation:  "Upgrade to version 1.2.0 or later",
-				Cwe:             "CWE-920",
-				FoundBy:         nil,
-				Deleted:         false,
-				ID:              1004947,
-				References:      "- https://advisory2.test.url/Ref1\n- https://advisory2.test.url/Ref2\n- https://advisory2.test.url/Ref3",
-				Created:         "2021-11-18T16:00:48.472Z",
-				ReportedBy:      nil,
-				Title:           "ADVISORY 2 TITLE",
-				NpmAdvisoryID:   nil,
-				Overview:        "Advisory 2 overview",
-				URL:             "https://advisory.2.url",
 			},
 		},
 	}
 
-	assert.True(t, reflect.DeepEqual(expectedAdvisories, report.AuditAdvisories), report.AuditAdvisories)
+	assert.True(t, reflect.DeepEqual(expectedAdvisories, *advisories), *advisories)
 }
 
 func TestParseValidReportActions(t *testing.T) {
-	report, err := NewReport(
-		fullYarnJSONLines,
-	)
+	actions, _, _, err := NewReport(fullYarnJSONLines)
 
 	assert.Nil(t, err)
-	assert.NotNil(t, report)
 
-	assert.Len(t, report.AuditActions, 1)
+	assert.Len(t, *actions, 1)
 
-	expectedActionData := auditActionData{
-		Cmd:        "action command",
-		IsBreaking: false,
-		Action: auditAction{
-			Action:  "action string",
-			Module:  "action module string",
-			Target:  "action target",
-			IsMajor: true,
-			Resolves: []auditResolution{
-				{
-					ID:       1,
-					Path:     "action reolve path",
-					Dev:      true,
-					Optional: true,
-					Bundled:  true,
+	expectedActions := []auditAction{
+		{
+			Type: "auditAction",
+			Data: auditActionData{
+				Cmd:        "action command",
+				IsBreaking: false,
+				Action: auditActionAction{
+					Action:  "action string",
+					Module:  "action module string",
+					Target:  "action target",
+					IsMajor: true,
+					Resolves: []auditResolution{
+						{
+							ID:       1,
+							Path:     "action reolve path",
+							Dev:      true,
+							Optional: true,
+							Bundled:  true,
+						},
+					},
 				},
 			},
 		},
 	}
 
-	assert.True(t, reflect.DeepEqual(&expectedActionData, report.AuditActions[0]), report.AuditActions[0])
+	assert.True(t, reflect.DeepEqual(expectedActions, *actions), *actions)
 }
 
 func TestParseValidReportAsIssues(t *testing.T) {
-	report, err := NewReport(
-		fullYarnJSONLines,
-	)
+	_, advisories, _, err := NewReport(fullYarnJSONLines)
 
 	assert.Nil(t, err)
 
-	assert.Len(t, report.AuditAdvisories, 2)
+	assert.Len(t, *advisories, 2)
 
-	issues := report.AsIssues()
+	issues := AsIssues(advisories)
 	assert.Len(t, issues, 2)
 
 	expectedIssues := []*v1.Issue{
