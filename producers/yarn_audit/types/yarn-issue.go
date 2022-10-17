@@ -202,22 +202,13 @@ func (audit *auditAdvisoryData) AsIssue() *v1.Issue {
 	}
 	targetName += audit.Advisory.ModuleName
 
-	// yarn audit now outputs CWEs as an array. if there is at least one CWE use a comma-separated list,
-	// else use empty string
-	cweType := ""
-	if(len(audit.Advisory.Cwe) > 0) {
-		cweType = audit.Advisory.Cwe[0]
-
-		if (len(audit.Advisory.Cwe) > 1) {
-			for _, cwe := range audit.Advisory.Cwe {
-				cweType += fmt.Sprintf(", %s", cwe)
-			}
-		}
-	}
+	// yarn audit now outputs CWEs as an array. if there is at least one CWE provide a comma-separated list
+	// to issue constructor, else provide empty string
+	cwe := strings.Join(audit.Advisory.Cwe, ", ")
 
 	return &v1.Issue{
 		Target:      targetName,
-		Type:        cweType,
+		Type:        cwe,
 		Title:       audit.Advisory.Title,
 		Severity:    yarnToIssueSeverity(audit.Advisory.Severity),
 		Confidence:  v1.Confidence_CONFIDENCE_HIGH,
