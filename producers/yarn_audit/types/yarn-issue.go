@@ -25,13 +25,16 @@ func yarnToIssueSeverity(severity string) v1.Severity {
 	}
 }
 
+// AuditAction represents the action type within yarn audit output
 type AuditAction struct {
-	Type string 			`json:"type"`
-	Data auditActionData	`json:"data"`
+	Type string          `json:"type"`
+	Data auditActionData `json:"data"`
 }
 
+// AuditActions is a slice of AuditAction type
 type AuditActions []AuditAction
 
+// AuditAction.Unmarshal attempts to unmarshal a raw JSON message into the AuditAction struct
 func (audit *AuditAction) Unmarshal(raw json.RawMessage) bool {
 	if err := json.Unmarshal(raw, audit); err != nil {
 		return false
@@ -39,13 +42,16 @@ func (audit *AuditAction) Unmarshal(raw json.RawMessage) bool {
 	return audit.Type == "auditAction"
 }
 
+// AuditAdvisory represents the advisory type within yarn audit output
 type AuditAdvisory struct {
-	Type string 			`json:"type"`
-	Data auditAdvisoryData 	`json:"data"`
+	Type string            `json:"type"`
+	Data auditAdvisoryData `json:"data"`
 }
 
+// AuditAdvisories is a slice of AuditAdvisory type
 type AuditAdvisories []AuditAdvisory
 
+// AuditAdvisory.Unmarshal attempts to unmarshal a raw JSON message into the AuditAdvisory struct
 func (audit *AuditAdvisory) Unmarshal(raw json.RawMessage) bool {
 	if err := json.Unmarshal(raw, audit); err != nil {
 		return false
@@ -53,13 +59,16 @@ func (audit *AuditAdvisory) Unmarshal(raw json.RawMessage) bool {
 	return audit.Type == "auditAdvisory"
 }
 
+// AuditSummary represents the summary type within yarn audit output
 type AuditSummary struct {
-	Type string 			`json:"type"`
-	Data auditSummaryData 	`json:"data"`
+	Type string           `json:"type"`
+	Data auditSummaryData `json:"data"`
 }
 
+// AuditSummaries is a slice of AuditSummary type
 type AuditSummaries []AuditSummary
 
+// AuditSummary.Unmarshal attempts to unmarshal a raw JSON message into the AuditSummary struct
 func (audit *AuditSummary) Unmarshal(raw json.RawMessage) bool {
 	if err := json.Unmarshal(raw, audit); err != nil {
 		return false
@@ -68,9 +77,9 @@ func (audit *AuditSummary) Unmarshal(raw json.RawMessage) bool {
 }
 
 type auditActionData struct {
-	Cmd        string      			`json:"cmd"`
-	IsBreaking bool        			`json:"isBreaking"`
-	Action     auditActionAction 	`json:"action"`
+	Cmd        string            `json:"cmd"`
+	IsBreaking bool              `json:"isBreaking"`
+	Action     auditActionAction `json:"action"`
 }
 
 type auditAdvisoryData struct {
@@ -112,12 +121,12 @@ type yarnAdvisory struct {
 	Cves               []string          `json:"cves"`
 	Access             string            `json:"access"`
 	PatchedVersions    string            `json:"patched_versions"`
-	Cvss			   cvss				 `json:"cvss"`
+	Cvss               cvss              `json:"cvss"`
 	Updated            string            `json:"updated"`
 	Recommendation     string            `json:"recommendation"`
 	Cwe                []string          `json:"cwe"`
 	FoundBy            *contact          `json:"found_by"`
-	Deleted            bool          	 `json:"deleted"`
+	Deleted            bool              `json:"deleted"`
 	ID                 int               `json:"id"`
 	References         string            `json:"references"`
 	Created            string            `json:"created"`
@@ -129,8 +138,8 @@ type yarnAdvisory struct {
 }
 
 type cvss struct {
-	Score 		 json.Number `json:"score"`
-	VectorString string 	 `json:"vectorString"`
+	Score        json.Number `json:"score"`
+	VectorString string      `json:"vectorString"`
 }
 
 type finding struct {
@@ -151,7 +160,7 @@ type auditResolution struct {
 
 type advisoryMetaData struct {
 	ModuleType         string `json:"module_type"`
-	Exploitability      int   `json:"exploitability"`
+	Exploitability     int    `json:"exploitability"`
 	AffectedComponents string `json:"affected_components"`
 }
 
@@ -159,12 +168,14 @@ type contact struct {
 	Name string `json: name`
 }
 
+// YarnReport holds the actions/advisories/summaries from yarn audit input JSON
 type YarnReport struct {
 	AuditActions    AuditActions
 	AuditAdvisories AuditAdvisories
 	AuditSummaries  AuditSummaries
 }
 
+// NewReport transforms input yarn audit JSON into a YarnReport
 func NewReport(report []byte) (YarnReport, error) {
 	var raws []json.RawMessage
 	if err := json.Unmarshal(report, &raws); err != nil {

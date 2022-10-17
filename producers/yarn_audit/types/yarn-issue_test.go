@@ -66,7 +66,7 @@ func TestParseCompletelyUnsupportedJSON(t *testing.T) {
 
 // In reality these would be single lines, but for readability in test these should also work
 var fullYarnJSONLines []byte = []byte(
-  `[{
+	`[{
     "type": "auditAdvisory",
     "data": {
       "resolution": {
@@ -297,16 +297,16 @@ func TestParseValidReportAdvisories(t *testing.T) {
 					Cwe: []string{
 						"CWE-918",
 					},
-					FoundBy:         nil,
-					Deleted:         false,
-					ID:              1004946,
-					References:      "- https://advisory1.test.url/Ref1\n- https://advisory1.test.url/Ref2",
-					Created:         "2021-11-18T16:00:48.472Z",
-					ReportedBy:      nil,
-					Title:           "ADVISORY 1 TITLE",
-					NpmAdvisoryID:   nil,
-					Overview:        "Advisory 1 overview",
-					URL:             "https://advisory.1.url",
+					FoundBy:       nil,
+					Deleted:       false,
+					ID:            1004946,
+					References:    "- https://advisory1.test.url/Ref1\n- https://advisory1.test.url/Ref2",
+					Created:       "2021-11-18T16:00:48.472Z",
+					ReportedBy:    nil,
+					Title:         "ADVISORY 1 TITLE",
+					NpmAdvisoryID: nil,
+					Overview:      "Advisory 1 overview",
+					URL:           "https://advisory.1.url",
 				},
 			},
 		},
@@ -351,16 +351,16 @@ func TestParseValidReportAdvisories(t *testing.T) {
 					Cwe: []string{
 						"CWE-920",
 					},
-					FoundBy:         nil,
-					Deleted:         false,
-					ID:              1004947,
-					References:      "- https://advisory2.test.url/Ref1\n- https://advisory2.test.url/Ref2\n- https://advisory2.test.url/Ref3",
-					Created:         "2021-11-18T16:00:48.472Z",
-					ReportedBy:      nil,
-					Title:           "ADVISORY 2 TITLE",
-					NpmAdvisoryID:   nil,
-					Overview:        "Advisory 2 overview",
-					URL:             "https://advisory.2.url",
+					FoundBy:       nil,
+					Deleted:       false,
+					ID:            1004947,
+					References:    "- https://advisory2.test.url/Ref1\n- https://advisory2.test.url/Ref2\n- https://advisory2.test.url/Ref3",
+					Created:       "2021-11-18T16:00:48.472Z",
+					ReportedBy:    nil,
+					Title:         "ADVISORY 2 TITLE",
+					NpmAdvisoryID: nil,
+					Overview:      "Advisory 2 overview",
+					URL:           "https://advisory.2.url",
 				},
 			},
 		},
@@ -415,7 +415,7 @@ func TestParseValidReportAsIssues(t *testing.T) {
 	assert.Len(t, issues, 2)
 
 	expectedIssues := []*v1.Issue{
-		&v1.Issue{
+		{
 			Target:     "advisory1Path: super-awesome-module",
 			Type:       "CWE-918",
 			Title:      "ADVISORY 1 TITLE",
@@ -431,7 +431,7 @@ Advisory URL: https://advisory.1.url
 `,
 			Cve: "CVE-2022-0001",
 		},
-		&v1.Issue{
+		{
 			Target:     "advisory2Path: not-so-awesome-module",
 			Type:       "CWE-920",
 			Title:      "ADVISORY 2 TITLE",
