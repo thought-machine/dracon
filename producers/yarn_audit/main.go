@@ -17,15 +17,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	_, auditAdvisories, _, err := types.NewReport(in)
+	yarnReport, err := types.NewReport(in)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if auditAdvisories != nil {
+	if yarnReport.AuditAdvisories != nil {
 		if err := producers.WriteDraconOut(
 			"yarn-audit",
-			types.AsIssues(auditAdvisories),
+			yarnReport.AuditAdvisories.AsIssues(),
 		); err != nil {
 			log.Fatal(err)
 		}

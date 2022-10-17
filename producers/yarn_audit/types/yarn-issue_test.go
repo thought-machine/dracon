@@ -9,15 +9,57 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var invalidJSON = `Not a valid JSON object`
+var invalidJSON []byte = []byte(`Not a valid JSON object`)
 
 func TestParseInvalidJSON(t *testing.T) {
-	oneLine := []byte(invalidJSON)
-	actions, advisories, summaries, err := NewReport(oneLine)
+	report, err := NewReport(invalidJSON)
 
-	assert.Nil(t, actions)
-	assert.Nil(t, advisories)
-	assert.Nil(t, summaries)
+	assert.Nil(t, report.AuditActions)
+	assert.Nil(t, report.AuditAdvisories)
+	assert.Nil(t, report.AuditSummaries)
+
+	assert.NotNil(t, err)
+}
+
+var unsupportedTypeJSON []byte = []byte(
+	`[{
+	  "type": "unsupported",
+	  "data": {
+		"vulnerabilities": {
+		  "info": 1,
+		  "low": 10,
+		  "moderate": 177,
+		  "high": 94,
+		  "critical": 4
+		},
+		"dependencies": 6274,
+		"devDependencies": 0,
+		"optionalDependencies": 0,
+		"totalDependencies": 6274
+	  }
+	}]`)
+
+func TestParseUnsupportedTypeJSON(t *testing.T) {
+	report, err := NewReport(unsupportedTypeJSON)
+
+	assert.Nil(t, report.AuditActions)
+	assert.Nil(t, report.AuditAdvisories)
+	assert.Nil(t, report.AuditSummaries)
+
+	assert.NotNil(t, err)
+}
+
+var completelyUnsupportedJSON []byte = []byte(
+	`{
+	  "completely": "unsupported"
+	},`)
+
+func TestParseCompletelyUnsupportedJSON(t *testing.T) {
+	report, err := NewReport(completelyUnsupportedJSON)
+
+	assert.Nil(t, report.AuditActions)
+	assert.Nil(t, report.AuditAdvisories)
+	assert.Nil(t, report.AuditSummaries)
 
 	assert.NotNil(t, err)
 }
@@ -74,22 +116,6 @@ var fullYarnJSONLines []byte = []byte(
         "overview": "Advisory 1 overview",
         "url": "https://advisory.1.url"
       }
-    }
-  },
-  {
-    "type": "unsupported",
-    "data": {
-      "vulnerabilities": {
-        "info": 1,
-        "low": 10,
-        "moderate": 177,
-        "high": 94,
-        "critical": 4
-      },
-      "dependencies": 6274,
-      "devDependencies": 0,
-      "optionalDependencies": 0,
-      "totalDependencies": 6274
     }
   },
   {
@@ -167,9 +193,6 @@ var fullYarnJSONLines []byte = []byte(
     }
   },
   {
-    "completely": "unsupported"
-  },
-  {
     "type": "auditSummary",
     "data": {
       "vulnerabilities": {
@@ -187,23 +210,23 @@ var fullYarnJSONLines []byte = []byte(
   }]`)
 
 func TestParseValidReportContainsAllSupportedFields(t *testing.T) {
-	actions, advisories, summaries, err := NewReport(fullYarnJSONLines)
+	report, err := NewReport(fullYarnJSONLines)
 
 	assert.Nil(t, err)
 
-	assert.Len(t, *actions, 1)
-	assert.Len(t, *advisories, 2)
-	assert.Len(t, *summaries, 1)
+	assert.Len(t, report.AuditActions, 1)
+	assert.Len(t, report.AuditAdvisories, 2)
+	assert.Len(t, report.AuditSummaries, 1)
 }
 
 func TestParseValidReportSummary(t *testing.T) {
-	_, _, summaries, err := NewReport(fullYarnJSONLines)
+	report, err := NewReport(fullYarnJSONLines)
 
 	assert.Nil(t, err)
 
-	assert.Len(t, *summaries, 1)
+	assert.Len(t, report.AuditSummaries, 1)
 
-	expectedSummaries := []AuditSummary{
+	expectedSummaries := AuditSummaries{
 		{
 			Type: "auditSummary",
 			Data: auditSummaryData{
@@ -222,17 +245,17 @@ func TestParseValidReportSummary(t *testing.T) {
 		},
 	}
 
-	assert.True(t, reflect.DeepEqual(expectedSummaries, *summaries), *summaries)
+	assert.True(t, reflect.DeepEqual(expectedSummaries, report.AuditSummaries), report.AuditSummaries)
 }
 
 func TestParseValidReportAdvisories(t *testing.T) {
-	_, advisories, _, err := NewReport(fullYarnJSONLines)
+	report, err := NewReport(fullYarnJSONLines)
 
 	assert.Nil(t, err)
 
-	assert.Len(t, *advisories, 2)
+	assert.Len(t, report.AuditAdvisories, 2)
 
-	expectedAdvisories := []AuditAdvisory{
+	expectedAdvisories := AuditAdvisories{
 		{
 			Type: "auditAdvisory",
 			Data: auditAdvisoryData{
@@ -343,17 +366,17 @@ func TestParseValidReportAdvisories(t *testing.T) {
 		},
 	}
 
-	assert.True(t, reflect.DeepEqual(expectedAdvisories, *advisories), *advisories)
+	assert.True(t, reflect.DeepEqual(expectedAdvisories, report.AuditAdvisories), report.AuditAdvisories)
 }
 
 func TestParseValidReportActions(t *testing.T) {
-	actions, _, _, err := NewReport(fullYarnJSONLines)
+	report, err := NewReport(fullYarnJSONLines)
 
 	assert.Nil(t, err)
 
-	assert.Len(t, *actions, 1)
+	assert.Len(t, report.AuditActions, 1)
 
-	expectedActions := []AuditAction{
+	expectedActions := AuditActions{
 		{
 			Type: "auditAction",
 			Data: auditActionData{
@@ -378,17 +401,17 @@ func TestParseValidReportActions(t *testing.T) {
 		},
 	}
 
-	assert.True(t, reflect.DeepEqual(expectedActions, *actions), *actions)
+	assert.True(t, reflect.DeepEqual(expectedActions, report.AuditActions), report.AuditActions)
 }
 
 func TestParseValidReportAsIssues(t *testing.T) {
-	_, advisories, _, err := NewReport(fullYarnJSONLines)
+	report, err := NewReport(fullYarnJSONLines)
 
 	assert.Nil(t, err)
 
-	assert.Len(t, *advisories, 2)
+	assert.Len(t, report.AuditAdvisories, 2)
 
-	issues := AsIssues(advisories)
+	issues := report.AuditAdvisories.AsIssues()
 	assert.Len(t, issues, 2)
 
 	expectedIssues := []*v1.Issue{

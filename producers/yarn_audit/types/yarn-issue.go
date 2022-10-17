@@ -2,6 +2,7 @@ package types
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -29,6 +30,8 @@ type AuditAction struct {
 	Data auditActionData	`json:"data"`
 }
 
+type AuditActions []AuditAction
+
 func (audit *AuditAction) Unmarshal(raw json.RawMessage) bool {
 	if err := json.Unmarshal(raw, audit); err != nil {
 		return false
@@ -41,6 +44,8 @@ type AuditAdvisory struct {
 	Data auditAdvisoryData 	`json:"data"`
 }
 
+type AuditAdvisories []AuditAdvisory
+
 func (audit *AuditAdvisory) Unmarshal(raw json.RawMessage) bool {
 	if err := json.Unmarshal(raw, audit); err != nil {
 		return false
@@ -52,6 +57,8 @@ type AuditSummary struct {
 	Type string 			`json:"type"`
 	Data auditSummaryData 	`json:"data"`
 }
+
+type AuditSummaries []AuditSummary
 
 func (audit *AuditSummary) Unmarshal(raw json.RawMessage) bool {
 	if err := json.Unmarshal(raw, audit); err != nil {
@@ -68,7 +75,7 @@ type auditActionData struct {
 
 type auditAdvisoryData struct {
 	Resolution auditResolution `json:"resolution"`
-	Advisory   yarnAdvisory        `json:"advisory"`
+	Advisory   yarnAdvisory    `json:"advisory"`
 }
 
 type auditSummaryData struct {
@@ -123,7 +130,7 @@ type yarnAdvisory struct {
 
 type cvss struct {
 	Score 		 json.Number `json:"score"`
-	VectorString string `json:"vectorString"`
+	VectorString string 	 `json:"vectorString"`
 }
 
 type finding struct {
@@ -144,7 +151,7 @@ type auditResolution struct {
 
 type advisoryMetaData struct {
 	ModuleType         string `json:"module_type"`
-	Exploitability      int    `json:"exploitability"`
+	Exploitability      int   `json:"exploitability"`
 	AffectedComponents string `json:"affected_components"`
 }
 
@@ -152,35 +159,48 @@ type contact struct {
 	Name string `json: name`
 }
 
-func NewReport(report []byte) (*[]AuditAction, *[]AuditAdvisory, *[]AuditSummary, error) {
+type YarnReport struct {
+	AuditActions    AuditActions
+	AuditAdvisories AuditAdvisories
+	AuditSummaries  AuditSummaries
+}
 
+func NewReport(report []byte) (YarnReport, error) {
 	var raws []json.RawMessage
 	if err := json.Unmarshal(report, &raws); err != nil {
-		return nil, nil, nil, err
+		return YarnReport{}, err
 	}
 
-	var auditActions []AuditAction
-	var auditAdvisories []AuditAdvisory
-	var auditSummaries []AuditSummary
+	var auditActions AuditActions
+	var auditAdvisories AuditAdvisories
+	var auditSummaries AuditSummaries
 
 	for _, raw := range raws {
 		auditAction := new(AuditAction)
 		if auditAction.Unmarshal(raw) {
 			auditActions = append(auditActions, *auditAction)
+			continue
 		}
 
 		auditAdvisory := new(AuditAdvisory)
 		if auditAdvisory.Unmarshal(raw) {
 			auditAdvisories = append(auditAdvisories, *auditAdvisory)
+			continue
 		}
 
 		auditSummary := new(AuditSummary)
 		if auditSummary.Unmarshal(raw) {
 			auditSummaries = append(auditSummaries, *auditSummary)
+			continue
 		}
+
+		err := errors.New(fmt.Sprintf("Unable to unmarshal JSON into known structure: %s", raw))
+		return YarnReport{}, err
 	}
 
-	return &auditActions, &auditAdvisories, &auditSummaries, nil
+	yarnReport := YarnReport{auditActions, auditAdvisories, auditSummaries}
+
+	return yarnReport, nil
 }
 
 func (advisory *yarnAdvisory) GetDescription() string {
@@ -218,10 +238,10 @@ func (audit *auditAdvisoryData) AsIssue() *v1.Issue {
 }
 
 // AsIssues returns an auditAdvisory as Dracon v1.Issue list
-func AsIssues(advisories *[]AuditAdvisory) []*v1.Issue {
+func (advisories AuditAdvisories) AsIssues() []*v1.Issue {
 	issues := make([]*v1.Issue, 0)
 
-	for _, audit := range *advisories {
+	for _, audit := range advisories {
 		issues = append(issues, audit.Data.AsIssue())
 	}
 
