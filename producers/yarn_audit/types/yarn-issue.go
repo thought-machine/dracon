@@ -2,7 +2,6 @@ package types
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strings"
 
@@ -34,7 +33,7 @@ type AuditAction struct {
 // AuditActions is a slice of AuditAction type
 type AuditActions []AuditAction
 
-// AuditAction.Unmarshal attempts to unmarshal a raw JSON message into the AuditAction struct
+// Unmarshal attempts to unmarshal a raw JSON message into the AuditAction struct
 func (audit *AuditAction) Unmarshal(raw json.RawMessage) bool {
 	if err := json.Unmarshal(raw, audit); err != nil {
 		return false
@@ -51,7 +50,7 @@ type AuditAdvisory struct {
 // AuditAdvisories is a slice of AuditAdvisory type
 type AuditAdvisories []AuditAdvisory
 
-// AuditAdvisory.Unmarshal attempts to unmarshal a raw JSON message into the AuditAdvisory struct
+// Unmarshal attempts to unmarshal a raw JSON message into the AuditAdvisory struct
 func (audit *AuditAdvisory) Unmarshal(raw json.RawMessage) bool {
 	if err := json.Unmarshal(raw, audit); err != nil {
 		return false
@@ -68,7 +67,7 @@ type AuditSummary struct {
 // AuditSummaries is a slice of AuditSummary type
 type AuditSummaries []AuditSummary
 
-// AuditSummary.Unmarshal attempts to unmarshal a raw JSON message into the AuditSummary struct
+// Unmarshal attempts to unmarshal a raw JSON message into the AuditSummary struct
 func (audit *AuditSummary) Unmarshal(raw json.RawMessage) bool {
 	if err := json.Unmarshal(raw, audit); err != nil {
 		return false
@@ -178,38 +177,34 @@ type YarnReport struct {
 // NewReport transforms input yarn audit JSON into a YarnReport
 func NewReport(report []byte) (YarnReport, error) {
 	var raws []json.RawMessage
+	yarnReport := YarnReport{}
+
 	if err := json.Unmarshal(report, &raws); err != nil {
 		return YarnReport{}, err
 	}
 
-	var auditActions AuditActions
-	var auditAdvisories AuditAdvisories
-	var auditSummaries AuditSummaries
-
 	for _, raw := range raws {
 		auditAction := new(AuditAction)
 		if auditAction.Unmarshal(raw) {
-			auditActions = append(auditActions, *auditAction)
+			yarnReport.AuditActions = append(yarnReport.AuditActions, *auditAction)
 			continue
 		}
 
 		auditAdvisory := new(AuditAdvisory)
 		if auditAdvisory.Unmarshal(raw) {
-			auditAdvisories = append(auditAdvisories, *auditAdvisory)
+			yarnReport.AuditAdvisories = append(yarnReport.AuditAdvisories, *auditAdvisory)
 			continue
 		}
 
 		auditSummary := new(AuditSummary)
 		if auditSummary.Unmarshal(raw) {
-			auditSummaries = append(auditSummaries, *auditSummary)
+			yarnReport.AuditSummaries = append(yarnReport.AuditSummaries, *auditSummary)
 			continue
 		}
 
-		err := errors.New(fmt.Sprintf("Unable to unmarshal JSON into known structure: %s", raw))
+		err := fmt.Errorf("Unable to unmarshal JSON into known structure: %s", raw)
 		return YarnReport{}, err
 	}
-
-	yarnReport := YarnReport{auditActions, auditAdvisories, auditSummaries}
 
 	return yarnReport, nil
 }
