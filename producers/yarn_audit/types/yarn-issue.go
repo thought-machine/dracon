@@ -6,13 +6,9 @@ import (
 	"strings"
 
 	v1 "github.com/thought-machine/dracon/api/proto/v1"
-	"github.com/thought-machine/dracon/producers"
-
-	"log"
 )
 
 func yarnToIssueSeverity(severity string) v1.Severity {
-
 	switch severity {
 	case "low":
 		return v1.Severity_SEVERITY_LOW
@@ -28,64 +24,66 @@ func yarnToIssueSeverity(severity string) v1.Severity {
 	}
 }
 
-type yarnAuditLine struct {
-	Type string      `json:"type"`
-	Data interface{} `json:"data"`
+// AuditAction represents the action type within yarn audit output
+type AuditAction struct {
+	Type string          `json:"type"`
+	Data auditActionData `json:"data"`
 }
 
-func (yl *yarnAuditLine) UnmarshalJSON(data []byte) error {
-	var typ struct {
-		Type string `json:"type"`
+// AuditActions is a slice of AuditAction type
+type AuditActions []AuditAction
+
+// Unmarshal attempts to unmarshal a raw JSON message into the AuditAction struct
+func (audit *AuditAction) Unmarshal(raw json.RawMessage) bool {
+	if err := json.Unmarshal(raw, audit); err != nil {
+		return false
 	}
+	return audit.Type == "auditAction"
+}
 
-	if err := json.Unmarshal(data, &typ); err != nil {
-		return err
+// AuditAdvisory represents the advisory type within yarn audit output
+type AuditAdvisory struct {
+	Type string            `json:"type"`
+	Data auditAdvisoryData `json:"data"`
+}
+
+// AuditAdvisories is a slice of AuditAdvisory type
+type AuditAdvisories []AuditAdvisory
+
+// Unmarshal attempts to unmarshal a raw JSON message into the AuditAdvisory struct
+func (audit *AuditAdvisory) Unmarshal(raw json.RawMessage) bool {
+	if err := json.Unmarshal(raw, audit); err != nil {
+		return false
 	}
+	return audit.Type == "auditAdvisory"
+}
 
-	switch typ.Type {
-	case "auditSummary":
-		yl.Data = new(auditSummaryData)
-	case "auditAdvisory":
-		yl.Data = new(auditAdvisoryData)
-	case "auditAction":
-		yl.Data = new(auditActionData)
-	default:
-		log.Printf("Parsed unsupported type: %s", typ.Type)
+// AuditSummary represents the summary type within yarn audit output
+type AuditSummary struct {
+	Type string           `json:"type"`
+	Data auditSummaryData `json:"data"`
+}
+
+// AuditSummaries is a slice of AuditSummary type
+type AuditSummaries []AuditSummary
+
+// Unmarshal attempts to unmarshal a raw JSON message into the AuditSummary struct
+func (audit *AuditSummary) Unmarshal(raw json.RawMessage) bool {
+	if err := json.Unmarshal(raw, audit); err != nil {
+		return false
 	}
-
-	type tmp yarnAuditLine // avoids infinite recursion
-	return json.Unmarshal(data, (*tmp)(yl))
-
+	return audit.Type == "auditSummary"
 }
 
 type auditActionData struct {
-	Cmd        string      `json:"cmd"`
-	IsBreaking bool        `json:"isBreaking"`
-	Action     auditAction `json:"action"`
+	Cmd        string            `json:"cmd"`
+	IsBreaking bool              `json:"isBreaking"`
+	Action     auditActionAction `json:"action"`
 }
 
 type auditAdvisoryData struct {
 	Resolution auditResolution `json:"resolution"`
-	Advisory   yarnAdvisory        `json:"advisory"`
-}
-
-// AsIssue returns data as a Dracon v1.Issue
-func (audit *auditAdvisoryData) AsIssue() *v1.Issue {
-	var targetName string
-	if audit.Resolution.Path != "" {
-		targetName = audit.Resolution.Path + ": "
-	}
-	targetName += audit.Advisory.ModuleName
-
-	return &v1.Issue{
-		Target:      targetName,
-		Type:        audit.Advisory.Cwe,
-		Title:       audit.Advisory.Title,
-		Severity:    yarnToIssueSeverity(audit.Advisory.Severity),
-		Confidence:  v1.Confidence_CONFIDENCE_HIGH,
-		Description: fmt.Sprintf("%s", audit.Advisory.GetDescription()),
-		Cve:         strings.Join(audit.Advisory.Cves, ", "),
-	}
+	Advisory   yarnAdvisory    `json:"advisory"`
 }
 
 type auditSummaryData struct {
@@ -96,7 +94,7 @@ type auditSummaryData struct {
 	TotalDependencies    int             `json:"totalDependencies"`
 }
 
-type auditAction struct {
+type auditActionAction struct {
 	Action   string            `json:"action"`
 	Module   string            `json:"module"`
 	Target   string            `json:"target"`
@@ -122,9 +120,10 @@ type yarnAdvisory struct {
 	Cves               []string          `json:"cves"`
 	Access             string            `json:"access"`
 	PatchedVersions    string            `json:"patched_versions"`
+	Cvss               cvss              `json:"cvss"`
 	Updated            string            `json:"updated"`
 	Recommendation     string            `json:"recommendation"`
-	Cwe                string            `json:"cwe"`
+	Cwe                []string          `json:"cwe"`
 	FoundBy            *contact          `json:"found_by"`
 	Deleted            bool              `json:"deleted"`
 	ID                 int               `json:"id"`
@@ -132,20 +131,14 @@ type yarnAdvisory struct {
 	Created            string            `json:"created"`
 	ReportedBy         *contact          `json:"reported_by"`
 	Title              string            `json:"title"`
-	NpmAdvisoryID      interface{}       `json:"npm_advisory_id"`
+	NpmAdvisoryID      *interface{}      `json:"npm_advisory_id"`
 	Overview           string            `json:"overview"`
 	URL                string            `json:"url"`
 }
 
-func (advisory *yarnAdvisory) GetDescription() string {
-	return fmt.Sprintf(
-		"Vulnerable Versions: %s\nRecommendation: %s\nOverview: %s\nReferences:\n%s\nAdvisory URL: %s\n",
-		advisory.VulnerableVersions,
-		advisory.Recommendation,
-		advisory.Overview,
-		advisory.References,
-		advisory.URL,
-	)
+type cvss struct {
+	Score        json.Number `json:"score"`
+	VectorString string      `json:"vectorString"`
 }
 
 type finding struct {
@@ -166,7 +159,7 @@ type auditResolution struct {
 
 type advisoryMetaData struct {
 	ModuleType         string `json:"module_type"`
-	Exploitability      int    `json:"exploitability"`
+	Exploitability     int    `json:"exploitability"`
 	AffectedComponents string `json:"affected_components"`
 }
 
@@ -174,51 +167,88 @@ type contact struct {
 	Name string `json: name`
 }
 
-// YarnAuditReport includes yarn audit data grouped by advisories, actions and summary
-type YarnAuditReport struct {
-	AuditAdvisories []*auditAdvisoryData
-	AuditActions  []*auditActionData
-	AuditSummary       *auditSummaryData
+// YarnReport holds the actions/advisories/summaries from yarn audit input JSON
+type YarnReport struct {
+	AuditActions    AuditActions
+	AuditAdvisories AuditAdvisories
+	AuditSummaries  AuditSummaries
 }
 
-// NewReport returns a YarnAuditReport, assuming each line is jsonline and returns any errors
-func NewReport(reportLines [][]byte) (*YarnAuditReport, []error) {
+// NewReport transforms input yarn audit JSON into a YarnReport
+func NewReport(report []byte) (YarnReport, error) {
+	var raws []json.RawMessage
+	yarnReport := YarnReport{}
 
-	var report YarnAuditReport
+	if err := json.Unmarshal(report, &raws); err != nil {
+		return YarnReport{}, err
+	}
 
-	var errors []error
-
-	for _, line := range reportLines {
-		var auditLine yarnAuditLine
-		if err := producers.ParseJSON(line, &auditLine); err != nil {
-			log.Printf("Error parsing JSON line '%s': %s\n", line, err)
-			errors = append(errors, err)
-		} else {
-
-			switch auditLine.Data.(type) {
-			case *auditSummaryData:
-				report.AuditSummary = auditLine.Data.(*auditSummaryData)
-			case *auditAdvisoryData:
-				report.AuditAdvisories = append(report.AuditAdvisories, auditLine.Data.(*auditAdvisoryData))
-			case *auditActionData:
-				report.AuditActions = append(report.AuditActions, auditLine.Data.(*auditActionData))
-			}
+	for _, raw := range raws {
+		auditAction := new(AuditAction)
+		if auditAction.Unmarshal(raw) {
+			yarnReport.AuditActions = append(yarnReport.AuditActions, *auditAction)
+			continue
 		}
+
+		auditAdvisory := new(AuditAdvisory)
+		if auditAdvisory.Unmarshal(raw) {
+			yarnReport.AuditAdvisories = append(yarnReport.AuditAdvisories, *auditAdvisory)
+			continue
+		}
+
+		auditSummary := new(AuditSummary)
+		if auditSummary.Unmarshal(raw) {
+			yarnReport.AuditSummaries = append(yarnReport.AuditSummaries, *auditSummary)
+			continue
+		}
+
+		err := fmt.Errorf("Unable to unmarshal JSON into known structure: %s", raw)
+		return YarnReport{}, err
 	}
 
-	if report.AuditAdvisories != nil && len(report.AuditAdvisories) > 0 {
-		return &report, errors
-	}
-
-	return nil, errors
+	return yarnReport, nil
 }
 
-// AsIssues returns the YarnAuditReport as Dracon v1.Issue list. Currently only converts the YarnAuditReport.AuditAdvisories
-func (r *YarnAuditReport) AsIssues() []*v1.Issue {
+func (advisory *yarnAdvisory) GetDescription() string {
+	return fmt.Sprintf(
+		"Vulnerable Versions: %s\nRecommendation: %s\nOverview: %s\nReferences:\n%s\nAdvisory URL: %s\n",
+		advisory.VulnerableVersions,
+		advisory.Recommendation,
+		advisory.Overview,
+		advisory.References,
+		advisory.URL,
+	)
+}
+
+// AsIssue returns data as a Dracon v1.Issue
+func (audit *auditAdvisoryData) AsIssue() *v1.Issue {
+	var targetName string
+	if audit.Resolution.Path != "" {
+		targetName = audit.Resolution.Path + ": "
+	}
+	targetName += audit.Advisory.ModuleName
+
+	// yarn audit now outputs CWEs as an array. if there is at least one CWE provide a comma-separated list
+	// to issue constructor, else provide empty string
+	cwe := strings.Join(audit.Advisory.Cwe, ", ")
+
+	return &v1.Issue{
+		Target:      targetName,
+		Type:        cwe,
+		Title:       audit.Advisory.Title,
+		Severity:    yarnToIssueSeverity(audit.Advisory.Severity),
+		Confidence:  v1.Confidence_CONFIDENCE_HIGH,
+		Description: fmt.Sprintf("%s", audit.Advisory.GetDescription()),
+		Cve:         strings.Join(audit.Advisory.Cves, ", "),
+	}
+}
+
+// AsIssues returns an auditAdvisory as Dracon v1.Issue list
+func (advisories AuditAdvisories) AsIssues() []*v1.Issue {
 	issues := make([]*v1.Issue, 0)
 
-	for _, audit := range r.AuditAdvisories {
-		issues = append(issues, audit.AsIssue())
+	for _, audit := range advisories {
+		issues = append(issues, audit.Data.AsIssue())
 	}
 
 	return issues
