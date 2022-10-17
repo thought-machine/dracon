@@ -24,38 +24,36 @@ func yarnToIssueSeverity(severity string) v1.Severity {
 	}
 }
 
-type RawMessage = json.RawMessage
-
-type auditAction struct {
+type AuditAction struct {
 	Type string 			`json:"type"`
 	Data auditActionData	`json:"data"`
 }
 
-func (audit *auditAction) unmarshal(raw RawMessage) bool {
+func (audit *AuditAction) Unmarshal(raw json.RawMessage) bool {
 	if err := json.Unmarshal(raw, audit); err != nil {
 		return false
 	}
 	return audit.Type == "auditAction"
 }
 
-type auditAdvisory struct {
+type AuditAdvisory struct {
 	Type string 			`json:"type"`
 	Data auditAdvisoryData 	`json:"data"`
 }
 
-func (audit *auditAdvisory) unmarshal(raw RawMessage) bool {
+func (audit *AuditAdvisory) Unmarshal(raw json.RawMessage) bool {
 	if err := json.Unmarshal(raw, audit); err != nil {
 		return false
 	}
 	return audit.Type == "auditAdvisory"
 }
 
-type auditSummary struct {
+type AuditSummary struct {
 	Type string 			`json:"type"`
 	Data auditSummaryData 	`json:"data"`
 }
 
-func (audit *auditSummary) unmarshal(raw RawMessage) bool {
+func (audit *AuditSummary) Unmarshal(raw json.RawMessage) bool {
 	if err := json.Unmarshal(raw, audit); err != nil {
 		return false
 	}
@@ -154,30 +152,30 @@ type contact struct {
 	Name string `json: name`
 }
 
-func NewReport(report []byte) (*[]auditAction, *[]auditAdvisory, *[]auditSummary, error) {
+func NewReport(report []byte) (*[]AuditAction, *[]AuditAdvisory, *[]AuditSummary, error) {
 
-	var raws []RawMessage
+	var raws []json.RawMessage
 	if err := json.Unmarshal(report, &raws); err != nil {
 		return nil, nil, nil, err
 	}
 
-	var auditActions []auditAction
-	var auditAdvisories []auditAdvisory
-	var auditSummaries []auditSummary
+	var auditActions []AuditAction
+	var auditAdvisories []AuditAdvisory
+	var auditSummaries []AuditSummary
 
 	for _, raw := range raws {
-		auditAction := new(auditAction)
-		if auditAction.unmarshal(raw) {
+		auditAction := new(AuditAction)
+		if auditAction.Unmarshal(raw) {
 			auditActions = append(auditActions, *auditAction)
 		}
 
-		auditAdvisory := new(auditAdvisory)
-		if auditAdvisory.unmarshal(raw) {
+		auditAdvisory := new(AuditAdvisory)
+		if auditAdvisory.Unmarshal(raw) {
 			auditAdvisories = append(auditAdvisories, *auditAdvisory)
 		}
 
-		auditSummary := new(auditSummary)
-		if auditSummary.unmarshal(raw) {
+		auditSummary := new(AuditSummary)
+		if auditSummary.Unmarshal(raw) {
 			auditSummaries = append(auditSummaries, *auditSummary)
 		}
 	}
@@ -204,15 +202,22 @@ func (audit *auditAdvisoryData) AsIssue() *v1.Issue {
 	}
 	targetName += audit.Advisory.ModuleName
 
-	// yarn audit now outputs CWEs as an array. if there is at least one CWE use the first, else use empty string
-	cwe := ""
+	// yarn audit now outputs CWEs as an array. if there is at least one CWE use a comma-separated list,
+	// else use empty string
+	cweType := ""
 	if(len(audit.Advisory.Cwe) > 0) {
-		cwe = audit.Advisory.Cwe[0]
+		cweType = audit.Advisory.Cwe[0]
+
+		if (len(audit.Advisory.Cwe) > 1) {
+			for _, cwe := range audit.Advisory.Cwe {
+				cweType += fmt.Sprintf(", %s", cwe)
+			}
+		}
 	}
 
 	return &v1.Issue{
 		Target:      targetName,
-		Type:        cwe,
+		Type:        cweType,
 		Title:       audit.Advisory.Title,
 		Severity:    yarnToIssueSeverity(audit.Advisory.Severity),
 		Confidence:  v1.Confidence_CONFIDENCE_HIGH,
@@ -222,7 +227,7 @@ func (audit *auditAdvisoryData) AsIssue() *v1.Issue {
 }
 
 // AsIssues returns an auditAdvisory as Dracon v1.Issue list
-func AsIssues(advisories *[]auditAdvisory) []*v1.Issue {
+func AsIssues(advisories *[]AuditAdvisory) []*v1.Issue {
 	issues := make([]*v1.Issue, 0)
 
 	for _, audit := range *advisories {

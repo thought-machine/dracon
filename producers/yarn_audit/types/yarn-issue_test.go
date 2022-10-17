@@ -203,7 +203,7 @@ func TestParseValidReportSummary(t *testing.T) {
 
 	assert.Len(t, *summaries, 1)
 
-	expectedSummaries := []auditSummary{
+	expectedSummaries := []AuditSummary{
 		{
 			Type: "auditSummary",
 			Data: auditSummaryData{
@@ -232,7 +232,7 @@ func TestParseValidReportAdvisories(t *testing.T) {
 
 	assert.Len(t, *advisories, 2)
 
-	expectedAdvisories := []auditAdvisory{
+	expectedAdvisories := []AuditAdvisory{
 		{
 			Type: "auditAdvisory",
 			Data: auditAdvisoryData{
@@ -353,7 +353,7 @@ func TestParseValidReportActions(t *testing.T) {
 
 	assert.Len(t, *actions, 1)
 
-	expectedActions := []auditAction{
+	expectedActions := []AuditAction{
 		{
 			Type: "auditAction",
 			Data: auditActionData{
