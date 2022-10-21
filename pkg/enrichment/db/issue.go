@@ -24,7 +24,7 @@ type issue struct {
 	Confidence  int32   		`db:"confidence"`
 	Description string  		`db:"description"`
 	Source      string  		`db:"source"`
-	CVE         sql.NullString  `db:"cve"`
+	CVE         sql.NullString	`db:"cve"`
 }
 
 func toDBIssue(i *v1.EnrichedIssue) (*issue, error) {
