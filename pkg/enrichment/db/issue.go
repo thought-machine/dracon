@@ -16,15 +16,15 @@ type issue struct {
 	FalsePositive bool      `db:"false_positive"`
 	UpdatedAt     time.Time `db:"updated_at"`
 
-	Target      string  		`db:"target"`
-	Type        string  		`db:"type"`
-	Title       string  		`db:"title"`
-	Severity    int32   		`db:"severity"`
-	CVSS        float64 		`db:"cvss"`
-	Confidence  int32   		`db:"confidence"`
-	Description string  		`db:"description"`
-	Source      string  		`db:"source"`
-	CVE         sql.NullString	`db:"cve"`
+	Target      string         `db:"target"`
+	Type        string         `db:"type"`
+	Title       string         `db:"title"`
+	Severity    int32          `db:"severity"`
+	CVSS        float64        `db:"cvss"`
+	Confidence  int32          `db:"confidence"`
+	Description string         `db:"description"`
+	Source      string         `db:"source"`
+	CVE         sql.NullString `db:"cve"`
 }
 
 func toDBIssue(i *v1.EnrichedIssue) (*issue, error) {
@@ -67,11 +67,9 @@ func toEnrichedIssue(i *issue) (*v1.EnrichedIssue, error) {
 	}
 
 	// Handle DBIssues with NULL CVE field
-	var cve string
+	cve := ""
 	if (i.CVE.Valid) {
 		cve = i.CVE.String
-	} else {
-		cve = ""
 	}
 
 	return &v1.EnrichedIssue{
