@@ -6,7 +6,7 @@
 ; Or you can uncomment the following to pin everyone to a particular version;
 ; when you change it all users will automatically get updated.
 [please]
-version = 16.21.2
+version = 16.23.1
 
 [buildconfig]
 default-docker-repo = index.docker.io/thoughtmachine

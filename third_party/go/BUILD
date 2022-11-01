@@ -82,14 +82,14 @@ go_module(
 
 go_module(
     name = "gogo_protobuf",
-    hashes = ["1cadc8a7da408a99a92e888f97c951e9da3e257585eb01a80bda33661d5387cb"],
+    hashes = ["14b27e769cbfcef5e9311461ff3767b91a6766c697b7a847c250e01ee00cfb52"],
     install = [
         "gogoproto",
         "proto",
         "sortkeys",
     ],
     module = "github.com/gogo/protobuf",
-    version = "v1.2.1",
+    version = "v1.3.2",
 )
 
 go_module(
@@ -263,13 +263,13 @@ go_module(
 
 go_module(
     name = "x_sys",
-    hashes = ["e9ba045ac49a174a9bb1220fc50e89b46e26c8ea18d987248baec06478c9c7bf"],
+    hashes = ["96c3848d7cc6644ed4e2a605f504d1e24331f3daa7df6a1fc1ab332a8452a705"],
     install = [
         "unix",
         "cpu",
     ],
     module = "golang.org/x/sys",
-    version = "95b1ffbd15a57cc5abb3f04402b9e8ec0016a52c",
+    version = "v0.1.0",
 )
 
 go_module(
@@ -387,11 +387,11 @@ go_module(
     ],
 )
 
-KUBERNETES_VERSION = "1.13.12"
+KUBERNETES_VERSION = "1.19.11"
 
 go_module(
     name = "apimachinery",
-    hashes = ["1a8f138862f20f444ac2b0bcb9fc0f8249cc1fec4a2cdefa0e025ecad0506065"],
+    hashes = ["8569c4a7efa0eea536f4ce1532255cda1ddf1c7ea3038463d36222f9918bd798"],
     install = [
         "pkg/apis/meta/v1",
         "pkg/runtime/schema",
@@ -427,8 +427,50 @@ go_module(
         ":google_gofuzz",
         ":inf.v0",
         ":klog",
+        ":structured_merge_diff",
         ":x_net",
     ],
+)
+
+go_module(
+    name = "structured_merge_diff",
+    hashes = ["7914676683e72d802fece1fc9012e65fd9f84220aecde1790faaff4918780cc4"],
+    install = [
+        "value",
+    ],
+    module = "sigs.k8s.io/structured-merge-diff/v4",
+    version = "v4.0.3",
+    deps = [
+        ":json_iterator",
+        ":yaml.v2",
+    ],
+)
+
+go_module(
+    name = "json_iterator",
+    hashes = ["00aae44a12a21c43199a336508df7f4a660d0da24c8e90bf303627f97a9ac1af"],
+    module = "github.com/json-iterator/go",
+    version = "v1.1.6",
+    deps = [
+        ":reflect2",
+    ],
+)
+
+go_module(
+    name = "reflect2",
+    hashes = ["1fdc942252b4e2b5f9ca518d4e8b82fcecbc7e3280e60de45c187a601e9ce9c7"],
+    module = "github.com/modern-go/reflect2",
+    version = "1.0.1",
+    deps = [
+        ":concurrent",
+    ],
+)
+
+go_module(
+    name = "concurrent",
+    hashes = ["438252a7d11480ae422503259a475d6e1cd644b9736ee9a9cac99561ee8f6a3e"],
+    module = "github.com/modern-go/concurrent",
+    version = "1.0.0",
 )
 
 go_module(
@@ -447,14 +489,14 @@ go_module(
 
 go_module(
     name = "x_net",
-    hashes = ["30ad515d77b7dee160c3cd64871edcb88205a4e04ef14825f335556cb021578d"],
+    hashes = ["0c3b540bc291efdedf305995c5f014e414ea3c1dcb1ab0797d54d145f60042ac"],
     install = ["..."],
     module = "golang.org/x/net",
     strip = [
         "http2/h2demo",
         "http2/h2i",
     ],
-    version = "13f9640d40b9cc418fb53703dfbd177679788ceb",
+    version = "v0.1.0",
     deps = [
         ":x_sys",
         ":x_text",
@@ -463,9 +505,19 @@ go_module(
 
 go_module(
     name = "klog",
-    hashes = ["0e223a4730f3eaeaa878c9cd880fd44850fe11f799a0fd70394be179c5de5398"],
-    module = "k8s.io/klog",
-    version = "v1.0.0",
+    hashes = ["028e7f2aca2d68387833b2f7d90b04caafbb7ae874289a403b7b231363c4634e"],
+    module = "k8s.io/klog/v2",
+    version = "v2.2.0",
+    deps = [
+        ":logr",
+    ],
+)
+
+go_module(
+    name = "logr",
+    hashes = ["c138a6871940566ce12676a42ea2c1e012a65605b5aa61c7bbbddc57debdfdd5"],
+    module = "github.com/go-logr/logr",
+    version = "v0.2.0",
 )
 
 go_module(
