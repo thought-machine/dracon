@@ -22,12 +22,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if yarnReport.AuditAdvisories != nil {
-		if err := producers.WriteDraconOut(
-			"yarn-audit",
-			yarnReport.AuditAdvisories.AsIssues(),
-		); err != nil {
-			log.Fatal(err)
-		}
+	if err := producers.WriteDraconOut(
+		"yarn-audit",
+		yarnReport.AuditAdvisories.AsIssues(),
+	); err != nil {
+		log.Fatal(err)
 	}
 }
