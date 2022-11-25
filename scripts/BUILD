@@ -7,10 +7,10 @@ genrule(
 for script in glob(["*.sh"]):
     sh_binary(
         name = basename(splitext(script)[0]),
-        main = script,
         data = [
             ":default_docker_repo",
         ],
+        main = script,
         deps = [
             "//third_party/sh:shflags",
         ],
