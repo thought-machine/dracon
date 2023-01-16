@@ -19,6 +19,18 @@ go_library(
     ],
 )
 
+go_test(
+    name = "template_test",
+    srcs = [
+        "load_test.go",
+    ],
+    resources = [":resources"],
+    deps = [
+        ":template",
+        "//third_party/go:stretchr_testify",
+    ],
+)
+
 # This is a workaround for embedding files that are
 # not in the same pkg dir.
 filegroup(
