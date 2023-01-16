@@ -15,6 +15,7 @@ go_library(
         "//third_party/go:evanphx_json-patch",
         "//third_party/go:ghodss_yaml",
         "//third_party/go:speps_go-hashids",
+        "//third_party/go:yaml_v3",
     ],
 )
 
