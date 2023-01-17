@@ -3,6 +3,7 @@ package template
 import (
 	"testing"
 
+	heredoc "github.com/makenowjust/heredoc/v2"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,76 +16,84 @@ func TestSplitYAML(t *testing.T) {
 	}{
 		{
 			desc: "a simple YAML file with no leading document separator",
-			inBytes: []byte(`a: Easy
-b:
-    c: 2
-    d:
-        - 3
-        - 4
-`),
-			outBytes: [][]byte{[]byte(`a: Easy
-b:
-    c: 2
-    d:
-        - 3
-        - 4
-`)},
+			inBytes: []byte(heredoc.Doc(`
+			a: Easy
+			b:
+			    c: 2
+			    d:
+			        - 3
+			        - 4
+			`)),
+			outBytes: [][]byte{[]byte(heredoc.Doc(`
+			a: Easy
+			b:
+			    c: 2
+			    d:
+			        - 3
+			        - 4
+			`))},
 			err: nil,
 		},
 		{
 			desc: "a simple YAML file with a leading document separator",
-			inBytes: []byte(`---
-a: Easy
-b:
-    c: 2
-    d:
-        - 3
-        - 4
-`),
-			outBytes: [][]byte{[]byte(`a: Easy
-b:
-    c: 2
-    d:
-        - 3
-        - 4
-`)},
+			inBytes: []byte(heredoc.Doc(`
+			---
+			a: Easy
+			b:
+			    c: 2
+			    d:
+			        - 3
+			        - 4
+			`)),
+			outBytes: [][]byte{[]byte(heredoc.Doc(`
+			a: Easy
+			b:
+			    c: 2
+			    d:
+			        - 3
+			        - 4
+			`))},
 			err: nil,
 		},
 		{
 			desc: "a YAML file with no leading document separator but a string value containing ---",
-			inBytes: []byte(`a: Easy
-b:
-    c: 2 ---
-    d:
-        - 3
-        - 4
-`),
-			outBytes: [][]byte{[]byte(`a: Easy
-b:
-    c: 2 ---
-    d:
-        - 3
-        - 4
-`)},
+			inBytes: []byte(heredoc.Doc(`
+			a: Easy
+			b:
+			    c: 2 ---
+			    d:
+			        - 3
+			        - 4
+			`)),
+			outBytes: [][]byte{[]byte(heredoc.Doc(`
+			a: Easy
+			b:
+			    c: 2 ---
+			    d:
+			        - 3
+			        - 4
+			`))},
 			err: nil,
 		},
 		{
 			desc: "a YAML file with both a leading document separator and a string value containing ---",
-			inBytes: []byte(`---
-a: Easy
-b:
-    c: 2 ---
-    d:
-        - 3
-        - 4
-`),
-			outBytes: [][]byte{[]byte(`a: Easy
-b:
-    c: 2 ---
-    d:
-        - 3
-        - 4
-`)},
+			inBytes: []byte(heredoc.Doc(`
+			---
+			a: Easy
+			b:
+			    c: 2 ---
+			    d:
+			        - 3
+			        - 4
+			`)),
+			outBytes: [][]byte{[]byte(heredoc.Doc(`
+			a: Easy
+			b:
+			    c: 2 ---
+			    d:
+			        - 3
+			        - 4
+			`))},
 			err: nil,
 		},
 	}

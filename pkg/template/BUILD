@@ -27,6 +27,7 @@ go_test(
     resources = [":resources"],
     deps = [
         ":template",
+        "//third_party/go:heredoc",
         "//third_party/go:stretchr_testify",
     ],
 )
