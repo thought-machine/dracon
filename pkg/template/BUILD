@@ -15,6 +15,20 @@ go_library(
         "//third_party/go:evanphx_json-patch",
         "//third_party/go:ghodss_yaml",
         "//third_party/go:speps_go-hashids",
+        "//third_party/go:yaml_v3",
+    ],
+)
+
+go_test(
+    name = "template_test",
+    srcs = [
+        "load_test.go",
+    ],
+    resources = [":resources"],
+    deps = [
+        ":template",
+        "//third_party/go:heredoc",
+        "//third_party/go:stretchr_testify",
     ],
 )
 

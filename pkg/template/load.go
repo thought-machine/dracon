@@ -5,6 +5,7 @@ import (
 	"embed"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -15,6 +16,7 @@ import (
 
 	jsonpatch "github.com/evanphx/json-patch"
 	"github.com/ghodss/yaml"
+	goyaml "gopkg.in/yaml.v3"
 )
 
 // yamlPatches holds patch yaml files as static assets
@@ -51,7 +53,10 @@ func loadYAMLFile(path string) (ResourceDocs, error) {
 		return nil, fmt.Errorf("could not read file at path %s: %w", path, err)
 	}
 	resFileYamlDocs := ResourceDocs{}
-	yamlByteParts := bytes.Split(targetYAML, []byte(`---`))
+	yamlByteParts, err := splitYAML(targetYAML)
+	if err != nil {
+		return nil, fmt.Errorf("could not split YAML at path %s: %w", path, err)
+	}
 	yamlParts := ResourceDocs{}
 	for _, bytePart := range yamlByteParts {
 		yamlParts = append(yamlParts, ResourceDoc(bytePart))
@@ -75,6 +80,28 @@ func loadYAMLFile(path string) (ResourceDocs, error) {
 	}
 
 	return resFileYamlDocs, nil
+}
+
+func splitYAML(targetYAML []byte) ([][]byte, error) {
+	dec := goyaml.NewDecoder(bytes.NewReader(targetYAML))
+
+	var res [][]byte
+	for {
+		var value interface{}
+		err := dec.Decode(&value)
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		valueBytes, err := goyaml.Marshal(value)
+		if err != nil {
+			return nil, err
+		}
+		res = append(res, valueBytes)
+	}
+	return res, nil
 }
 
 // PatchKindYAMLDocs stores all of the jsonpatch yaml docs found by type

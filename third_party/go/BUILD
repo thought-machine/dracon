@@ -754,3 +754,11 @@ go_module(
     module = "github.com/owenrumney/go-sarif/v2",
     version = "v2.1.2",
 )
+
+go_module(
+    name = "heredoc",
+    hashes = ["4411c83041d1ce5c59829c809861c95065fd687f83154e28441eea6f0ccec1f7"],
+    licences = ["MIT"],
+    module = "github.com/makenowjust/heredoc/v2",
+    version = "v2.0.1",
+)
