@@ -6,7 +6,7 @@ pip_library(
     hashes = [
         "6b6839032627170b468ca08e2d75d78a66cd4b9c83af0742f6d4c46f3a877d52",  # TM Mirror
         "d1660bcf7d90b1ebe054f2e1a66ce0d96c80f5b5d0ccb3e52ee80649a938a944",  # Public
-        "e0fd27277382e821b221303c41ed616953d876836a21eeb3fe2f9c4b0d6dc75c",  # GitHub Actions
+        "f2a850039cbe56880e99a44015ab1cba050ec3370192494047d1931b7572591e",  # GitHub Actions
     ],
     licences = ["Apache 2.0"],
     version = "1.38.0",
