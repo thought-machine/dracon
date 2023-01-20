@@ -25,7 +25,7 @@ pip_library(
     hashes = [
         "57f6f22bde4e042978bcd50176fdb381d7c21a9efa4041202288d3737a0c6a54",  # TM Mirror
         "a951e6c5a85abc380f46c0cd8780a1a03581e82edd08b64defebe8f52ae6ab8d",  # Public
-        "979a9d34c6ae1e8efc3bb9cbd7182d2fb319345d6376382307b2977153745036",  # GitHub Actions
+        "c4a1ddda2582eb4c681ab9fc6d7e6ac5a0d34999d335623ec282a062ea384060",  # GitHub Actions
     ],
     licences = ["MIT"],
     version = "65.6.3",
