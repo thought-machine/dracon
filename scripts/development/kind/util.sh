@@ -19,7 +19,7 @@ util::load_development_images_into_kind() {
     fi
     util::rinfor "building ${#docker_fqn_targets[@]} image(s)"
     docker_load_targets=($(printf '%s\n' "${docker_fqn_targets[@]}" | sed 's/_fqn$/_load/g'))
-    ./pleasew -p -v 2 --colour run parallel --quiet "${docker_load_targets[@]}"
+    ./pleasew -p -v 2 --colour run parallel --output=quiet "${docker_load_targets[@]}"
     for docker_fqn_target in "${docker_fqn_targets[@]}"; do
         util::rinfor "loading $docker_fqn_target into kind cluster '$kind_cluster_name'"
         docker_fqn=$(<$(./pleasew query output $docker_fqn_target))
