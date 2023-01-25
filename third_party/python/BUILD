@@ -4,12 +4,12 @@ pip_library(
     name = "grpc",
     package_name = "grpcio",
     hashes = [
-        "f81a854eeda013553881fedf6395a2e253d2f269a79e9318efb5d22d09246668",  # TM Mirror
-        "0d28cf192fcffdb370273a54cb1600df283bd4c56dff76f626849cc6f11ae278",  # Public
-        "caa92e3af01edfb5c9bd050071d3ba6a99791bebfa3414ffda8680fe801cfc3c",  # GitHub Actions
+        "6b6839032627170b468ca08e2d75d78a66cd4b9c83af0742f6d4c46f3a877d52",  # TM Mirror
+        "d1660bcf7d90b1ebe054f2e1a66ce0d96c80f5b5d0ccb3e52ee80649a938a944",  # Public
+        "f2a850039cbe56880e99a44015ab1cba050ec3370192494047d1931b7572591e",  # GitHub Actions
     ],
     licences = ["Apache 2.0"],
-    version = "1.27.2",
+    version = "1.38.0",
 )
 
 pip_library(
@@ -23,20 +23,19 @@ pip_library(
     name = "pkg_resources",
     package_name = "setuptools",
     hashes = [
-        "b3ce5a39751dd052c771fb6b840bf5c4eaeaa8356ed8549718eaab6acf06c0eb",  # TM Mirror
-        "841b1413fc9f13ed481b7c2df0d3a8c58879d405aa2f289a7998e78119ba1b73",  # Public
-        "ba8b2677634bce32cc743242ae5a2596c2f5c82ff1826b40ce0093a0f8d0b3c5",  # GitHub Actions
-        "331ca5f64f49cba507b2dd66b0d327acf6dffa5acae53bad1e949e5e80b3fe5f",
+        "57f6f22bde4e042978bcd50176fdb381d7c21a9efa4041202288d3737a0c6a54",  # TM Mirror
+        "a951e6c5a85abc380f46c0cd8780a1a03581e82edd08b64defebe8f52ae6ab8d",  # Public
+        "c4a1ddda2582eb4c681ab9fc6d7e6ac5a0d34999d335623ec282a062ea384060",  # GitHub Actions
     ],
     licences = ["MIT"],
-    version = "40.4.3",
+    version = "65.6.3",
 )
 
 pip_library(
     name = "six",
     package_name = "six",
     licences = ["MIT"],
-    version = "1.14.0",
+    version = "1.16.0",
 )
 
 pip_library(

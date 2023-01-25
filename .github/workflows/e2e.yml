@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: E2E
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         kubernetes: ["1.21"]
@@ -18,7 +18,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y python3-setuptools python3-pip
 
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Create KinD cluster
         run: ./pleasew run //scripts/development/kind:setup -- --kubernetes_version="${{ matrix.kubernetes }}"
