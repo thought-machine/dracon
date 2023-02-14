@@ -95,11 +95,13 @@ func splitYAML(targetYAML []byte) ([][]byte, error) {
 		if err != nil {
 			return nil, err
 		}
-		valueBytes, err := goyaml.Marshal(value)
-		if err != nil {
-			return nil, err
+		if value != nil {
+			valueBytes, err := goyaml.Marshal(value)
+			if err != nil {
+				return nil, err
+			}
+			res = append(res, valueBytes)
 		}
-		res = append(res, valueBytes)
 	}
 	return res, nil
 }

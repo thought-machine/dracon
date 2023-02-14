@@ -35,6 +35,28 @@ func TestSplitYAML(t *testing.T) {
 			err: nil,
 		},
 		{
+			desc: "a simple YAML file with two leading document separators",
+			inBytes: []byte(heredoc.Doc(`
+			---
+			---
+			a: Easy
+			b:
+			    c: 2
+			    d:
+			        - 3
+			        - 4
+			`)),
+			outBytes: [][]byte{[]byte(heredoc.Doc(`
+			a: Easy
+			b:
+			    c: 2
+			    d:
+			        - 3
+			        - 4
+			`))},
+			err: nil,
+		},
+		{
 			desc: "a simple YAML file with a leading document separator",
 			inBytes: []byte(heredoc.Doc(`
 			---
