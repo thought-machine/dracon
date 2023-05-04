@@ -3,7 +3,7 @@
 set -Eeuo pipefail
 
 DEFINE_string 'kind_cluster' 'dracon' 'Kind cluster to use' 'c'
-DEFINE_string 'kubernetes_version' '1.21' 'Kubernetes version to use' 'k'
+DEFINE_string 'kubernetes_version' '1.23' 'Kubernetes version to use' 'k'
 FLAGS "$@" || exit $?
 eval set -- "${FLAGS_ARGV}"
 
@@ -12,6 +12,7 @@ kubernetes_version="${FLAGS_kubernetes_version//./_}"
 declare -A KUBERNETES_VERSIONS
 KUBERNETES_VERSIONS=(
   ["1_21"]="kindest/node:v1.21.10@sha256:84709f09756ba4f863769bdcabe5edafc2ada72d3c8c44d6515fc581b66b029c"
+  ["1_23"]="kindest/node:v1.23.12@sha256:9402cf1330bbd3a0d097d2033fa489b2abe40d479cc5ef47d0b6a6960613148a"
 )
 
 kubernetes_context="kind-${FLAGS_kind_cluster}"
@@ -36,7 +37,7 @@ $kubectl apply -f "${KUBERNETES_INGRESSNGINX_CONFIG}" > /dev/null
 util::rinfor "waiting for kubernetes/ingress-nginx pods"
 util::waitForRollout "${KUBERNETES_INGRESSNGINX_INSTALL}"
 util::rsuccess "Installed kubernetes/ingress-nginx"
-  
+
 # jetstack/cert-manager
 util::infor "Installing jetstack/cert-manager"
 $kubectl apply -f "${JETSTACK_CERTMANAGER_INSTALL}" > /dev/null
