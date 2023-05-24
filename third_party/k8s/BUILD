@@ -1,18 +1,18 @@
-KUBERNETES_INGRESSNGINX_VERSION = "3.25.0"
+KUBERNETES_INGRESSNGINX_VERSION = "4.5.2"
 
 remote_file(
     name = "kubernetes_ingressnginx",
-    hashes = ["5cea6ce0f7e285f88847852aab05902406a63bfe4aef297831ea0207111fae44"],
+    hashes = ["c36d92bf32f76fac22aa9324f15d1019a7380411f07261f903a713fc85737fbb"],
     url = f"https://raw.githubusercontent.com/kubernetes/ingress-nginx/helm-chart-{KUBERNETES_INGRESSNGINX_VERSION}/deploy/static/provider/kind/deploy.yaml",
     visibility = ["//scripts/development/kind/..."],
 )
 
-JETSTACK_CERTMANAGER_VERSION = "1.1.0"
+CERTMANAGER_CERTMANAGER_VERSION = "1.12.0"
 
 remote_file(
-    name = "jetstack_certmanager",
-    hashes = ["651857a32b0be92f3c5c274729eea9c34bd457726bd3f560b3f68399659d1cfd"],
-    url = f"https://github.com/jetstack/cert-manager/releases/download/v{JETSTACK_CERTMANAGER_VERSION}/cert-manager.yaml",
+    name = "certmanager_certmanager",
+    hashes = ["fac060a5a953d2ebe2f38e3ded79ebbee3bebe9d26078478618d81bebd9c6385"],
+    url = f"https://github.com/cert-manager/cert-manager/releases/download/v{CERTMANAGER_CERTMANAGER_VERSION}/cert-manager.yaml",
     visibility = ["//scripts/development/kind/..."],
 )
 
@@ -29,8 +29,8 @@ TEKTONCD_DASHBOARD_VERSION = "0.34.0"
 
 remote_file(
     name = "tektoncd_dashboard",
-    hashes = ["48d26b523438eb35bb622270b6ae7853f9238f0703f5961297199edd001d0529"],
     out = "tekton-dashboard-release-readonly.yaml",
+    hashes = ["48d26b523438eb35bb622270b6ae7853f9238f0703f5961297199edd001d0529"],
     url = f"https://github.com/tektoncd/dashboard/releases/download/v{TEKTONCD_DASHBOARD_VERSION}/release.yaml",
     visibility = ["//scripts/development/..."],
 )

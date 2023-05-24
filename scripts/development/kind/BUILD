@@ -11,7 +11,7 @@ KIND_CONFIG="$(out_location :_configuration)"
 KUBERNETES_INGRESSNGINX_INSTALL="$(out_location //third_party/k8s:kubernetes_ingressnginx)"
 KUBERNETES_INGRESSNGINX_CONFIG="$(out_location //scripts/development/kind/ingress:ingress-nginx)"
 
-JETSTACK_CERTMANAGER_INSTALL="$(out_location //third_party/k8s:jetstack_certmanager)"
+CERTMANAGER_CERTMANAGER_INSTALL="$(out_location //third_party/k8s:certmanager_certmanager)"
 
 TEKTONCD_PIPELINE_INSTALL="$(out_location //third_party/k8s:tektoncd_pipeline)"
 TEKTONCD_DASHBOARD_INSTALL="$(out_location //scripts/development/k8s/tektoncd-dashboard)"
@@ -23,7 +23,7 @@ source $SRCS
         "//scripts/development/k8s/tektoncd-dashboard",
         "//scripts/development/kind/ingress:ingress-nginx",
         "//scripts/util",
-        "//third_party/k8s:jetstack_certmanager",
+        "//third_party/k8s:certmanager_certmanager",
         "//third_party/k8s:kubernetes_ingressnginx",
         "//third_party/k8s:tektoncd_pipeline",
         "//third_party/sh:shflags",

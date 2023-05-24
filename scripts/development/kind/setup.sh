@@ -39,12 +39,12 @@ util::rinfor "waiting for kubernetes/ingress-nginx pods"
 util::waitForRollout "${KUBERNETES_INGRESSNGINX_INSTALL}"
 util::rsuccess "Installed kubernetes/ingress-nginx"
   
-# jetstack/cert-manager
-util::infor "Installing jetstack/cert-manager"
-$kubectl apply -f "${JETSTACK_CERTMANAGER_INSTALL}" > /dev/null
-util::rinfor "waiting for jetstack/cert-manager pods"
-util::waitForRollout "${JETSTACK_CERTMANAGER_INSTALL}"
-util::rsuccess "Installed jetstack/cert-manager"
+# cert-manager/cert-manager
+util::infor "Installing cert-manager/cert-manager"
+$kubectl apply -f "${CERTMANAGER_CERTMANAGER_INSTALL}" > /dev/null
+util::rinfor "waiting for cert-manager/cert-manager pods"
+util::waitForRollout "${CERTMANAGER_CERTMANAGER_INSTALL}"
+util::rsuccess "Installed cert-manager/cert-manager"
 
 # tektoncd/pipeline
 util::infor "Installing tektoncd/pipeline"
