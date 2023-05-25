@@ -5,12 +5,14 @@ metadata:
   name: tekton-dashboard
   namespace: tekton-pipelines
   annotations:
-    kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/backend-protocol: "http"
 spec:
-  backend:
-    serviceName: tekton-dashboard
-    servicePort: webinterface
+  ingressClassName: nginx
+  defaultBackend:
+    service:
+      name: tekton-dashboard
+      port:
+        name: webinterface
   tls:
   - hosts:
     - "dashboard.localhost"
@@ -20,5 +22,8 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: tekton-dashboard
-          servicePort: http
+          service:
+            name: tekton-dashboard
+            port:
+              name: http
+        pathType: ImplementationSpecific
