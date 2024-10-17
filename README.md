@@ -1,3 +1,6 @@
+> [!NOTE]
+> **This project is deprecated.** Users should consider migrating to [Ocurity's fork of Dracon](https://github.com/ocurity/dracon).
+
 # Dracon
 
 Security pipelines on Kubernetes. The purpose of this project is to provide a
