@@ -1,6 +1,5 @@
-# THIS PROJECT IS DEPRECATED
-
-Projects using this tool should consider migrating instead to [github.com/ocurity/dracon](github.com/ocurity/dracon).
+> [!NOTE]
+> **This project is deprecated.** Users should consider migrating to [Ocurity's fork of Dracon](https://github.com/ocurity/dracon).
 
 # Dracon
 
